@@ -1,105 +1,187 @@
+let URL_params = window.location.search.replace("?", "").split("&").reduce(function (p, e) {
+    let a = e.split("=");
+    p[decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+    return p;
+}, {});
+
 export function synchronize(target = null) {
-  if (process.env.NODE_ENV !== "production") console.log("Sync: Call");
-  const root = target ? target : this;
-  return new Promise((resolve) => {
-    const video = root._.form.video;
-    const audio = root._.form.audio;
-    const playbackRate = root.playbackRate;
-    const diff = video.currentTime - audio.currentTime;
-
-    audio.mjs_setRate(playbackRate);
-    video.mjs_setRate(playbackRate);
-    if (video.syncTimeout) clearTimeout(video.syncTimeout);
-    video.syncTimeout = null;
-
-    if (root._.playing && Math.abs(diff) > 1 / 60) {
-      if (process.env.NODE_ENV !== "production")
-        console.log("Sync: Need to sync");
-      let scale = playbackRate - diff;
-      if (0.25 <= scale && scale <= 4) {
-        if (document.hasFocus()) {
-          if (process.env.NODE_ENV !== "production")
-            console.log(`Sync: Rate changed to ${scale}`);
-          video.mjs_setRate(scale);
-          video.syncTimeout = setTimeout(() => {
-            if (process.env.NODE_ENV !== "production")
-              console.log("Sync: Rate changed back");
-            video.mjs_setRate(playbackRate);
-            video.syncTimeout = null;
-          }, 1000);
-          setTimeout(() => {
-            resolve();
-          }, 1050);
-        } else {
-          resolve();
-        }
-      } else {
-        if (process.env.NODE_ENV !== "production")
-          console.log(`Sync: Seeked to ${audio.currentTime}`);
-        video.mjs_setTime(audio.currentTime);
-        resolve();
-      }
-    } else {
-      resolve();
+    if (process.env.NODE_ENV !== "production") {
+        console.log("Sync: Call");
     }
-  });
+
+    const root = target ? target : this;
+
+    return new Promise((resolve) => {
+        const video = root._.form.video;
+        const audio = root._.form.audio;
+        const playbackRate = root.playbackRate;
+        const diff = video.currentTime - audio.currentTime;
+
+        audio.mjs_setRate(playbackRate);
+        video.mjs_setRate(playbackRate);
+
+        if (video.syncTimeout) {
+            clearTimeout(video.syncTimeout);
+        }
+
+        video.syncTimeout = null;
+
+        if (root._.playing && Math.abs(diff) > 1 / 60) {
+            if (process.env.NODE_ENV !== "production") {
+                console.log("Sync: Need to sync");
+            }
+
+            let scale = playbackRate - diff;
+
+            if (0.25 <= scale && scale <= 4) {
+                if (document.hasFocus()) {
+                    if (process.env.NODE_ENV !== "production") {
+                        console.log("Sync: Rate changed to " + scale);
+                    }
+
+                    video.mjs_setRate(scale);
+                    video.syncTimeout = setTimeout(() => {
+                        if (process.env.NODE_ENV !== "production") {
+                            console.log("Sync: Rate changed back");
+                        }
+
+                        video.mjs_setRate(playbackRate);
+                        video.syncTimeout = null;
+                    }, 1000);
+
+                    setTimeout(() => {
+                        resolve();
+                    }, 1050);
+                } else {
+                    resolve();
+                }
+            } else {
+                if (process.env.NODE_ENV !== "production") {
+                    console.log("Sync: Seeked to " + audio.currentTime);
+                }
+
+                video.mjs_setTime(audio.currentTime);
+                resolve();
+            }
+        } else {
+            resolve();
+        }
+    });
 }
 
+let trigger = true;
+
 export function downloadStatusUpdate() {
-  const allowedStates = [3, 4];
-  const video = this._.form.video;
-  const audio = this._.form.audio;
-  if (this._.playing) {
-    if (
-      allowedStates.includes(video.readyState) &&
-      allowedStates.includes(audio.readyState)
-    ) {
-      audio.mjs_play();
-      video.mjs_play();
-    } else {
-      if (!allowedStates.includes(video.readyState) && document.hasFocus())
-        audio.mjs_pause();
-      if (!allowedStates.includes(audio.readyState)) video.mjs_pause();
+    const allowedStates = [3, 4];
+    const video = this._.form.video;
+    const audio = this._.form.audio;
+    const button_play = this._.form.buttons.play;
+
+    if (allowedStates.includes(video.readyState) && allowedStates.includes(audio.readyState)) {
+        let logo_spiner = document.getElementById("logo_spiner");
+        logo_spiner.style.display = "none";
     }
-  }
+
+    if (this._.playing || ("p" in URL_params && trigger)) {
+        if (allowedStates.includes(video.readyState) && allowedStates.includes(audio.readyState)) {
+            audio.mjs_play();
+            video.mjs_play();
+
+            this.trySync = true;
+
+            button_play.setAttribute("icon", "pauseBtn");
+
+            trigger = false;
+        } else {
+            if (!allowedStates.includes(video.readyState) && document.hasFocus()) {
+                audio.mjs_pause();
+            }
+
+            if (!allowedStates.includes(audio.readyState)) {
+                video.mjs_pause();
+            }
+        }
+    }
 }
 
 export function changePlaying(val) {
-  if (val) {
-    this._.form.video.mjs_play();
-    this._.form.audio.mjs_play();
-    this._.form.buttons.play.setAttribute("icon", "pauseBtn");
-  } else {
-    this._.form.video.mjs_pause();
-    this._.form.audio.mjs_pause();
-    this._.form.buttons.play.setAttribute("icon", "playBtn");
-  }
-  this._.playing = val;
+    if (val) {
+        this._.form.video.mjs_play();
+        this._.form.audio.mjs_play();
+        this._.form.buttons.play.setAttribute("icon", "pauseBtn");
+
+        let logo_play = document.getElementById("logo_play");
+        logo_play.style.display = "block";
+
+        setTimeout(function () {
+            logo_play.style.display = "none";
+        }, 1000);
+    } else {
+        this._.form.video.mjs_pause();
+        this._.form.audio.mjs_pause();
+        this._.form.buttons.play.setAttribute("icon", "playBtn");
+
+        let logo_pause = document.getElementById("logo_pause");
+        logo_pause.style.display = "block";
+
+        setTimeout(function () {
+            logo_pause.style.display = "none";
+        }, 1000);
+    }
+
+    this._.playing = val;
 }
 
 export function play() {
-  changePlaying.call(this, true);
+    changePlaying.call(this, true);
 }
 
 export function pause() {
-  changePlaying.call(this, false);
+    changePlaying.call(this, false);
 }
 
 export function seek(val) {
-  val += this.currentTime;
-  if (val < 0) val = 0;
-  this._.form.audio.mjs_setTime(val);
-  this._.form.video.mjs_setTime(val);
+    val += this.currentTime;
+    if (val < 0) {
+        val = 0;
+    }
+
+    this._.form.audio.mjs_setTime(val);
+    this._.form.video.mjs_setTime(val);
+}
+
+export function skip(val) {
+    fetch("ds_series.json").then(function (response) {
+        response.json().then(function (dataset) {
+            const index = dataset.findIndex((url) => ("/стафф/видео/" + url) === decodeURIComponent(window.location.pathname));
+
+            if (val) {
+                if (index + 1 < dataset.length) {
+                    location.href = window.location.origin + "/стафф/видео/" + dataset[index + 1] + "?p=1";
+                }
+            } else {
+                if (index - 1 >= 0) {
+                    location.href = window.location.origin + "/стафф/видео/" + dataset[index - 1] + "?p=1";
+                }
+            }
+        })
+    })
 }
 
 export function setTime(val, isVideo = false) {
-  this._.form.audio.mjs_setTime(val);
-  if (!isVideo) this._.form.video.mjs_setTime(val);
+    this._.form.audio.mjs_setTime(val);
+    if (!isVideo) {
+        this._.form.video.mjs_setTime(val);
+    }
 }
 
 export function setSpeed(val) {
-  if (val < 0.25) val = 0.25;
-  if (val > 2) val = 2;
-  this._.playbackRate = val;
-  synchronize.call(this);
+
+    document.cookie = "speed=" + encodeURIComponent(val) + "; path=/; max-age=" + (86400 * 365);
+
+    if (val < 0.25) val = 0.25;
+    if (val > 2) val = 2;
+    this._.playbackRate = val;
+
+    synchronize.call(this).then(r => r);
 }

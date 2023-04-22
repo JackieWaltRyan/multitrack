@@ -1,85 +1,37 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <title>Плеер для сайта ТО "Магия дружбы"</title>
-    <script src="main.js"></script>
-    <style>
-        #player {
-            width: 854px;
-            height: 480px;
-        }
-    </style>
-</head>
-
-<body>
-    <div id="player"></div>
-    <div id="diff"></div>
-    <button onclick="player.sync()">Sync now</button>
-    <script>
-        var player = new MultitrackJS("#player", {
-            videos: [{
-                name: "1080p",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/1080.mp4"
-            }, {
-                name: "720p",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/720.mp4"
-            }, {
-                name: "480p",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/480.mp4"
-            }, {
-                name: "360p",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/360.mp4"
-            }, {
-                name: "240p",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/240.mp4"
-            }, {
-                name: "144p",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/144.mp4"
-            }],
-            audios: [{
-                name: 'Карусель (ЗАО "Первый канал Всемирная сеть")',
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/www.mp4"
-            }, {
-                name: "Gala Voices",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/gal.mp4"
-            }, {
-                name: "Трина Дубовицкая",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/tri.mp4"
-            }, {
-                name: "Doublezett Studio (Agent DieGo)",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/die.mp4"
-            }, {
-                name: 'Украинская (ПлюсПлюс, студия "Мастер Видео")',
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/mav.mp4"
-            }, {
-                name: "Оригинал",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/has.mp4"
-            }],
-            subtitles: [{
-                name: "RUS anon2anon",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/a2a-rus.ass"
-            }, {
-                name: "ENG anon2anon",
-                path: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/a2a-eng.ass"
-            }],
-            preferredVideoName: '720p',
-            placeholder: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/index.jpg",
-            preview: "//base.bronyru.info/video/G4/EG/media/OriginalMovie/preview.webp",
-            title: "Equestria Girls"
-        });
-
-        var diff = document.querySelector("#diff");
-        var diffInterval = setInterval(()=>{
-            diff.innerText = "V-A: " + (player._.form.video.currentTime - player._.form.audio.currentTime);
-            if(player._.form.video.syncTimeout != null){
-                diff.style = "background-color: black; color: white;";
-            }else{
-                diff.style = "";
-            }
-        }, 100);
-    </script>
-</body>
-
+<!DOCTYPE HTML>
+<html lang="ru">
+    <head>
+		<meta charset="UTF-8">
+        <title>Плеер</title>
+        <link rel="shortcut icon" href="_design/favicon.ico">
+        <link rel="stylesheet" type="text/css" href="_design/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" type="text/css" href="_design/main_background.css">
+    </head>
+    <body>
+        <center>
+            <table width="900" border="1" style="border-collapse: collapse; border: 1px #5500cc; cellspacing: 0; cellpadding: 7; background-color: #eeeeff;">
+                <tr>
+                    <td valign="top" align="justify">
+                        <div id="PageContent">
+                            <div id="app">
+                                <player v-bind:episode_name="episode_name"></player>
+                            </div>
+                            <script src="main.js"></script>
+                            <script src="multitrack-bronyru.js"></script>
+                            <link rel="stylesheet" type="text/css" href="multitrack-bronyru.css"/>
+                            <script>
+                                let vm = new MultitrackJSLoader({
+                                    el: '#app',
+                                    data: {
+                                        episode_name: "Equestria Girls"
+                                    }
+                                });
+                            </script>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</center>
+	</body>
 </html>
