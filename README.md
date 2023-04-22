@@ -7,3 +7,6 @@
 npm install
 npx webpack
 ```
+
+### Online test
+[https://jackiewaltryan.github.io/multitrack/dist/index.html](https://jackiewaltryan.github.io/multitrack/dist/index.html)
