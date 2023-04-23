@@ -9,6 +9,19 @@ export function logError(text) {
     console.error(this._.name + " | " + text);
 }
 
+export function getCookie(name) {
+    let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+export function URLparams() {
+    return window.location.search.replace("?", "").split("&").reduce(function (p, e) {
+        let a = e.split("=");
+        p[decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+        return p;
+    }, {});
+}
+
 export function secondsToTime(sec) {
     sec = Math.floor(sec);
     let seconds = sec % 60;

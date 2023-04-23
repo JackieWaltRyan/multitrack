@@ -1,10 +1,5 @@
-import {createElement, secondsToTime} from "../utils";
-import {changePlaying, downloadStatusUpdate, setSpeed, setTime, skip,} from "../playback";
-
-function getCookie(name) {
-    let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-}
+import {createElement, getCookie, secondsToTime} from "../utils";
+import {changePlaying, downloadStatusUpdate, setSpeed, setTime, skip} from "../playback";
 
 function appendEvents(element) {
     const root = this;

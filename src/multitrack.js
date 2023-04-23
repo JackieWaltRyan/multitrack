@@ -1,12 +1,7 @@
 import "./style.scss";
 import {init} from "./internal/init";
 import {pause, play, setSpeed, setTime, synchronize} from "./internal/playback";
-import {createElement, sleep} from "./internal/utils";
-
-function getCookie(name) {
-    let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-}
+import {createElement, getCookie, sleep} from "./internal/utils";
 
 document.getElementById("app").appendChild(createElement("div", {
     id: "curent_audio", style: "display: none;"

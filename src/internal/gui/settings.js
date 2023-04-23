@@ -1,12 +1,6 @@
-import {createElement} from "../utils";
+import {createElement, getCookie, URLparams} from "../utils";
 import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
 import {setSpeed} from "../playback";
-
-let URL_params = window.location.search.replace("?", "").split("&").reduce(function (p, e) {
-    let a = e.split("=");
-    p[decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
-    return p;
-}, {});
 
 class SettingsButtons {
     constructor(name = null) {
@@ -75,12 +69,28 @@ class SettingsPage {
     }
 }
 
-export function toggleSettings() {
-    if (!this._.form.settings.opened) {
-        resetMenu.call(this);
-        this._.rootElement.classList.add("mjs__settings_show");
-    } else {
+let SettingsTimeout;
+
+function set_timeout() {
+    clearTimeout(SettingsTimeout);
+
+    SettingsTimeout = setTimeout(() => {
         this._.rootElement.classList.remove("mjs__settings_show");
+        this._.form.settings.opened = false;
+    }, 3000);
+}
+
+export function toggleSettings() {
+    if (this._.form.settings.opened) {
+        this._.rootElement.classList.remove("mjs__settings_show");
+
+        clearTimeout(SettingsTimeout);
+    } else {
+        resetMenu.call(this);
+
+        this._.rootElement.classList.add("mjs__settings_show");
+
+        set_timeout.call(this);
     }
 
     this._.form.settings.opened = !this._.form.settings.opened;
@@ -96,11 +106,6 @@ function resetMenu() {
     }
 
     this._.form.settings.menuSwitcher.Content.removeAttribute("style");
-}
-
-function getCookie(name) {
-    let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
 export function generateSettings() {
@@ -157,6 +162,7 @@ export function generateSettings() {
     }, "s_sp");
 
     this._.form.settings.menu.settings.appendElement("hr", {
+        id: "hr1",
         style: "border-style: inset; border-width: 1px;"
     });
 
@@ -174,6 +180,25 @@ export function generateSettings() {
         input.checked = trigger;
         this._.form.video.dispatchEvent(new ProgressEvent("progress"));
     }, "s_sic");
+
+    this._.form.settings.menu.settings.appendElement("hr", {
+        id: "hr2",
+        style: "border-style: inset; border-width: 1px;"
+    });
+
+    this._.form.settings.menu.settings.appendButton("Добавление новых сегментов", () => {
+        let trigger = !(getCookie("s_sts") === "true");
+        document.cookie = "s_sts=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
+        let input = document.getElementById("s_sts");
+        input.checked = trigger;
+        let overlay_sts = document.getElementById("overlay_sts");
+
+        if (trigger) {
+            overlay_sts.style.display = "block";
+        } else {
+            overlay_sts.style.display = "none";
+        }
+    }, "s_sts");
 
     this._.form.settings.menu.info = new SettingsPage("Информация о плеере");
     this._.form.settings.menu.info.Content = createElement("div", {
@@ -223,7 +248,8 @@ export function generateSettings() {
     // Добавление видео
     for (let video of this._.videos) {
         this._.form.settings.menu.quality.appendButton(video.name, () => {
-            setVideo.call(this, video.path, video.name);
+            document.cookie = "video=" + encodeURIComponent(video.name) + "; path=/; max-age=" + (86400 * 365);
+            setVideo.call(this, video.path);
         });
     }
 
@@ -244,7 +270,8 @@ export function generateSettings() {
     // Добавление аудио
     for (let audio of this._.audios) {
         this._.form.settings.menu.dubs.appendButton(audio.name, () => {
-            setAudio.call(this, audio.path, audio.name, this._.audios.findIndex((a) => a === audio));
+            document.cookie = "audio=" + encodeURIComponent(audio.name) + "; path=/; max-age=" + (86400 * 365);
+            setAudio.call(this, audio.path, audio.code);
         });
     }
 
@@ -255,8 +282,8 @@ export function generateSettings() {
         if (index !== -1) preferredAudioIndex = index;
     }
 
-    if ("a" in URL_params) {
-        preferredAudioIndex = parseInt(URL_params["a"]);
+    if ("a" in URLparams()) {
+        preferredAudioIndex = this._.audios.findIndex((audio) => audio.code === URLparams()["a"]);
     }
 
     this._.form.settings.menu.dubs.Buttons[preferredAudioIndex].click();
@@ -266,7 +293,8 @@ export function generateSettings() {
 
     for (let subtitle of this._.subtitles) {
         this._.form.settings.menu.subtitles.appendButton(subtitle.name, () => {
-            setSubtitles.call(this, subtitle.path, subtitle.name, this._.subtitles.findIndex((s) => s === subtitle));
+            document.cookie = "subtitle=" + encodeURIComponent(subtitle.name) + "; path=/; max-age=" + (86400 * 365);
+            setSubtitles.call(this, subtitle.path, subtitle.code);
         });
     }
 
@@ -277,8 +305,8 @@ export function generateSettings() {
         if (index !== -1) preferredSubtitleIndex = index;
     }
 
-    if ("s" in URL_params) {
-        preferredSubtitleIndex = parseInt(URL_params["s"]);
+    if ("s" in URLparams()) {
+        preferredSubtitleIndex = this._.subtitles.findIndex((subtitle) => subtitle.code === URLparams()["s"]);
     }
 
     this._.form.settings.menu.subtitles.Buttons[preferredSubtitleIndex].click();
@@ -286,6 +314,7 @@ export function generateSettings() {
     // Добавление скорости
     for (let speed of [0.5, 1, 1.5, 2]) {
         this._.form.settings.menu.playbackRate.appendButton(speed + "x", () => {
+            document.cookie = "speed=" + encodeURIComponent(speed) + "; path=/; max-age=" + (86400 * 365);
             setSpeed.call(this, speed);
         });
     }
@@ -328,4 +357,12 @@ export function generateSettings() {
     this._.form.settings.header.appendChild(this._.form.settings.title);
     this._.form.settings._root.appendChild(this._.form.settings.header);
     this._.form.settings._root.appendChild(this._.form.settings.body);
+
+    this._.form.settings._root.addEventListener("mousemove", () => {
+        set_timeout.call(this);
+    });
+
+    this._.form.settings._root.addEventListener("touchmove", () => {
+        set_timeout.call(this);
+    });
 }

@@ -1,8 +1,4 @@
-let URL_params = window.location.search.replace("?", "").split("&").reduce(function (p, e) {
-    let a = e.split("=");
-    p[decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
-    return p;
-}, {});
+import {URLparams} from "./utils";
 
 export function synchronize(target = null) {
     if (process.env.NODE_ENV !== "production") {
@@ -82,11 +78,12 @@ export function downloadStatusUpdate() {
         logo_spiner.style.display = "none";
     }
 
-    if (this._.playing || ("p" in URL_params && trigger)) {
+    if (this._.playing || (("p" in URLparams()) && trigger)) {
         if (allowedStates.includes(video.readyState) && allowedStates.includes(audio.readyState)) {
             audio.mjs_play();
             video.mjs_play();
 
+            this._.playing = true;
             this.trySync = true;
 
             button_play.setAttribute("icon", "pauseBtn");
@@ -176,9 +173,6 @@ export function setTime(val, isVideo = false) {
 }
 
 export function setSpeed(val) {
-
-    document.cookie = "speed=" + encodeURIComponent(val) + "; path=/; max-age=" + (86400 * 365);
-
     if (val < 0.25) val = 0.25;
     if (val > 2) val = 2;
     this._.playbackRate = val;

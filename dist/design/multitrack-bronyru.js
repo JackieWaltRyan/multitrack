@@ -30,6 +30,7 @@ class MultitrackJSLoader {
             let audios = episodeData.dubs.map(function (dub) {
                 return {
                     name: "[" + dub.lang.toUpperCase() + "] " + dub.name,
+                    code: dub.code,
                     path: episodeData.path + dub.code + ".mp4"
                 };
             });
@@ -37,6 +38,7 @@ class MultitrackJSLoader {
             let subtitles = episodeData["subs"].map(function (sub) {
                 return {
                     name: "[" + sub.lang.toUpperCase() + "] " + sub.name,
+                    code: sub.code,
                     path: episodeData.path + sub.code + ".ass"
                 };
             });

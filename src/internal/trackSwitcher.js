@@ -1,34 +1,21 @@
-import {logError} from "./utils";
+import {getCookie, logError, URLparams} from "./utils";
 
-let URL_params = window.location.search.replace("?", "").split("&").reduce(function (p, e) {
-    let a = e.split("=");
-    p[decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
-    return p;
-}, {});
+let ASS;
 
 // Надо ждать, пока загрузится страница, а иначе - ошибка
-let ASS;
 document.addEventListener("DOMContentLoaded", function () {
     ASS = require("assjs").default;
 });
 
-function getCookie(name) {
-    let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-
-export function setVideo(link, name) {
-
-    document.cookie = "video=" + encodeURIComponent(name) + "; path=/; max-age=" + (86400 * 365);
-
+export function setVideo(link) {
     let currentTimeVideo = this.currentTime;
 
     if (getCookie("time") !== undefined && getCookie("s_tt") === "true") {
         currentTimeVideo = parseFloat(getCookie("time"));
     }
 
-    if ("t" in URL_params) {
-        currentTimeVideo = parseFloat(URL_params["t"]);
+    if ("t" in URLparams()) {
+        currentTimeVideo = parseFloat(URLparams()["t"]);
     }
 
     const playbackRate = this.playbackRate;
@@ -42,12 +29,9 @@ export function setVideo(link, name) {
     }
 }
 
-export function setAudio(link, name, index) {
-
-    document.cookie = "audio=" + encodeURIComponent(name) + "; path=/; max-age=" + (86400 * 365);
-
+export function setAudio(link, code) {
     let curent_audio = document.getElementById("curent_audio");
-    curent_audio.innerText = index.toString();
+    curent_audio.innerText = code.toString();
 
     let currentTimeAudio = this.currentTime;
 
@@ -55,8 +39,8 @@ export function setAudio(link, name, index) {
         currentTimeAudio = parseFloat(getCookie("time"));
     }
 
-    if ("t" in URL_params) {
-        currentTimeAudio = parseFloat(URL_params["t"]);
+    if ("t" in URLparams()) {
+        currentTimeAudio = parseFloat(URLparams()["t"]);
     }
 
     const playbackRate = this.playbackRate;
@@ -74,12 +58,9 @@ export function setAudio(link, name, index) {
     }
 }
 
-export function setSubtitles(url, name, index) {
-
-    document.cookie = "subtitle=" + encodeURIComponent(name) + "; path=/; max-age=" + (86400 * 365);
-
+export function setSubtitles(url, code) {
     let curent_subtitle = document.getElementById("curent_subtitle");
-    curent_subtitle.innerText = index.toString();
+    curent_subtitle.innerText = code.toString();
 
     clearTimeout(this._.subtitlesDownloader);
 
