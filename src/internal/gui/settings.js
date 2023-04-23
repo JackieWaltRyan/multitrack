@@ -257,12 +257,16 @@ export function generateSettings() {
 
     if (this._.preferredVideoName) {
         const index = this._.videos.findIndex((video) => video.name === this._.preferredVideoName);
-        if (index !== -1) preferredVideoIndex = index;
+        if (index !== -1) {
+            preferredVideoIndex = index;
+        }
     }
 
-    if (getCookie("video") !== undefined && getCookie("s_vd") === "true") {
+    if ((getCookie("video") !== undefined) && (getCookie("s_vd") === "true")) {
         const index = this._.videos.findIndex((video) => video.name === getCookie("video"));
-        if (index !== -1) preferredVideoIndex = index;
+        if (index !== -1) {
+            preferredVideoIndex = index;
+        }
     }
 
     this._.form.settings.menu.quality.Buttons[preferredVideoIndex].click();
@@ -270,43 +274,57 @@ export function generateSettings() {
     // Добавление аудио
     for (let audio of this._.audios) {
         this._.form.settings.menu.dubs.appendButton(audio.name, () => {
-            document.cookie = "audio=" + encodeURIComponent(audio.name) + "; path=/; max-age=" + (86400 * 365);
+            document.cookie = "audio=" + encodeURIComponent(audio.code) + "; path=/; max-age=" + (86400 * 365);
             setAudio.call(this, audio.path, audio.code);
         });
     }
 
     let preferredAudioIndex = 0;
 
-    if (getCookie("audio") !== undefined && getCookie("s_au") === "true") {
-        const index = this._.audios.findIndex((audio) => audio.name === getCookie("audio"));
-        if (index !== -1) preferredAudioIndex = index;
+    if ((getCookie("audio") !== undefined) && (getCookie("s_au") === "true")) {
+        const index = this._.audios.findIndex((audio) => audio.code === getCookie("audio"));
+        if (index !== -1) {
+            preferredAudioIndex = index;
+        }
     }
 
     if ("a" in URLparams()) {
-        preferredAudioIndex = this._.audios.findIndex((audio) => audio.code === URLparams()["a"]);
+        const index = this._.audios.findIndex((audio) => audio.code === URLparams()["a"]);
+        if (index !== -1) {
+            preferredAudioIndex = index;
+        }
     }
 
     this._.form.settings.menu.dubs.Buttons[preferredAudioIndex].click();
 
     // Добавление субтитров
-    this._.subtitles.unshift({"name": "Без субтитров", "path": undefined});
+    this._.subtitles.unshift({
+        "name": "Без субтитров",
+        "code": "none",
+        "path": undefined
+    });
 
     for (let subtitle of this._.subtitles) {
         this._.form.settings.menu.subtitles.appendButton(subtitle.name, () => {
-            document.cookie = "subtitle=" + encodeURIComponent(subtitle.name) + "; path=/; max-age=" + (86400 * 365);
+            document.cookie = "subtitle=" + encodeURIComponent(subtitle.code) + "; path=/; max-age=" + (86400 * 365);
             setSubtitles.call(this, subtitle.path, subtitle.code);
         });
     }
 
     let preferredSubtitleIndex = 0;
 
-    if (getCookie("subtitle") !== undefined && getCookie("s_st") === "true") {
-        const index = this._.subtitles.findIndex((subtitle) => subtitle.name === getCookie("subtitle"));
-        if (index !== -1) preferredSubtitleIndex = index;
+    if ((getCookie("subtitle") !== undefined) && (getCookie("s_st") === "true")) {
+        const index = this._.subtitles.findIndex((subtitle) => subtitle.code === getCookie("subtitle"));
+        if (index !== -1) {
+            preferredSubtitleIndex = index;
+        }
     }
 
     if ("s" in URLparams()) {
-        preferredSubtitleIndex = this._.subtitles.findIndex((subtitle) => subtitle.code === URLparams()["s"]);
+        const index = this._.subtitles.findIndex((subtitle) => subtitle.code === URLparams()["s"]);
+        if (index !== -1) {
+            preferredSubtitleIndex = index;
+        }
     }
 
     this._.form.settings.menu.subtitles.Buttons[preferredSubtitleIndex].click();
@@ -321,9 +339,11 @@ export function generateSettings() {
 
     let preferredSpeedIndex = 1;
 
-    if (getCookie("speed") !== undefined && getCookie("s_sp") === "true") {
+    if ((getCookie("speed") !== undefined) && (getCookie("s_sp") === "true")) {
         const index = [0.5, 1, 1.5, 2].findIndex((speed) => speed === parseFloat(getCookie("speed")));
-        if (index !== -1) preferredSpeedIndex = index;
+        if (index !== -1) {
+            preferredSpeedIndex = index;
+        }
     }
 
     this._.form.settings.menu.playbackRate.Buttons[preferredSpeedIndex].click();

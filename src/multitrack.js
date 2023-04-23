@@ -60,7 +60,7 @@ export default class {
     }
 
     get volume() {
-        if (getCookie("volume") !== undefined && getCookie("s_vl") === "true") {
+        if ((getCookie("volume") !== undefined) && (getCookie("s_vl") === "true")) {
             return parseFloat(getCookie("volume"));
         } else {
             return this._.form.audio.volume;
@@ -111,14 +111,15 @@ export default class {
         const old = this._.enable_sync;
         this._.enable_sync = val;
 
-        if (val === true && old !== true) {
+        if ((val === true) && (old !== true)) {
             (async function () {
                 let now = Date.now() - 1000;
                 while (root._.enable_sync) {
-                    if (Date.now() - now > 900) {
+                    if ((Date.now() - now) > 900) {
                         if (root._.playing) {
                             await synchronize(root);
                         }
+
                         now = Date.now();
                     } else {
                         await sleep(1000);

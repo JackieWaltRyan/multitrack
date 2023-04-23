@@ -10,12 +10,12 @@ document.addEventListener("DOMContentLoaded", function () {
 export function setVideo(link) {
     let currentTimeVideo = this.currentTime;
 
-    if (getCookie("time") !== undefined && getCookie("s_tt") === "true") {
+    if ((getCookie("time") !== undefined) && (getCookie("s_tt") === "true")) {
         currentTimeVideo = parseFloat(getCookie("time"));
     }
 
     if ("t" in URLparams()) {
-        currentTimeVideo = parseFloat(URLparams()["t"]);
+        currentTimeVideo = parseInt(URLparams()["t"]);
     }
 
     const playbackRate = this.playbackRate;
@@ -31,11 +31,11 @@ export function setVideo(link) {
 
 export function setAudio(link, code) {
     let curent_audio = document.getElementById("curent_audio");
-    curent_audio.innerText = code.toString();
+    curent_audio.innerText = encodeURIComponent(code.toString());
 
     let currentTimeAudio = this.currentTime;
 
-    if (getCookie("time") !== undefined && getCookie("s_tt") === "true") {
+    if ((getCookie("time") !== undefined) && (getCookie("s_tt") === "true")) {
         currentTimeAudio = parseFloat(getCookie("time"));
     }
 
@@ -49,7 +49,7 @@ export function setAudio(link, code) {
     this._.form.audio.mjs_setTime(currentTimeAudio);
     this._.form.audio.mjs_setRate(playbackRate);
 
-    if (getCookie("volume") !== undefined && getCookie("s_vl") === "true") {
+    if ((getCookie("volume") !== undefined) && (getCookie("s_vl") === "true")) {
         this.volume = parseFloat(getCookie("volume"));
     }
 
@@ -60,7 +60,7 @@ export function setAudio(link, code) {
 
 export function setSubtitles(url, code) {
     let curent_subtitle = document.getElementById("curent_subtitle");
-    curent_subtitle.innerText = code.toString();
+    curent_subtitle.innerText = encodeURIComponent(code.toString());
 
     clearTimeout(this._.subtitlesDownloader);
 

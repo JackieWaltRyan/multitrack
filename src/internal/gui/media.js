@@ -95,7 +95,7 @@ function appendEvents(element) {
 
             document.cookie = "time=" + encodeURIComponent(element.currentTime) + "; max-age=" + (86400 * 365);
 
-            if ((root.duration - element.currentTime) < 2 && getCookie("s_anv") === "true") {
+            if (((root.duration - element.currentTime) < 2) && (getCookie("s_anv") === "true")) {
                 document.cookie = "time=" + 0 + "; max-age=" + (86400 * 365);
                 skip.call(this, true);
             }

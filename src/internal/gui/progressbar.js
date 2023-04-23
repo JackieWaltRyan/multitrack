@@ -40,7 +40,7 @@ export function generateProgressbar() {
 
                     if (cursorX < this._.form.progressbar.popup.halfWidth) {
                         this._.form.progressbar.popup.setAttribute("style", "left: 0px");
-                    } else if (cursorX < el.clientWidth - this._.form.progressbar.popup.halfWidth) {
+                    } else if (cursorX < (el.clientWidth - this._.form.progressbar.popup.halfWidth)) {
                         this._.form.progressbar.popup.setAttribute("style", "left:" + (cursorX - this._.form.progressbar.popup.halfWidth) + "px");
                     } else {
                         this._.form.progressbar.popup.setAttribute("style", "left:" + (el.clientWidth - this._.form.progressbar.popup.halfWidth * 2) + "px");
@@ -67,9 +67,11 @@ export function generateProgressbar() {
                     // Получение координаты и вычисление позиции (от 0 до 1)
                     const cursor = getPosInElement(el, event);
                     let position = cursor.x / el.clientWidth;
+
                     if (position < 0) {
                         position = 0;
                     }
+
                     if (position > 1) {
                         position = 1;
                     }
@@ -106,13 +108,16 @@ export function generateProgressbar() {
                 el.addEventListener("mousemove", (event) => {
                     const cursor = getPosInElement(el, event);
                     let position = cursor.x / el.clientWidth;
+
                     if (position < 0) {
                         position = 0;
                     }
+
                     if (position > 1) {
                         position = 1;
                     }
-                    if (this._.form.progressbar.updateStyle || cursor.y > 0) {
+
+                    if (this._.form.progressbar.updateStyle || (cursor.y > 0)) {
                         updatePopup(cursor.x, position);
                     } else {
                         this._.form.progressbar.popup.classList.remove("mjs__overlay-progressPopup-show");

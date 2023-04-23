@@ -22,14 +22,14 @@ export function synchronize(target = null) {
 
         video.syncTimeout = null;
 
-        if (root._.playing && Math.abs(diff) > 1 / 60) {
+        if (root._.playing && (Math.abs(diff) > 1 / 60)) {
             if (process.env.NODE_ENV !== "production") {
                 console.log("Sync: Need to sync");
             }
 
             let scale = playbackRate - diff;
 
-            if (0.25 <= scale && scale <= 4) {
+            if ((0.25 <= scale) && (scale <= 4)) {
                 if (document.hasFocus()) {
                     if (process.env.NODE_ENV !== "production") {
                         console.log("Sync: Rate changed to " + scale);
@@ -153,11 +153,11 @@ export function skip(val) {
             const index = dataset.findIndex((url) => ("/стафф/видео/" + url) === decodeURIComponent(window.location.pathname));
 
             if (val) {
-                if (index + 1 < dataset.length) {
+                if ((index + 1) < dataset.length) {
                     location.href = window.location.origin + "/стафф/видео/" + dataset[index + 1] + "?p=1";
                 }
             } else {
-                if (index - 1 >= 0) {
+                if ((index - 1) >= 0) {
                     location.href = window.location.origin + "/стафф/видео/" + dataset[index - 1] + "?p=1";
                 }
             }
@@ -173,8 +173,14 @@ export function setTime(val, isVideo = false) {
 }
 
 export function setSpeed(val) {
-    if (val < 0.25) val = 0.25;
-    if (val > 2) val = 2;
+    if (val < 0.25) {
+        val = 0.25;
+    }
+
+    if (val > 2) {
+        val = 2;
+    }
+
     this._.playbackRate = val;
 
     synchronize.call(this).then(r => r);

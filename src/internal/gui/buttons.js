@@ -109,7 +109,7 @@ export function generateButtons() {
                     try {
                         let curent_audio = document.getElementById("curent_audio");
                         let curent_subtitle = document.getElementById("curent_subtitle");
-                        navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?p=1&t=" + encodeURIComponent(this._.form.video.currentTime) + "&a=" + curent_audio.innerText + "&s=" + curent_subtitle.innerText).then(r => r);
+                        navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + curent_audio.innerText + "&s=" + curent_subtitle.innerText).then(r => r);
                     } catch {
                         logError.call(this, "Sorry, an error occurred while creating the link");
                     }
