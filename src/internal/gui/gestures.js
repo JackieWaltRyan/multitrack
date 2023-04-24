@@ -13,6 +13,7 @@ export function gestures() {
         for (let func of this._.moveEvents) {
             func.release(event);
         }
+
         this._.moveEvents = [];
     });
 
@@ -26,6 +27,7 @@ export function gestures() {
         for (let func of this._.moveEvents) {
             func.release(event.changedTouches[0]);
         }
+
         this._.moveEvents = [];
     }, false);
 

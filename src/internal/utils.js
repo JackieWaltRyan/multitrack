@@ -22,6 +22,24 @@ export function URLparams() {
     }, {});
 }
 
+let LIBtimeout;
+
+export function LogoInfoBlock(text) {
+    let logo_info_block = document.getElementById("logo_info_block");
+    logo_info_block.innerText = text.toString().slice(0, 5);
+    logo_info_block.style.display = "block";
+    logo_info_block.style.animation = "none";
+
+    clearTimeout(LIBtimeout);
+    LIBtimeout = setTimeout(() => {
+        logo_info_block.style.animation = "change_opacity 1s forwards";
+
+        LIBtimeout = setTimeout(() => {
+            logo_info_block.style.display = "none";
+        }, 1000);
+    }, 100);
+}
+
 export function secondsToTime(sec) {
     sec = Math.floor(sec);
     let seconds = sec % 60;
@@ -37,7 +55,11 @@ export function secondsToTime(sec) {
 export function createElement(tag, params = {}, actions = () => {
 }) {
     const el = document.createElement(tag);
-    for (const name in params) el.setAttribute(name, params[name]);
+
+    for (const name in params) {
+        el.setAttribute(name, params[name]);
+    }
+
     actions(el);
     return el;
 }

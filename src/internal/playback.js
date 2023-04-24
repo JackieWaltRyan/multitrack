@@ -1,4 +1,4 @@
-import {URLparams} from "./utils";
+import {LogoInfoBlock, URLparams} from "./utils";
 
 export function synchronize(target = null) {
     if (process.env.NODE_ENV !== "production") {
@@ -109,10 +109,15 @@ export function changePlaying(val) {
 
         let logo_play = document.getElementById("logo_play");
         logo_play.style.display = "block";
+        logo_play.style.animation = "none";
 
-        setTimeout(function () {
-            logo_play.style.display = "none";
-        }, 1000);
+        setTimeout(() => {
+            logo_play.style.animation = "change_opacity 1s forwards";
+
+            setTimeout(() => {
+                logo_play.style.display = "none";
+            }, 1000);
+        }, 100);
     } else {
         this._.form.video.mjs_pause();
         this._.form.audio.mjs_pause();
@@ -120,10 +125,15 @@ export function changePlaying(val) {
 
         let logo_pause = document.getElementById("logo_pause");
         logo_pause.style.display = "block";
+        logo_pause.style.animation = "none";
 
-        setTimeout(function () {
-            logo_pause.style.display = "none";
-        }, 1000);
+        setTimeout(() => {
+            logo_pause.style.animation = "change_opacity 1s forwards";
+
+            setTimeout(() => {
+                logo_pause.style.display = "none";
+            }, 1000);
+        }, 100);
     }
 
     this._.playing = val;
@@ -138,6 +148,8 @@ export function pause() {
 }
 
 export function seek(val) {
+    LogoInfoBlock((val > 0) ? ("+" + val) : val);
+
     val += this.currentTime;
     if (val < 0) {
         val = 0;
@@ -182,6 +194,13 @@ export function setSpeed(val) {
     }
 
     this._.playbackRate = val;
-
     synchronize.call(this).then(r => r);
+
+    document.cookie = "speed=" + encodeURIComponent(val) + "; path=/; max-age=" + (86400 * 365);
+
+    if (val === 1) {
+        this._.form.settings.menu.playbackRate.Buttons[0].setAttribute("selected", "true");
+    } else {
+        this._.form.settings.menu.playbackRate.Buttons[0].removeAttribute("selected");
+    }
 }

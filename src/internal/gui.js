@@ -38,11 +38,18 @@ export function gui() {
     });
 
     this._.form.logo_play = createElement("div", {
-        id: "logo_play"
+        id: "logo_play",
+        class: "all_logo"
     });
 
     this._.form.logo_pause = createElement("div", {
-        id: "logo_pause"
+        id: "logo_pause",
+        class: "all_logo"
+    });
+
+    this._.form.logo_info_block = createElement("div", {
+        id: "logo_info_block",
+        class: "all_logo"
     });
 
     // Кнопки (массив)
@@ -60,6 +67,7 @@ export function gui() {
     this._.element.appendChild(this._.form.logo_spiner);
     this._.element.appendChild(this._.form.logo_play);
     this._.element.appendChild(this._.form.logo_pause);
+    this._.element.appendChild(this._.form.logo_info_block);
 
     gestures.call(this);
     hotkeys.call(this);

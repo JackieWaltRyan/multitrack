@@ -1,6 +1,7 @@
 import {mute} from "../volume";
 import {toggleFullscreen} from "./buttons";
 import {seek} from "../playback";
+import {LogoInfoBlock} from "../utils";
 
 export function hotkeys() {
     document.addEventListener("keydown", (event) => {
@@ -31,10 +32,12 @@ export function hotkeys() {
             case "ArrowUp":
                 event.preventDefault();
                 this.volume += 0.05;
+                LogoInfoBlock(parseInt((this.volume * 100).toString()));
                 break;
             case "ArrowDown":
                 event.preventDefault();
                 this.volume -= 0.05;
+                LogoInfoBlock(parseInt((this.volume * 100).toString()));
                 break;
             case "KeyF":
                 toggleFullscreen.call(this);
@@ -81,12 +84,12 @@ export function hotkeys() {
                 break;
             case "Comma":
                 if (!this._.playing) {
-                    seek.call(this, -(1 / 24));
+                    seek.call(this, -(1 / 30));
                 }
                 break;
             case "Period":
                 if (!this._.playing) {
-                    seek.call(this, (1 / 24));
+                    seek.call(this, (1 / 30));
                 }
                 break;
             default:

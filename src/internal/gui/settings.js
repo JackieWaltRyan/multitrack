@@ -1,4 +1,4 @@
-import {createElement, getCookie, URLparams} from "../utils";
+import {createElement, getCookie, getPosInElement, LogoInfoBlock, URLparams} from "../utils";
 import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
 import {setSpeed} from "../playback";
 
@@ -10,14 +10,19 @@ class SettingsButtons {
     }
 
     appendButton(name, action, checkbox) {
-        let btn = createElement("div", {class: "mjs__settings_element"});
+        let btn = createElement("div", {
+            class: "mjs__settings_element"
+        });
+
         btn.innerText = name;
         btn.onclick = () => {
             action();
         };
 
         if (checkbox !== undefined) {
-            let div = createElement("div", {style: "flex: auto;"});
+            let div = createElement("div", {
+                style: "flex: auto;"
+            });
             btn.appendChild(div);
             let input = createElement("input", {
                 id: checkbox,
@@ -49,10 +54,16 @@ class SettingsRadioButtons {
     }
 
     appendButton(name, action) {
-        let btn = createElement("div", {class: "mjs__settings_element"});
+        let btn = createElement("div", {
+            class: "mjs__settings_element"
+        });
+
         btn.innerText = name;
         btn.onclick = () => {
-            for (let el of this.Buttons) el.removeAttribute("selected");
+            for (let el of this.Buttons) {
+                el.removeAttribute("selected");
+            }
+
             btn.setAttribute("selected", "true");
             action();
         };
@@ -210,7 +221,7 @@ export function generateSettings() {
                     const imageBlock = createElement("img", {
                         src: "https://avatars.githubusercontent.com/u/87809793?s=48",
                         width: 48,
-                        height: 48,
+                        height: 48
                     });
                     bl.appendChild(imageBlock);
 
@@ -220,9 +231,11 @@ export function generateSettings() {
                             inf.innerHTML += 'Исходный код плеера:<br><a href="https://github.com/bronyru/Multitrack.JS" style="color: #ffccff">bronyru/Multitrack.JS</a>';
                         }
                     );
+
                     bl.appendChild(infoBlock);
                 }
             );
+
             el.appendChild(authorBlock);
 
             el.innerHTML += "Build date: " + new Date(__TIMESTAMP__).toString();
@@ -230,7 +243,7 @@ export function generateSettings() {
     );
 
     this._.form.settings.title = createElement("div", {
-        style: "mjs__settingsHeader-title",
+        style: "mjs__settingsHeader-title"
     });
 
     this._.form.settings.header = createElement("div", {
@@ -243,7 +256,9 @@ export function generateSettings() {
     );
 
     this._.form.settings.menuSwitcher = new SettingsButtons();
-    this._.form.settings._root = createElement("div", {class: "mjs__settings"});
+    this._.form.settings._root = createElement("div", {
+        class: "mjs__settings"
+    });
 
     // Добавление видео
     for (let video of this._.videos) {
@@ -330,24 +345,114 @@ export function generateSettings() {
     this._.form.settings.menu.subtitles.Buttons[preferredSubtitleIndex].click();
 
     // Добавление скорости
-    for (let speed of [0.5, 1, 1.5, 2]) {
-        this._.form.settings.menu.playbackRate.appendButton(speed + "x", () => {
-            document.cookie = "speed=" + encodeURIComponent(speed) + "; path=/; max-age=" + (86400 * 365);
-            setSpeed.call(this, speed);
-        });
-    }
+    this._.form.settings.menu.playbackRate.appendButton(1 + "x", () => {
+        let val = 1;
 
-    let preferredSpeedIndex = 1;
+        this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * ((val - 0.25) / (2 - 0.25))) + "%;");
+
+        LogoInfoBlock(val);
+
+        setSpeed.call(this, val);
+    });
+
+    this._.form.settings.menu.playbackRate.speed_root = createElement("div", {
+        class: "speed_root"
+    }, (el) => {
+        let release = (event) => {
+            this._.form.settings.menu.playbackRate.updateStyle = false;
+            // Получение координаты и вычисление позиции (от 0 до 1)
+            let element_1 = document.getElementById("speed_root_background");
+            let pos_1 = getPosInElement(element_1, event).x / element_1.clientWidth;
+
+            if (pos_1 < 0) {
+                pos_1 = 0;
+            }
+
+            if (pos_1 > 1) {
+                pos_1 = 1;
+            }
+
+            this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * pos_1) + "%;");
+
+            let convert = ((2 - 0.25) * pos_1) + 0.25;
+
+            LogoInfoBlock(convert);
+            setSpeed.call(this, convert);
+        };
+
+        let move = (event) => {
+            if (this._.form.settings.menu.playbackRate.updateStyle) {
+                // Получение координаты и вычисление позиции (от 0 до 1)
+                let element_2 = document.getElementById("speed_root_background");
+                let pos_2 = getPosInElement(element_2, event).x / element_2.clientWidth;
+
+                if (pos_2 < 0) {
+                    pos_2 = 0;
+                }
+
+                if (pos_2 > 1) {
+                    pos_2 = 1;
+                }
+
+                this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * pos_2) + "%;");
+
+                let convert = ((2 - 0.25) * pos_2) + 0.25;
+
+                LogoInfoBlock(convert);
+                setSpeed.call(this, convert);
+            }
+        };
+
+        el.addEventListener("mousedown", () => {
+            this._.form.settings.menu.playbackRate.updateStyle = true;
+            Object(this._.moveEvents).push({
+                move: move,
+                release: release,
+            });
+        });
+
+        el.addEventListener("touchstart", () => {
+            this._.form.settings.menu.playbackRate.updateStyle = true;
+            Object(this._.moveEvents).push({
+                move: move,
+                release: release,
+            });
+        });
+    });
+
+    this._.form.settings.menu.playbackRate.min = createElement("div", {
+        class: "speed_root-min"
+    });
+    this._.form.settings.menu.playbackRate.min.innerText = "0.25";
+    this._.form.settings.menu.playbackRate.speed_root.appendChild(this._.form.settings.menu.playbackRate.min);
+
+    this._.form.settings.menu.playbackRate.speed_root.appendChild(createElement("div", {
+        id: "speed_root_background",
+        class: "speed_root-background"
+    }));
+
+    this._.form.settings.menu.playbackRate.selected = createElement("div", {
+        class: "speed_root-selected"
+    });
+    this._.form.settings.menu.playbackRate.speed_root.appendChild(this._.form.settings.menu.playbackRate.selected);
+
+    this._.form.settings.menu.playbackRate.max = createElement("div", {
+        class: "speed_root-max"
+    });
+    this._.form.settings.menu.playbackRate.max.innerText = "2";
+    this._.form.settings.menu.playbackRate.speed_root.appendChild(this._.form.settings.menu.playbackRate.max);
+
+    this._.form.settings.menu.playbackRate.Content.appendChild(this._.form.settings.menu.playbackRate.speed_root);
 
     if ((getCookie("speed") !== undefined) && (getCookie("s_sp") === "true")) {
-        const index = [0.5, 1, 1.5, 2].findIndex((speed) => speed === parseFloat(getCookie("speed")));
-        if (index !== -1) {
-            preferredSpeedIndex = index;
-        }
+        this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * ((parseFloat(getCookie("speed")) - 0.25) / (2 - 0.25))) + "%;");
+
+        setSpeed.call(this, parseFloat(getCookie("speed")));
+    } else {
+        this._.form.settings.menu.playbackRate.Buttons[0].click();
     }
 
-    this._.form.settings.menu.playbackRate.Buttons[preferredSpeedIndex].click();
-
+    // Остальная непонятная хрень
     for (let menu in this._.form.settings.menu) {
         menu = this._.form.settings.menu[menu];
 
@@ -362,7 +467,7 @@ export function generateSettings() {
 
     // AppendMenus
     this._.form.settings.body = createElement("div", {
-        class: "mjs__settingsBody",
+        class: "mjs__settingsBody"
     });
 
     this._.form.settings.body.appendChild(this._.form.settings.menuSwitcher.Content);
