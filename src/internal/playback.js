@@ -147,8 +147,15 @@ export function pause() {
     changePlaying.call(this, false);
 }
 
+let old_seek = 0;
+
+export function clear_old_seek() {
+    old_seek = 0;
+}
+
 export function seek(val) {
-    LogoInfoBlock((val > 0) ? ("+" + val) : val);
+    old_seek += val;
+    LogoInfoBlock(((old_seek > 0) ? ("+" + old_seek) : old_seek).toString().slice(0, 5));
 
     val += this.currentTime;
     if (val < 0) {

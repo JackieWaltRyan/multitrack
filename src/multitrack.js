@@ -4,10 +4,12 @@ import {pause, play, setSpeed, setTime, synchronize} from "./internal/playback";
 import {createElement, getCookie, sleep} from "./internal/utils";
 
 document.getElementById("app").appendChild(createElement("div", {
-    id: "curent_audio", style: "display: none;"
+    id: "curent_audio",
+    style: "display: none"
 }));
 document.getElementById("app").appendChild(createElement("div", {
-    id: "curent_subtitle", style: "display: none;"
+    id: "curent_subtitle",
+    style: "display: none"
 }));
 
 export default class {
@@ -89,7 +91,7 @@ export default class {
             }
 
             this._.form.buttons.volume.setAttribute("iconVar", iconNum);
-            this._.form.volumebar.selected.setAttribute("style", "width: " + (100 * value) + "%;");
+            this._.form.volumebar.selected.setAttribute("style", "width: " + (100 * value) + "%");
         }
     }
 

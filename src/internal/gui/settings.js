@@ -1,6 +1,7 @@
 import {createElement, getCookie, getPosInElement, LogoInfoBlock, URLparams} from "../utils";
 import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
 import {setSpeed} from "../playback";
+import {hotkeys} from "./hotkeys";
 
 class SettingsButtons {
     constructor(name = null) {
@@ -21,7 +22,7 @@ class SettingsButtons {
 
         if (checkbox !== undefined) {
             let div = createElement("div", {
-                style: "flex: auto;"
+                style: "flex: auto"
             });
             btn.appendChild(div);
             let input = createElement("input", {
@@ -85,13 +86,15 @@ let SettingsTimeout;
 function set_timeout() {
     clearTimeout(SettingsTimeout);
 
-    SettingsTimeout = setTimeout(() => {
-        this._.rootElement.classList.remove("mjs__settings_show");
-        this._.form.settings.opened = false;
-    }, 3000);
+    if (getCookie("s_hsm") === "true") {
+        SettingsTimeout = setTimeout(() => {
+            this._.rootElement.classList.remove("mjs__settings_show");
+            this._.form.settings.opened = false;
+        }, 3000);
+    }
 }
 
-export function toggleSettings() {
+export function toggleSettings(event) {
     if (this._.form.settings.opened) {
         this._.rootElement.classList.remove("mjs__settings_show");
 
@@ -102,6 +105,28 @@ export function toggleSettings() {
         this._.rootElement.classList.add("mjs__settings_show");
 
         set_timeout.call(this);
+
+        if (event !== undefined) {
+            let pos = getPosInElement(this._.element, event);
+
+            if ((this._.element.offsetWidth - pos.x) >= this._.form.settings._root.offsetWidth) {
+                this._.form.settings._root.style.left = pos.x + "px";
+                this._.form.settings._root.style.right = "auto";
+            } else {
+                this._.form.settings._root.style.right = (this._.element.offsetWidth - pos.x) + "px";
+                this._.form.settings._root.style.left = "auto";
+            }
+
+            if ((this._.element.offsetHeight - pos.y) >= this._.form.settings._root.offsetHeight) {
+                this._.form.settings._root.style.top = pos.y + "px";
+                this._.form.settings._root.style.bottom = "auto";
+            } else {
+                this._.form.settings._root.style.bottom = (this._.element.offsetHeight - pos.y) + "px";
+                this._.form.settings._root.style.top = "auto";
+            }
+        } else {
+            this._.form.settings._root.style = "bottom: 60px; right: 8px;";
+        }
     }
 
     this._.form.settings.opened = !this._.form.settings.opened;
@@ -127,7 +152,7 @@ export function generateSettings() {
     this._.form.settings.menu.quality = new SettingsRadioButtons("Качество");
     this._.form.settings.menu.dubs = new SettingsRadioButtons("Озвучки");
     this._.form.settings.menu.subtitles = new SettingsRadioButtons("Субтитры");
-    this._.form.settings.menu.playbackRate = new SettingsRadioButtons("Скорость воспроизведения");
+    this._.form.settings.menu.playbackRate = new SettingsRadioButtons("Скорость");
     this._.form.settings.menu.settings = new SettingsButtons("Дополнительно");
 
     this._.form.settings.menu.settings.appendButton("Запоминать позицию", () => {
@@ -211,52 +236,63 @@ export function generateSettings() {
         }
     }, "s_sts");
 
+    this._.form.settings.menu.settings.appendButton("Скрывать меню при неактивности", () => {
+        let trigger = !(getCookie("s_hsm") === "true");
+        document.cookie = "s_hsm=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
+        let input = document.getElementById("s_hsm");
+        input.checked = trigger;
+    }, "s_hsm");
+
+    this._.form.settings.menu.hotkeys = new SettingsPage("Управление");
+    this._.form.settings.menu.hotkeys.Content = createElement("div", {
+        blockName: "hotkeys"
+    }, (el) => {
+        console.log(el);
+    });
+
     this._.form.settings.menu.info = new SettingsPage("Информация о плеере");
     this._.form.settings.menu.info.Content = createElement("div", {
-            blockName: "info"
-        }, (el) => {
-            let authorBlock = createElement("div", {
-                    style: "display: flex; padding-bottom: 12px"
-                }, (bl) => {
-                    const imageBlock = createElement("img", {
-                        src: "https://avatars.githubusercontent.com/u/87809793?s=48",
-                        width: 48,
-                        height: 48
-                    });
-                    bl.appendChild(imageBlock);
+        blockName: "info"
+    }, (el) => {
+        let authorBlock = createElement("div", {
+            style: "display: flex; padding-bottom: 12px;"
+        }, (bl) => {
+            const imageBlock = createElement("img", {
+                src: "https://avatars.githubusercontent.com/u/79658863?s=48",
+                width: 48,
+                height: 48
+            });
+            bl.appendChild(imageBlock);
 
-                    const infoBlock = createElement("div", {
-                            style: "line-height: 20px; padding: 4px 8px"
-                        }, (inf) => {
-                            inf.innerHTML += 'Исходный код плеера:<br><a href="https://github.com/bronyru/Multitrack.JS" style="color: #ffccff">bronyru/Multitrack.JS</a>';
-                        }
-                    );
+            const infoBlock = createElement("div", {
+                style: "line-height: 20px; padding: 4px 8px;"
+            }, (inf) => {
+                inf.innerHTML += "Версия: " + require("/package.json").version + "<br>Исходный код плеера: <a href='https://github.com/JackieWaltRyan/multitrack' style='color: #ffccff'>JackieWaltRyan/multitrack</a>";
+            });
 
-                    bl.appendChild(infoBlock);
-                }
-            );
+            bl.appendChild(infoBlock);
+        });
 
-            el.appendChild(authorBlock);
+        el.appendChild(authorBlock);
 
-            el.innerHTML += "Build date: " + new Date(__TIMESTAMP__).toString();
-        }
-    );
+        el.innerHTML += "Дата сборки: " + new Date(__TIMESTAMP__).toLocaleString("ru").toString();
+    });
 
     this._.form.settings.title = createElement("div", {
-        style: "mjs__settingsHeader-title"
+        class: "mjs__settingsHeader-title"
     });
 
     this._.form.settings.header = createElement("div", {
-            class: "mjs__settingsHeader"
-        }, (el) => {
-            el.addEventListener("click", () => {
-                resetMenu.call(this);
-            });
-        }
-    );
+        class: "mjs__settingsHeader"
+    }, (el) => {
+        el.addEventListener("click", () => {
+            resetMenu.call(this);
+        });
+    });
 
     this._.form.settings.menuSwitcher = new SettingsButtons();
     this._.form.settings._root = createElement("div", {
+        id: "mjs_settings",
         class: "mjs__settings"
     });
 
@@ -348,7 +384,7 @@ export function generateSettings() {
     this._.form.settings.menu.playbackRate.appendButton(1 + "x", () => {
         let val = 1;
 
-        this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * ((val - 0.25) / (2 - 0.25))) + "%;");
+        this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * ((val - 0.25) / (2 - 0.25))) + "%");
 
         LogoInfoBlock(val);
 
@@ -372,11 +408,11 @@ export function generateSettings() {
                 pos_1 = 1;
             }
 
-            this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * pos_1) + "%;");
+            this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * pos_1) + "%");
 
             let convert = ((2 - 0.25) * pos_1) + 0.25;
 
-            LogoInfoBlock(convert);
+            LogoInfoBlock(convert.toString().slice(0, 4));
             setSpeed.call(this, convert);
         };
 
@@ -394,11 +430,11 @@ export function generateSettings() {
                     pos_2 = 1;
                 }
 
-                this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * pos_2) + "%;");
+                this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * pos_2) + "%");
 
                 let convert = ((2 - 0.25) * pos_2) + 0.25;
 
-                LogoInfoBlock(convert);
+                LogoInfoBlock(convert.toString().slice(0, 4));
                 setSpeed.call(this, convert);
             }
         };
@@ -445,7 +481,7 @@ export function generateSettings() {
     this._.form.settings.menu.playbackRate.Content.appendChild(this._.form.settings.menu.playbackRate.speed_root);
 
     if ((getCookie("speed") !== undefined) && (getCookie("s_sp") === "true")) {
-        this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * ((parseFloat(getCookie("speed")) - 0.25) / (2 - 0.25))) + "%;");
+        this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * ((parseFloat(getCookie("speed")) - 0.25) / (2 - 0.25))) + "%");
 
         setSpeed.call(this, parseFloat(getCookie("speed")));
     } else {
@@ -461,7 +497,7 @@ export function generateSettings() {
             this._.form.settings.header.setAttribute("showIcon", "true");
             this._.form.settings.title.innerText = menu.Name;
             menu.Content.removeAttribute("style");
-            this._.form.settings.menuSwitcher.Content.setAttribute("style", "display: none;");
+            this._.form.settings.menuSwitcher.Content.setAttribute("style", "display: none");
         });
     }
 

@@ -1,3 +1,5 @@
+import {clear_old_seek} from "./playback";
+
 export function getPosInElement(element, event) {
     return {
         x: event.clientX - element.getBoundingClientRect().x,
@@ -26,7 +28,7 @@ let LIBtimeout;
 
 export function LogoInfoBlock(text) {
     let logo_info_block = document.getElementById("logo_info_block");
-    logo_info_block.innerText = text.toString().slice(0, 5);
+    logo_info_block.innerText = text.toString();
     logo_info_block.style.display = "block";
     logo_info_block.style.animation = "none";
 
@@ -36,6 +38,8 @@ export function LogoInfoBlock(text) {
 
         LIBtimeout = setTimeout(() => {
             logo_info_block.style.display = "none";
+
+            clear_old_seek();
         }, 1000);
     }, 100);
 }

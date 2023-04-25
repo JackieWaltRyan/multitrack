@@ -6,18 +6,20 @@ export function generateOverlay() {
     let GUItimeout;
 
     function showOverlay() {
-        let bottom = document.getElementsByClassName("mjs__overlay-bottom");
-        let progressBar = document.getElementsByClassName("mjs__overlay-progressBar");
-        bottom[0].style["pointer-events"] = "all";
-        progressBar[0].style["pointer-events"] = "all";
+        let mjs_overlay_bottom = document.getElementById("mjs_overlay_bottom");
+        let mjs_overlay_progressBar = document.getElementById("mjs_overlay_progressBar");
+
+        mjs_overlay_bottom.style["pointer-events"] = "all";
+        mjs_overlay_progressBar.style["pointer-events"] = "all";
 
         this._.rootElement.classList.remove("mjs__overlay_hidden");
 
         clearTimeout(GUItimeout);
         GUItimeout = setTimeout(() => {
             this._.rootElement.classList.add("mjs__overlay_hidden");
-            bottom[0].style["pointer-events"] = "none";
-            progressBar[0].style["pointer-events"] = "none";
+
+            mjs_overlay_bottom.style["pointer-events"] = "none";
+            mjs_overlay_progressBar.style["pointer-events"] = "none";
         }, 3000);
     }
 
@@ -34,10 +36,8 @@ export function generateOverlay() {
 
         this._.rootElement.classList.add("mjs__overlay_hidden");
 
-        let bottom = document.getElementsByClassName("mjs__overlay-bottom");
-        let progressBar = document.getElementsByClassName("mjs__overlay-progressBar");
-        bottom[0].style["pointer-events"] = "none";
-        progressBar[0].style["pointer-events"] = "none";
+        document.getElementById("mjs_overlay_bottom").style["pointer-events"] = "none";
+        document.getElementById("mjs_overlay_progressBar").style["pointer-events"] = "none";
     });
 
     this._.form.overlays = {
@@ -46,6 +46,7 @@ export function generateOverlay() {
         }, () => {
         }),
         bottom: createElement("div", {
+            id: "mjs_overlay_bottom",
             class: "mjs__overlay-bottom",
         }),
         top: createElement("div", {

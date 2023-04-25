@@ -1,5 +1,6 @@
 import {toggleSettings} from "./settings";
 import {toggleFullscreen} from "./buttons";
+import {getPosInElement} from "../utils";
 
 export function gestures() {
     this._.moveEvents = [];
@@ -39,7 +40,7 @@ export function gestures() {
 
     this._.element.addEventListener("contextmenu", (event) => {
         event.preventDefault();
-        toggleSettings.call(this);
+        toggleSettings.call(this, event);
         return false;
     }, false);
 }

@@ -8,8 +8,8 @@ npm install
 npx webpack
 ```
 
-### Online test
-[https://jackiewaltryan.github.io/multitrack/dist/index.html](https://jackiewaltryan.github.io/multitrack/dist/index.html)
+### Online Test
+[dist/index.html](https://jackiewaltryan.github.io/multitrack/dist/index.html)
 
 ### Change History
 [change_history.log](https://raw.githubusercontent.com/JackieWaltRyan/multitrack/development/change_history.log)

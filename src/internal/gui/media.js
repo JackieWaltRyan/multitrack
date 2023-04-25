@@ -196,10 +196,9 @@ export function generateMedia() {
     });
 
     this._.form.video = createElement("video", {
-            playsinline: "",
-            preload: "metadata",
-        }, (el) => {
-            appendEvents.call(this, el);
-        }
-    );
+        playsinline: "",
+        preload: "metadata",
+    }, (el) => {
+        appendEvents.call(this, el);
+    });
 }
