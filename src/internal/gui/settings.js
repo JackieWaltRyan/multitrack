@@ -267,7 +267,7 @@ export function generateSettings() {
             const infoBlock = createElement("div", {
                 style: "line-height: 20px; padding: 4px 8px;"
             }, (inf) => {
-                inf.innerHTML += "Версия: " + require("/package.json").version + "<br>Исходный код плеера: <a href='https://github.com/JackieWaltRyan/multitrack' style='color: #ffccff'>JackieWaltRyan/multitrack</a>";
+                inf.innerHTML += "Версия: " + require("/package.json").version + "<br>Исходный код плеера: <a href='https://github.com/JackieWaltRyan/multitrack' style='color: #ffccff' target='_blank'>JackieWaltRyan/multitrack</a>";
             });
 
             bl.appendChild(infoBlock);
