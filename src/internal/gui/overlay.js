@@ -104,8 +104,9 @@ export function generateOverlay() {
         el.onclick = () => {
             if ((skip_time["e"] > skip_time["s"]) && (skip_time["s"] > 0) && (skip_time["e"] > 0)) {
                 if (confirm("Время начала: " + secondsToTime(skip_time["s"]) + "\nВремя конца: " + secondsToTime(skip_time["e"]) + "\n\nВсе верно? Отправлять сегмент?")) {
-                    let url = decodeURIComponent(window.location.pathname).replace("/стафф/видео/", "");
+                    let url = decodeURIComponent(window.location.pathname);
                     console.log({
+                        "sts_url": this._.sts_url,
                         "id": url,
                         "s": parseInt(skip_time["s"]),
                         "e": parseInt(skip_time["e"])
@@ -126,7 +127,7 @@ export function generateOverlay() {
                         }
                     }
 
-                    postData("http://140.238.190.163:1125/sts", {
+                    postData(this._.sts_url, {
                         "id": url,
                         "s": parseInt(skip_time["s"]),
                         "e": parseInt(skip_time["e"])

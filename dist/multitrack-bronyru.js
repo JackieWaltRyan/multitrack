@@ -53,7 +53,8 @@ class MultitrackJSLoader {
                 placeholder: episodeData.path + "index.jpg",
                 preview: episodeData.path + "preview.webp",
                 preferredVideoName: preferredVideoName,
-                title: episodeData.title
+                title: episodeData.title,
+                sts_url: "http://140.238.190.163:1125/sts"
             });
         } else {
             alert(xhr.status + ": " + xhr.statusText);

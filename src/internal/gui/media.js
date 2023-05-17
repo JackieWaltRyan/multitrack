@@ -103,7 +103,7 @@ function appendEvents(element) {
             if (getCookie("s_sic") === "true") {
                 fetch("ds_times.json").then(function (response) {
                     response.json().then(function (dataset) {
-                        let url = decodeURIComponent(window.location.pathname).replace("/стафф/видео/", "");
+                        let url = decodeURIComponent(window.location.pathname);
 
                         if (dataset[url] !== undefined) {
                             if (dataset[url].length >= 1) {
@@ -154,7 +154,7 @@ function appendEvents(element) {
             if (getCookie("s_sic") === "true") {
                 fetch("ds_times.json").then(function (response) {
                     response.json().then(function (dataset) {
-                        let url = decodeURIComponent(window.location.pathname).replace("/стафф/видео/", "");
+                        let url = decodeURIComponent(window.location.pathname);
 
                         if (dataset[url] !== undefined) {
                             if (dataset[url].length >= 1) {

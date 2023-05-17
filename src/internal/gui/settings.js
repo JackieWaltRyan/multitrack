@@ -1,7 +1,7 @@
 import {createElement, getCookie, getPosInElement, LogoInfoBlock, URLparams} from "../utils";
 import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
 import {setSpeed} from "../playback";
-import {hotkeys} from "./hotkeys";
+import {hotkeys, settings_hotkeys} from "./hotkeys";
 
 class SettingsButtons {
     constructor(name = null) {
@@ -28,7 +28,7 @@ class SettingsButtons {
             let input = createElement("input", {
                 id: checkbox,
                 type: "checkbox",
-                style: "top: 25%; position: relative; display: inline-block;"
+                style: "top: 21%; position: relative; display: inline-block;"
             });
 
             input.checked = (getCookie(checkbox) === "true");
@@ -198,7 +198,6 @@ export function generateSettings() {
     }, "s_sp");
 
     this._.form.settings.menu.settings.appendElement("hr", {
-        id: "hr1",
         style: "border-style: inset; border-width: 1px;"
     });
 
@@ -218,7 +217,6 @@ export function generateSettings() {
     }, "s_sic");
 
     this._.form.settings.menu.settings.appendElement("hr", {
-        id: "hr2",
         style: "border-style: inset; border-width: 1px;"
     });
 
@@ -247,7 +245,7 @@ export function generateSettings() {
     this._.form.settings.menu.hotkeys.Content = createElement("div", {
         blockName: "hotkeys"
     }, (el) => {
-        console.log(el);
+        settings_hotkeys.call(this, el);
     });
 
     this._.form.settings.menu.info = new SettingsPage("Информация о плеере");

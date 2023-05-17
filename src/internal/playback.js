@@ -169,15 +169,15 @@ export function seek(val) {
 export function skip(val) {
     fetch("ds_series.json").then(function (response) {
         response.json().then(function (dataset) {
-            const index = dataset.findIndex((url) => ("/стафф/видео/" + url) === decodeURIComponent(window.location.pathname));
+            const index = dataset.findIndex((url) => url === decodeURIComponent(window.location.pathname));
 
             if (val) {
                 if ((index + 1) < dataset.length) {
-                    location.href = window.location.origin + "/стафф/видео/" + dataset[index + 1] + "?p=1";
+                    location.href = window.location.origin + dataset[index + 1] + "?p=1";
                 }
             } else {
                 if ((index - 1) >= 0) {
-                    location.href = window.location.origin + "/стафф/видео/" + dataset[index - 1] + "?p=1";
+                    location.href = window.location.origin + dataset[index - 1] + "?p=1";
                 }
             }
         })

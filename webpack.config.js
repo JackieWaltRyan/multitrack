@@ -15,7 +15,7 @@ module.exports = {
     },
     entry: "./src/index.js",
     output: {
-        filename: "main.js",
+        filename: "multitrack.js",
         path: path.resolve(__dirname, "dist"),
         library: "MultitrackJS"
     },
