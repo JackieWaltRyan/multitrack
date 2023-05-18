@@ -120,10 +120,35 @@ export function toggleSettings(event) {
             if ((this._.element.offsetHeight - pos.y) >= this._.form.settings._root.offsetHeight) {
                 this._.form.settings._root.style.top = pos.y + "px";
                 this._.form.settings._root.style.bottom = "auto";
-            } else {
+            } else if ((this._.element.offsetHeight - (this._.element.offsetHeight - pos.y)) >= this._.form.settings._root.offsetHeight) {
                 this._.form.settings._root.style.bottom = (this._.element.offsetHeight - pos.y) + "px";
                 this._.form.settings._root.style.top = "auto";
+            } else {
+                this._.form.settings._root.style.top = 0 + "px";
+                this._.form.settings._root.style.bottom = "auto";
             }
+
+            this._.form.settings._root.addEventListener("click", () => {
+                if ((this._.form.settings._root.getBoundingClientRect().top - this._.element.getBoundingClientRect().top) < 0) {
+                    this._.form.settings._root.style.top = 0 + "px";
+                    this._.form.settings._root.style.bottom = "auto";
+                }
+
+                if ((this._.element.getBoundingClientRect().bottom - this._.form.settings._root.getBoundingClientRect().bottom) < 0) {
+                    this._.form.settings._root.style.bottom = 0 + "px";
+                    this._.form.settings._root.style.top = "auto";
+                }
+
+                if ((this._.form.settings._root.getBoundingClientRect().left - this._.element.getBoundingClientRect().left) < 0) {
+                    this._.form.settings._root.style.left = 0 + "px";
+                    this._.form.settings._root.style.right = "auto";
+                }
+
+                if ((this._.element.getBoundingClientRect().right - this._.form.settings._root.getBoundingClientRect().right) < 0) {
+                    this._.form.settings._root.style.right = 0 + "px";
+                    this._.form.settings._root.style.left = "auto";
+                }
+            });
         } else {
             this._.form.settings._root.style = "bottom: 60px; right: 8px;";
         }

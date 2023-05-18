@@ -28,20 +28,23 @@ let LIBtimeout;
 
 export function LogoInfoBlock(text) {
     let logo_info_block = document.getElementById("logo_info_block");
-    logo_info_block.innerText = text.toString();
-    logo_info_block.style.display = "block";
-    logo_info_block.style.animation = "none";
 
-    clearTimeout(LIBtimeout);
-    LIBtimeout = setTimeout(() => {
-        logo_info_block.style.animation = "change_opacity 1s forwards";
+    if (logo_info_block !== null) {
+        logo_info_block.innerText = text.toString();
+        logo_info_block.style.display = "block";
+        logo_info_block.style.animation = "none";
 
+        clearTimeout(LIBtimeout);
         LIBtimeout = setTimeout(() => {
-            logo_info_block.style.display = "none";
+            logo_info_block.style.animation = "change_opacity 1s forwards";
 
-            clear_old_seek();
-        }, 1000);
-    }, 100);
+            LIBtimeout = setTimeout(() => {
+                logo_info_block.style.display = "none";
+
+                clear_old_seek();
+            }, 1000);
+        }, 100);
+    }
 }
 
 export function secondsToTime(sec) {

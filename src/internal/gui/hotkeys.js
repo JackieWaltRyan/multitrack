@@ -116,7 +116,7 @@ export function settings_hotkeys(el) {
         const infoBlock = createElement("div", {
             class: "settings_hotkeys_infoBlock"
         }, (inf) => {
-            inf.innerHTML = "Плей / Пауза";
+            inf.innerHTML = "Воспроизведение / Пауза";
         });
         bl.appendChild(infoBlock);
     });

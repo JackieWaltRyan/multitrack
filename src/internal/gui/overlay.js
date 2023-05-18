@@ -104,43 +104,18 @@ export function generateOverlay() {
         el.onclick = () => {
             if ((skip_time["e"] > skip_time["s"]) && (skip_time["s"] > 0) && (skip_time["e"] > 0)) {
                 if (confirm("Время начала: " + secondsToTime(skip_time["s"]) + "\nВремя конца: " + secondsToTime(skip_time["e"]) + "\n\nВсе верно? Отправлять сегмент?")) {
-                    let url = decodeURIComponent(window.location.pathname);
-                    console.log({
-                        "sts_url": this._.sts_url,
-                        "id": url,
-                        "s": parseInt(skip_time["s"]),
-                        "e": parseInt(skip_time["e"])
-                    });
-
-                    const postData = async (url = "", data = {}) => {
-                        try {
-                            const response = await fetch(url, {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify(data)
-                            });
-                            return response.json();
-                        } catch (e) {
-                            alert("Во время отправки сегмента возникла ошибка.\n\n" + e);
-                        }
-                    }
-
-                    postData(this._.sts_url, {
-                        "id": url,
-                        "s": parseInt(skip_time["s"]),
-                        "e": parseInt(skip_time["e"])
-                    }).then(r => r);
-
-                    skip_time = {"s": 0, "e": 0};
-
-                    let send_time_start = document.getElementById("send_time_start");
-                    send_time_start.innerText = "НАЧАЛО";
-
-                    let send_time_end = document.getElementById("send_time_end");
-                    send_time_end.innerText = "КОНЕЦ";
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("GET", this._.sts_url + "?id=" + encodeURIComponent(window.location.pathname) + "&start=" + parseInt(skip_time["s"]) + "&end=" + parseInt(skip_time["e"]), true);
+                    xhr.send();
                 }
+
+                skip_time = {"s": 0, "e": 0};
+
+                let send_time_start = document.getElementById("send_time_start");
+                send_time_start.innerText = "НАЧАЛО";
+
+                let send_time_end = document.getElementById("send_time_end");
+                send_time_end.innerText = "КОНЕЦ";
             } else {
                 alert("1. Время начала или конца не может быть пустым.\n\n2. Время конца всегда должно быть больше чем начало.");
             }
