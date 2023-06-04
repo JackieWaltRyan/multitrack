@@ -172,10 +172,12 @@ export function skip(val) {
     if (dataset !== null) {
         let index = dataset.findIndex((url) => url === decodeURIComponent(window.location.pathname));
 
-        if (val) {
-            location.href = window.location.origin + dataset[index + 1] + "?p=1";
-        } else {
-            location.href = window.location.origin + dataset[index - 1] + "?p=1";
+        if (index !== -1) {
+            if (val) {
+                location.href = window.location.origin + dataset[index + 1] + "?p=1";
+            } else {
+                location.href = window.location.origin + dataset[index - 1] + "?p=1";
+            }
         }
     }
 }
