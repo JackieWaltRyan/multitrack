@@ -1,16 +1,7 @@
 import "./style.scss";
 import {init} from "./internal/init";
 import {pause, play, setSpeed, setTime, synchronize} from "./internal/playback";
-import {createElement, getCookie, sleep} from "./internal/utils";
-
-document.getElementById("app").appendChild(createElement("div", {
-    id: "curent_audio",
-    style: "display: none"
-}));
-document.getElementById("app").appendChild(createElement("div", {
-    id: "curent_subtitle",
-    style: "display: none"
-}));
+import {sleep} from "./internal/utils";
 
 export default class {
     get currentTime() {
@@ -62,8 +53,8 @@ export default class {
     }
 
     get volume() {
-        if ((getCookie("volume") !== undefined) && (getCookie("s_vl") === "true")) {
-            return parseFloat(getCookie("volume"));
+        if (localStorage.getItem("mt_mark_volume") && (localStorage.getItem("mt_set_volume") === "true")) {
+            return parseFloat(localStorage.getItem("mt_mark_volume"));
         } else {
             return this._.form.audio.volume;
         }
@@ -82,7 +73,7 @@ export default class {
             const audio = this._.form.audio;
             audio.volume = value;
 
-            document.cookie = "volume=" + encodeURIComponent(value) + "; path=/; max-age=" + (86400 * 365);
+            localStorage.setItem("mt_mark_volume", encodeURIComponent(value));
 
             let iconNum = Math.ceil(audio.volume * 3);
 

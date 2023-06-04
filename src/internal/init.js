@@ -40,6 +40,6 @@ export function init(selector, dataArray) {
             this.resize();
         });
     } else {
-        logError.call(this, "Can not find " + selector + " element!");
+        logError.call(this, "Не удается найти" + selector + "элемент.");
     }
 }

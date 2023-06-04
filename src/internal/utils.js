@@ -11,11 +11,6 @@ export function logError(text) {
     console.error(this._.name + " | " + text);
 }
 
-export function getCookie(name) {
-    let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-
 export function URLparams() {
     return window.location.search.replace("?", "").split("&").reduce(function (p, e) {
         let a = e.split("=");
@@ -44,6 +39,18 @@ export function LogoInfoBlock(text) {
                 clear_old_seek();
             }, 1000);
         }, 100);
+    }
+}
+
+export function load_ds(file) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", file, false);
+    xhr.send();
+
+    if (xhr.status === 200) {
+        return JSON.parse(xhr.responseText);
+    } else {
+        return null;
     }
 }
 

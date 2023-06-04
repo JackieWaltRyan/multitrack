@@ -1,4 +1,4 @@
-import {createElement, getCookie, secondsToTime} from "../utils";
+import {createElement, load_ds, secondsToTime} from "../utils";
 
 let skip_time = {"s": 0, "e": 0};
 
@@ -59,8 +59,23 @@ export function generateOverlay() {
     this._.form.overlays.bottom.appendChild(this._.form.buttons.play);
     this._.form.overlays.bottom.appendChild(this._.form.buttons.backward10);
     this._.form.overlays.bottom.appendChild(this._.form.buttons.forward10);
-    this._.form.overlays.bottom.appendChild(this._.form.buttons.skip_previous);
-    this._.form.overlays.bottom.appendChild(this._.form.buttons.skip_next);
+
+    let dataset = load_ds.call(this, "ds_series.json");
+
+    if (dataset !== null) {
+        let index = dataset.findIndex((url) => url === decodeURIComponent(window.location.pathname));
+
+        if (index !== -1) {
+            if ((index - 1) >= 0) {
+                this._.form.overlays.bottom.appendChild(this._.form.buttons.skip_previous);
+            }
+
+            if ((index + 1) < dataset.length) {
+                this._.form.overlays.bottom.appendChild(this._.form.buttons.skip_next);
+            }
+        }
+    }
+
     this._.form.overlays.bottom.appendChild(this._.form.buttons.volume);
     this._.form.overlays.bottom.appendChild(this._.form.volumebar._root);
     this._.form.overlays.bottom.appendChild(this._.form.time);
@@ -71,7 +86,7 @@ export function generateOverlay() {
 
     let overlay_sts = createElement("div", {
         id: "overlay_sts",
-        style: (getCookie("s_sts") === "true") ? "display: block; padding-top: 8px;" : "display: none; padding-top: 8px;"
+        style: (localStorage.getItem("mt_set_newsegments") === "true") ? "display: block; padding-top: 8px;" : "display: none; padding-top: 8px;"
     });
 
     let start = createElement("label", {
@@ -105,8 +120,12 @@ export function generateOverlay() {
             if ((skip_time["e"] > skip_time["s"]) && (skip_time["s"] > 0) && (skip_time["e"] > 0)) {
                 if (confirm("Время начала: " + secondsToTime(skip_time["s"]) + "\nВремя конца: " + secondsToTime(skip_time["e"]) + "\n\nВсе верно? Отправлять сегмент?")) {
                     let xhr = new XMLHttpRequest();
-                    xhr.open("GET", this._.sts_url + "?id=" + encodeURIComponent(window.location.pathname) + "&start=" + parseInt(skip_time["s"]) + "&end=" + parseInt(skip_time["e"]), true);
+                    xhr.open("GET", this._.sts_url + "?id=" + encodeURIComponent(window.location.pathname) + "&start=" + parseInt(skip_time["s"]) + "&end=" + parseInt(skip_time["e"]), false);
                     xhr.send();
+
+                    if (xhr.status !== 200) {
+                        alert("При отправке сегмента произошла ошибка:\n\n" + xhr.status + ": " + xhr.statusText);
+                    }
                 }
 
                 skip_time = {"s": 0, "e": 0};

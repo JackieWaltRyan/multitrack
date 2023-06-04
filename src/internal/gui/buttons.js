@@ -107,22 +107,19 @@ export function generateButtons() {
             }, (el) => {
                 el.onclick = () => {
                     try {
-                        let curent_audio = document.getElementById("curent_audio");
-                        let curent_subtitle = document.getElementById("curent_subtitle");
-
                         if (window.isSecureContext && navigator.clipboard) {
-                            navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + curent_audio.innerText + "&s=" + curent_subtitle.innerText).then(r => r);
+                            navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles")).then(r => r);
                         } else {
                             let app = document.getElementById("app");
                             let input = document.createElement("input");
                             app.appendChild(input);
-                            input.value = window.location.origin + window.location.pathname + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + curent_audio.innerText + "&s=" + curent_subtitle.innerText;
+                            input.value = window.location.origin + window.location.pathname + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles");
                             input.select();
                             document.execCommand("copy");
                             input.remove();
                         }
                     } catch {
-                        logError.call(this, "Sorry, an error occurred while creating the link");
+                        logError.call(this, "Извините, при создании ссылки произошла ошибка.");
                     }
                 };
             }
@@ -141,7 +138,7 @@ export function generateButtons() {
                             el.setAttribute("icon", "pipOn");
                         }
                     } else {
-                        logError.call(this, "Sorry, your browser is not support picture-in-picture");
+                        logError.call(this, "К сожалению, ваш браузер не поддерживает функцию «картинка в картинке».");
                     }
                 };
             }

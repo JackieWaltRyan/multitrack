@@ -1,4 +1,4 @@
-import {createElement, getCookie, secondsToTime} from "../utils";
+import {createElement, load_ds, secondsToTime} from "../utils";
 import {changePlaying, downloadStatusUpdate, setSpeed, setTime, skip} from "../playback";
 
 function appendEvents(element) {
@@ -93,42 +93,42 @@ function appendEvents(element) {
             }
             root._.form.time.innerText = secondsToTime.call(root, element.currentTime) + " / " + secondsToTime.call(root, root.duration);
 
-            document.cookie = "time=" + encodeURIComponent(element.currentTime) + "; max-age=" + (86400 * 365);
+            localStorage.setItem("mt_mark_time_" + encodeURIComponent(window.location.pathname), encodeURIComponent(element.currentTime));
 
-            if (((root.duration - element.currentTime) < 2) && (getCookie("s_anv") === "true")) {
-                document.cookie = "time=" + 0 + "; max-age=" + (86400 * 365);
+            if (((root.duration - element.currentTime) < 2) && (localStorage.getItem("mt_mark_time_" + encodeURIComponent(window.location.pathname)))) {
+                localStorage.setItem("mt_mark_time_" + encodeURIComponent(window.location.pathname), encodeURIComponent(0));
                 skip.call(this, true);
             }
 
-            if (getCookie("s_sic") === "true") {
-                fetch("ds_times.json").then(function (response) {
-                    response.json().then(function (dataset) {
-                        let url = decodeURIComponent(window.location.pathname);
+            if (localStorage.getItem("mt_set_skip") === "true") {
+                let dataset = load_ds.call(this, "ds_times.json");
 
-                        if (dataset[url] !== undefined) {
-                            if (dataset[url].length >= 1) {
-                                for (let item in dataset[url]) {
-                                    if (dataset[url][item].length === 2) {
-                                        let start = dataset[url][item][0];
-                                        let end = dataset[url][item][1];
+                if (dataset !== null) {
+                    let url = decodeURIComponent(window.location.pathname);
 
-                                        if (start < 0) {
-                                            start = 0;
-                                        }
+                    if (dataset[url] !== undefined) {
+                        if (dataset[url].length >= 1) {
+                            for (let item in dataset[url]) {
+                                if (dataset[url][item].length === 2) {
+                                    let start = dataset[url][item][0];
+                                    let end = dataset[url][item][1];
 
-                                        if (end > root.duration) {
-                                            end = root.duration;
-                                        }
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
 
-                                        if ((start <= element.currentTime) && (element.currentTime <= end)) {
-                                            setTime.call(root, end + 1);
-                                        }
+                                    if (end > root.duration) {
+                                        end = root.duration;
+                                    }
+
+                                    if ((start <= element.currentTime) && (element.currentTime <= end)) {
+                                        setTime.call(root, end + 1);
                                     }
                                 }
                             }
                         }
-                    })
-                })
+                    }
+                }
             }
         }
 
@@ -151,38 +151,38 @@ function appendEvents(element) {
                 canvas.fillRect(Math.floor(startX), 0, Math.floor(width), 1);
             }
 
-            if (getCookie("s_sic") === "true") {
-                fetch("ds_times.json").then(function (response) {
-                    response.json().then(function (dataset) {
-                        let url = decodeURIComponent(window.location.pathname);
+            if (localStorage.getItem("mt_set_skip") === "true") {
+                let dataset = load_ds.call(this, "ds_times.json");
 
-                        if (dataset[url] !== undefined) {
-                            if (dataset[url].length >= 1) {
-                                for (let item in dataset[url]) {
-                                    if (dataset[url][item].length === 2) {
-                                        let start = dataset[url][item][0];
-                                        let end = dataset[url][item][1];
+                if (dataset !== null) {
+                    let url = decodeURIComponent(window.location.pathname);
 
-                                        if (start < 0) {
-                                            start = 0;
-                                        }
+                    if (dataset[url] !== undefined) {
+                        if (dataset[url].length >= 1) {
+                            for (let item in dataset[url]) {
+                                if (dataset[url][item].length === 2) {
+                                    let start = dataset[url][item][0];
+                                    let end = dataset[url][item][1];
 
-                                        if (end > root.duration) {
-                                            end = root.duration;
-                                        }
-
-                                        canvas.fillStyle = "lime";
-                                        const startS = (start * element2.width) / root.duration;
-                                        const endS = (end * element2.width) / root.duration;
-                                        const widthS = endS - startS;
-
-                                        canvas.fillRect(Math.floor(startS), 0, Math.floor(widthS), 1);
+                                    if (start < 0) {
+                                        start = 0;
                                     }
+
+                                    if (end > root.duration) {
+                                        end = root.duration;
+                                    }
+
+                                    canvas.fillStyle = "lime";
+                                    const startS = (start * element2.width) / root.duration;
+                                    const endS = (end * element2.width) / root.duration;
+                                    const widthS = endS - startS;
+
+                                    canvas.fillRect(Math.floor(startS), 0, Math.floor(widthS), 1);
                                 }
                             }
                         }
-                    })
-                })
+                    }
+                }
             }
         }
 

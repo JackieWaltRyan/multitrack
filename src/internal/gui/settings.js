@@ -1,4 +1,4 @@
-import {createElement, getCookie, getPosInElement, LogoInfoBlock, URLparams} from "../utils";
+import {createElement, getPosInElement, LogoInfoBlock, URLparams} from "../utils";
 import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
 import {setSpeed} from "../playback";
 import {hotkeys, settings_hotkeys} from "./hotkeys";
@@ -31,7 +31,7 @@ class SettingsButtons {
                 style: "top: 21%; position: relative; display: inline-block;"
             });
 
-            input.checked = (getCookie(checkbox) === "true");
+            input.checked = (localStorage.getItem(checkbox) === "true");
             btn.appendChild(input);
         }
 
@@ -86,7 +86,7 @@ let SettingsTimeout;
 function set_timeout() {
     clearTimeout(SettingsTimeout);
 
-    if (getCookie("s_hsm") === "true") {
+    if (localStorage.getItem("mt_set_hidemenu") === "true") {
         SettingsTimeout = setTimeout(() => {
             this._.rootElement.classList.remove("mjs__settings_show");
             this._.form.settings.opened = false;
@@ -181,74 +181,74 @@ export function generateSettings() {
     this._.form.settings.menu.settings = new SettingsButtons("Дополнительно");
 
     this._.form.settings.menu.settings.appendButton("Запоминать позицию", () => {
-        let trigger = !(getCookie("s_tt") === "true");
-        document.cookie = "s_tt=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
-        let input = document.getElementById("s_tt");
+        let trigger = (localStorage.getItem("mt_set_position") !== "true");
+        localStorage.setItem("mt_set_position", encodeURIComponent(trigger));
+        let input = document.getElementById("mt_set_position");
         input.checked = trigger;
-    }, "s_tt");
+    }, "mt_set_position");
 
     this._.form.settings.menu.settings.appendButton("Запоминать громкость", () => {
-        let trigger = !(getCookie("s_vl") === "true");
-        document.cookie = "s_vl=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
-        let input = document.getElementById("s_vl");
+        let trigger = (localStorage.getItem("mt_set_volume") !== "true");
+        localStorage.setItem("mt_set_volume", encodeURIComponent(trigger));
+        let input = document.getElementById("mt_set_volume");
         input.checked = trigger;
-    }, "s_vl");
+    }, "mt_set_volume");
 
     this._.form.settings.menu.settings.appendButton("Запоминать качество", () => {
-        let trigger = !(getCookie("s_vd") === "true");
-        document.cookie = "s_vd=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
-        let input = document.getElementById("s_vd");
+        let trigger = (localStorage.getItem("mt_set_quality") !== "true");
+        localStorage.setItem("mt_set_quality", encodeURIComponent(trigger));
+        let input = document.getElementById("mt_set_quality");
         input.checked = trigger;
-    }, "s_vd");
+    }, "mt_set_quality");
 
     this._.form.settings.menu.settings.appendButton("Запоминать озвучки", () => {
-        let trigger = !(getCookie("s_au") === "true");
-        document.cookie = "s_au=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
-        let input = document.getElementById("s_au");
+        let trigger = (localStorage.getItem("mt_set_voiceovers") !== "true");
+        localStorage.setItem("mt_set_voiceovers", encodeURIComponent(trigger));
+        let input = document.getElementById("mt_set_voiceovers");
         input.checked = trigger;
-    }, "s_au");
+    }, "mt_set_voiceovers");
 
     this._.form.settings.menu.settings.appendButton("Запоминать субтитры", () => {
-        let trigger = !(getCookie("s_st") === "true");
-        document.cookie = "s_st=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
-        let input = document.getElementById("s_st");
+        let trigger = (localStorage.getItem("mt_set_subtitles") !== "true");
+        localStorage.setItem("mt_set_subtitles", encodeURIComponent(trigger));
+        let input = document.getElementById("mt_set_subtitles");
         input.checked = trigger;
-    }, "s_st");
+    }, "mt_set_subtitles");
 
     this._.form.settings.menu.settings.appendButton("Запоминать скорость", () => {
-        let trigger = !(getCookie("s_sp") === "true");
-        document.cookie = "s_sp=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
-        let input = document.getElementById("s_sp");
+        let trigger = (localStorage.getItem("mt_set_speed") !== "true");
+        localStorage.setItem("mt_set_speed", encodeURIComponent(trigger));
+        let input = document.getElementById("mt_set_speed");
         input.checked = trigger;
-    }, "s_sp");
+    }, "mt_set_speed");
 
     this._.form.settings.menu.settings.appendElement("hr", {
         style: "border-style: inset; border-width: 1px;"
     });
 
     this._.form.settings.menu.settings.appendButton("Переходить на следующее видео", () => {
-        let trigger = !(getCookie("s_anv") === "true");
-        document.cookie = "s_anv=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
-        let input = document.getElementById("s_anv");
+        let trigger = (localStorage.getItem("mt_set_nextvideo") !== "true");
+        localStorage.setItem("mt_set_nextvideo", encodeURIComponent(trigger));
+        let input = document.getElementById("mt_set_nextvideo");
         input.checked = trigger;
-    }, "s_anv");
+    }, "mt_set_nextvideo");
 
     this._.form.settings.menu.settings.appendButton("Пропускать заставку и титры", () => {
-        let trigger = !(getCookie("s_sic") === "true");
-        document.cookie = "s_sic=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
-        let input = document.getElementById("s_sic");
+        let trigger = (localStorage.getItem("mt_set_skip") !== "true");
+        localStorage.setItem("mt_set_skip", encodeURIComponent(trigger));
+        let input = document.getElementById("mt_set_skip");
         input.checked = trigger;
         this._.form.video.dispatchEvent(new ProgressEvent("progress"));
-    }, "s_sic");
+    }, "mt_set_skip");
 
     this._.form.settings.menu.settings.appendElement("hr", {
         style: "border-style: inset; border-width: 1px;"
     });
 
     this._.form.settings.menu.settings.appendButton("Добавление новых сегментов", () => {
-        let trigger = !(getCookie("s_sts") === "true");
-        document.cookie = "s_sts=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
-        let input = document.getElementById("s_sts");
+        let trigger = (localStorage.getItem("mt_set_newsegments") !== "true");
+        localStorage.setItem("mt_set_newsegments", encodeURIComponent(trigger));
+        let input = document.getElementById("mt_set_newsegments");
         input.checked = trigger;
         let overlay_sts = document.getElementById("overlay_sts");
 
@@ -257,14 +257,14 @@ export function generateSettings() {
         } else {
             overlay_sts.style.display = "none";
         }
-    }, "s_sts");
+    }, "mt_set_newsegments");
 
     this._.form.settings.menu.settings.appendButton("Скрывать меню при неактивности", () => {
-        let trigger = !(getCookie("s_hsm") === "true");
-        document.cookie = "s_hsm=" + encodeURIComponent(trigger) + "; path=/; max-age=" + (86400 * 365);
-        let input = document.getElementById("s_hsm");
+        let trigger = (localStorage.getItem("mt_set_hidemenu") !== "true");
+        localStorage.setItem("mt_set_hidemenu", encodeURIComponent(trigger));
+        let input = document.getElementById("mt_set_hidemenu");
         input.checked = trigger;
-    }, "s_hsm");
+    }, "mt_set_hidemenu");
 
     this._.form.settings.menu.hotkeys = new SettingsPage("Управление");
     this._.form.settings.menu.hotkeys.Content = createElement("div", {
@@ -322,7 +322,7 @@ export function generateSettings() {
     // Добавление видео
     for (let video of this._.videos) {
         this._.form.settings.menu.quality.appendButton(video.name, () => {
-            document.cookie = "video=" + encodeURIComponent(video.name) + "; path=/; max-age=" + (86400 * 365);
+            localStorage.setItem("mt_mark_quality", encodeURIComponent(video.name));
             setVideo.call(this, video.path);
         });
     }
@@ -336,8 +336,8 @@ export function generateSettings() {
         }
     }
 
-    if ((getCookie("video") !== undefined) && (getCookie("s_vd") === "true")) {
-        const index = this._.videos.findIndex((video) => video.name === getCookie("video"));
+    if (localStorage.getItem("mt_mark_quality") && (localStorage.getItem("mt_set_quality") === "true")) {
+        const index = this._.videos.findIndex((video) => video.name === localStorage.getItem("mt_mark_quality"));
         if (index !== -1) {
             preferredVideoIndex = index;
         }
@@ -348,15 +348,15 @@ export function generateSettings() {
     // Добавление аудио
     for (let audio of this._.audios) {
         this._.form.settings.menu.dubs.appendButton(audio.name, () => {
-            document.cookie = "audio=" + encodeURIComponent(audio.code) + "; path=/; max-age=" + (86400 * 365);
+            localStorage.setItem("mt_mark_dubs", encodeURIComponent(audio.code));
             setAudio.call(this, audio.path, audio.code);
         });
     }
 
     let preferredAudioIndex = 0;
 
-    if ((getCookie("audio") !== undefined) && (getCookie("s_au") === "true")) {
-        const index = this._.audios.findIndex((audio) => audio.code === getCookie("audio"));
+    if (localStorage.getItem("mt_mark_dubs") && (localStorage.getItem("mt_set_voiceovers") === "true")) {
+        const index = this._.audios.findIndex((audio) => audio.code === localStorage.getItem("mt_mark_dubs"));
         if (index !== -1) {
             preferredAudioIndex = index;
         }
@@ -380,15 +380,15 @@ export function generateSettings() {
 
     for (let subtitle of this._.subtitles) {
         this._.form.settings.menu.subtitles.appendButton(subtitle.name, () => {
-            document.cookie = "subtitle=" + encodeURIComponent(subtitle.code) + "; path=/; max-age=" + (86400 * 365);
+            localStorage.setItem("mt_mark_subtitles", encodeURIComponent(subtitle.code));
             setSubtitles.call(this, subtitle.path, subtitle.code);
         });
     }
 
     let preferredSubtitleIndex = 0;
 
-    if ((getCookie("subtitle") !== undefined) && (getCookie("s_st") === "true")) {
-        const index = this._.subtitles.findIndex((subtitle) => subtitle.code === getCookie("subtitle"));
+    if (localStorage.getItem("mt_mark_subtitles") && (localStorage.getItem("mt_set_subtitles") === "true")) {
+        const index = this._.subtitles.findIndex((subtitle) => subtitle.code === localStorage.getItem("mt_mark_subtitles"));
         if (index !== -1) {
             preferredSubtitleIndex = index;
         }
@@ -503,10 +503,10 @@ export function generateSettings() {
 
     this._.form.settings.menu.playbackRate.Content.appendChild(this._.form.settings.menu.playbackRate.speed_root);
 
-    if ((getCookie("speed") !== undefined) && (getCookie("s_sp") === "true")) {
-        this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * ((parseFloat(getCookie("speed")) - 0.25) / (2 - 0.25))) + "%");
+    if (localStorage.getItem("mt_mark_speed") && (localStorage.getItem("mt_set_speed") === "true")) {
+        this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * ((parseFloat(localStorage.getItem("mt_mark_speed")) - 0.25) / (2 - 0.25))) + "%");
 
-        setSpeed.call(this, parseFloat(getCookie("speed")));
+        setSpeed.call(this, parseFloat(localStorage.getItem("mt_mark_speed")));
     } else {
         this._.form.settings.menu.playbackRate.Buttons[0].click();
     }

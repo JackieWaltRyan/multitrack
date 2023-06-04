@@ -1,4 +1,4 @@
-import {LogoInfoBlock, URLparams} from "./utils";
+import {load_ds, LogoInfoBlock, URLparams} from "./utils";
 
 export function synchronize(target = null) {
     if (process.env.NODE_ENV !== "production") {
@@ -167,21 +167,17 @@ export function seek(val) {
 }
 
 export function skip(val) {
-    fetch("ds_series.json").then(function (response) {
-        response.json().then(function (dataset) {
-            const index = dataset.findIndex((url) => url === decodeURIComponent(window.location.pathname));
+    let dataset = load_ds.call(this, "ds_series.json");
 
-            if (val) {
-                if ((index + 1) < dataset.length) {
-                    location.href = window.location.origin + dataset[index + 1] + "?p=1";
-                }
-            } else {
-                if ((index - 1) >= 0) {
-                    location.href = window.location.origin + dataset[index - 1] + "?p=1";
-                }
-            }
-        })
-    })
+    if (dataset !== null) {
+        let index = dataset.findIndex((url) => url === decodeURIComponent(window.location.pathname));
+
+        if (val) {
+            location.href = window.location.origin + dataset[index + 1] + "?p=1";
+        } else {
+            location.href = window.location.origin + dataset[index - 1] + "?p=1";
+        }
+    }
 }
 
 export function setTime(val, isVideo = false) {
@@ -203,7 +199,7 @@ export function setSpeed(val) {
     this._.playbackRate = val;
     synchronize.call(this).then(r => r);
 
-    document.cookie = "speed=" + encodeURIComponent(val) + "; path=/; max-age=" + (86400 * 365);
+    localStorage.setItem("mt_mark_speed", encodeURIComponent(val));
 
     if (val === 1) {
         this._.form.settings.menu.playbackRate.Buttons[0].setAttribute("selected", "true");

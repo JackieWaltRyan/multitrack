@@ -1,4 +1,4 @@
-import {getCookie, logError, URLparams} from "./utils";
+import {logError, URLparams} from "./utils";
 
 let ASS;
 
@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
 export function setVideo(link) {
     let currentTimeVideo = this.currentTime;
 
-    if ((getCookie("time") !== undefined) && (getCookie("s_tt") === "true")) {
-        currentTimeVideo = parseFloat(getCookie("time"));
+    if (localStorage.getItem("mt_mark_time_" + encodeURIComponent(window.location.pathname)) && (localStorage.getItem("mt_set_position") === "true")) {
+        currentTimeVideo = parseFloat(localStorage.getItem("mt_mark_time_" + encodeURIComponent(window.location.pathname)));
     }
 
     if ("t" in URLparams()) {
@@ -30,13 +30,10 @@ export function setVideo(link) {
 }
 
 export function setAudio(link, code) {
-    let curent_audio = document.getElementById("curent_audio");
-    curent_audio.innerText = encodeURIComponent(code.toString());
-
     let currentTimeAudio = this.currentTime;
 
-    if ((getCookie("time") !== undefined) && (getCookie("s_tt") === "true")) {
-        currentTimeAudio = parseFloat(getCookie("time"));
+    if (localStorage.getItem("mt_mark_time_" + encodeURIComponent(window.location.pathname)) && (localStorage.getItem("mt_set_position") === "true")) {
+        currentTimeAudio = parseFloat(localStorage.getItem("mt_mark_time_" + encodeURIComponent(window.location.pathname)));
     }
 
     if ("t" in URLparams()) {
@@ -49,8 +46,8 @@ export function setAudio(link, code) {
     this._.form.audio.mjs_setTime(currentTimeAudio);
     this._.form.audio.mjs_setRate(playbackRate);
 
-    if ((getCookie("volume") !== undefined) && (getCookie("s_vl") === "true")) {
-        this.volume = parseFloat(getCookie("volume"));
+    if (localStorage.getItem("mt_mark_volume") && (localStorage.getItem("mt_set_volume") === "true")) {
+        this.volume = parseFloat(localStorage.getItem("mt_mark_volume"));
     }
 
     if (this._.playing) {
@@ -59,9 +56,6 @@ export function setAudio(link, code) {
 }
 
 export function setSubtitles(url, code) {
-    let curent_subtitle = document.getElementById("curent_subtitle");
-    curent_subtitle.innerText = encodeURIComponent(code.toString());
-
     clearTimeout(this._.subtitlesDownloader);
 
     if (this._.ass !== undefined) {
@@ -83,7 +77,7 @@ export function setSubtitles(url, code) {
 
                     this.resize();
                 } catch {
-                    logError.call(this, "Can't use ASS library");
+                    logError.call(this, "Не могу использовать библиотеку ASS.");
                 }
             }
         });
