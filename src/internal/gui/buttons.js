@@ -108,12 +108,11 @@ export function generateButtons() {
                 el.onclick = () => {
                     try {
                         if (window.isSecureContext && navigator.clipboard) {
-                            navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles")).then(r => r);
+                            navigator.clipboard.writeText(decodeURIComponent(window.location.origin + window.location.pathname) + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles")).then(r => r);
                         } else {
-                            let app = document.getElementById("app");
                             let input = document.createElement("input");
-                            app.appendChild(input);
-                            input.value = window.location.origin + window.location.pathname + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles");
+                            this._.rootElement.appendChild(input);
+                            input.value = decodeURIComponent(window.location.origin + window.location.pathname) + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles");
                             input.select();
                             document.execCommand("copy");
                             input.remove();

@@ -17,6 +17,8 @@ export function init(selector, dataArray) {
         preferredVideoName: dataArray.preferredVideoName,
         playbackRate: 1,
         enable_sync: false,
+        ds_series: dataArray.ds_series,
+        ds_times: dataArray.ds_times,
         sts_url: dataArray.sts_url
     };
 

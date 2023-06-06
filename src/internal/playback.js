@@ -1,4 +1,4 @@
-import {load_ds, LogoInfoBlock, URLparams} from "./utils";
+import {LogoInfoBlock, URLparams} from "./utils";
 
 export function synchronize(target = null) {
     if (process.env.NODE_ENV !== "production") {
@@ -74,8 +74,7 @@ export function downloadStatusUpdate() {
     const button_play = this._.form.buttons.play;
 
     if (allowedStates.includes(video.readyState) && allowedStates.includes(audio.readyState)) {
-        let logo_spiner = document.getElementById("logo_spiner");
-        logo_spiner.style.display = "none";
+        this._.form.logo_spiner.style.display = "none";
     }
 
     if (this._.playing || (("p" in URLparams()) && trigger)) {
@@ -107,15 +106,14 @@ export function changePlaying(val) {
         this._.form.audio.mjs_play();
         this._.form.buttons.play.setAttribute("icon", "pauseBtn");
 
-        let logo_play = document.getElementById("logo_play");
-        logo_play.style.display = "block";
-        logo_play.style.animation = "none";
+        this._.form.logo_play.style.display = "block";
+        this._.form.logo_play.style.animation = "none";
 
         setTimeout(() => {
-            logo_play.style.animation = "change_opacity 1s forwards";
+            this._.form.logo_play.style.animation = "change_opacity 1s forwards";
 
             setTimeout(() => {
-                logo_play.style.display = "none";
+                this._.form.logo_play.style.display = "none";
             }, 1000);
         }, 100);
     } else {
@@ -123,15 +121,14 @@ export function changePlaying(val) {
         this._.form.audio.mjs_pause();
         this._.form.buttons.play.setAttribute("icon", "playBtn");
 
-        let logo_pause = document.getElementById("logo_pause");
-        logo_pause.style.display = "block";
-        logo_pause.style.animation = "none";
+        this._.form.logo_pause.style.display = "block";
+        this._.form.logo_pause.style.animation = "none";
 
         setTimeout(() => {
-            logo_pause.style.animation = "change_opacity 1s forwards";
+            this._.form.logo_pause.style.animation = "change_opacity 1s forwards";
 
             setTimeout(() => {
-                logo_pause.style.display = "none";
+                this._.form.logo_pause.style.display = "none";
             }, 1000);
         }, 100);
     }
@@ -155,7 +152,7 @@ export function clear_old_seek() {
 
 export function seek(val) {
     old_seek += val;
-    LogoInfoBlock(((old_seek > 0) ? ("+" + old_seek) : old_seek).toString().slice(0, 5));
+    LogoInfoBlock.call(this, ((old_seek > 0) ? ("+" + old_seek) : old_seek).toString().slice(0, 5));
 
     val += this.currentTime;
     if (val < 0) {
@@ -167,16 +164,14 @@ export function seek(val) {
 }
 
 export function skip(val) {
-    let dataset = load_ds.call(this, "ds_series.json");
-
-    if (dataset !== null) {
-        let index = dataset.findIndex((url) => url === decodeURIComponent(window.location.pathname));
+    if (this._.ds_series !== null) {
+        let index = this._.ds_series.findIndex((url) => (url === decodeURIComponent(window.location.pathname)));
 
         if (index !== -1) {
             if (val) {
-                location.href = window.location.origin + dataset[index + 1] + "?p=1";
+                location.href = decodeURIComponent(window.location.origin) + this._.ds_series[index + 1] + "?p=1";
             } else {
-                location.href = window.location.origin + dataset[index - 1] + "?p=1";
+                location.href = decodeURIComponent(window.location.origin) + this._.ds_series[index - 1] + "?p=1";
             }
         }
     }

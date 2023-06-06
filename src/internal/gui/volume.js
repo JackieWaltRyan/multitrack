@@ -37,7 +37,7 @@ export function generateVolume() {
                     vol_val = parseInt(((getPosInElement(el, event).x / el.clientWidth) * 100).toString());
                 }
 
-                LogoInfoBlock(vol_val);
+                LogoInfoBlock.call(this, vol_val);
             };
 
             let move = (event) => {
@@ -54,7 +54,7 @@ export function generateVolume() {
                         vol_val = parseInt(((cursorX / el.clientWidth) * 100).toString());
                     }
 
-                    LogoInfoBlock(vol_val);
+                    LogoInfoBlock.call(this, vol_val);
                 }
             };
 

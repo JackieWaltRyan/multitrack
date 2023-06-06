@@ -31,12 +31,12 @@ export function hotkeys() {
             case "ArrowUp":
                 event.preventDefault();
                 this.volume += 0.05;
-                LogoInfoBlock(parseInt((this.volume * 100).toString()));
+                LogoInfoBlock.call(this, parseInt((this.volume * 100).toString()));
                 break;
             case "ArrowDown":
                 event.preventDefault();
                 this.volume -= 0.05;
-                LogoInfoBlock(parseInt((this.volume * 100).toString()));
+                LogoInfoBlock.call(this, parseInt((this.volume * 100).toString()));
                 break;
             case "KeyF":
                 toggleFullscreen.call(this);

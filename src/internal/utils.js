@@ -22,35 +22,21 @@ export function URLparams() {
 let LIBtimeout;
 
 export function LogoInfoBlock(text) {
-    let logo_info_block = document.getElementById("logo_info_block");
-
-    if (logo_info_block !== null) {
-        logo_info_block.innerText = text.toString();
-        logo_info_block.style.display = "block";
-        logo_info_block.style.animation = "none";
+    if (this._.form.logo_info_block !== null) {
+        this._.form.logo_info_block.innerText = text.toString();
+        this._.form.logo_info_block.style.display = "block";
+        this._.form.logo_info_block.style.animation = "none";
 
         clearTimeout(LIBtimeout);
         LIBtimeout = setTimeout(() => {
-            logo_info_block.style.animation = "change_opacity 1s forwards";
+            this._.form.logo_info_block.style.animation = "change_opacity 1s forwards";
 
             LIBtimeout = setTimeout(() => {
-                logo_info_block.style.display = "none";
+                this._.form.logo_info_block.style.display = "none";
 
                 clear_old_seek();
             }, 1000);
         }, 100);
-    }
-}
-
-export function load_ds(file) {
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", file, false);
-    xhr.send();
-
-    if (xhr.status === 200) {
-        return JSON.parse(xhr.responseText);
-    } else {
-        return null;
     }
 }
 

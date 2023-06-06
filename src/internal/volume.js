@@ -4,8 +4,8 @@ export function mute(undoLast = false) {
     this.muted = !(undoLast && this.muted);
 
     if (this.muted) {
-        LogoInfoBlock(0);
+        LogoInfoBlock.call(this, 0);
     } else {
-        LogoInfoBlock(parseInt((this.volume * 100).toString()));
+        LogoInfoBlock.call(this, parseInt((this.volume * 100).toString()));
     }
 }

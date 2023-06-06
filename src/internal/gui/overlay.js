@@ -1,27 +1,32 @@
-import {createElement, load_ds, secondsToTime} from "../utils";
+import {createElement, getPosInElement, secondsToTime} from "../utils";
 
 let skip_time = {"s": 0, "e": 0};
+let GUItimeout;
 
-export function generateOverlay() {
-    let GUItimeout;
+export function showOverlay() {
+    let root = this;
 
-    function showOverlay() {
-        let mjs_overlay_bottom = document.getElementById("mjs_overlay_bottom");
-        let mjs_overlay_progressBar = document.getElementById("mjs_overlay_progressBar");
+    root._.form.overlays.bottom.style["pointer-events"] = "all";
+    root._.form.progressbar._root.style["pointer-events"] = "all";
 
-        mjs_overlay_bottom.style["pointer-events"] = "all";
-        mjs_overlay_progressBar.style["pointer-events"] = "all";
+    root._.rootElement.classList.remove("mjs__overlay_hidden");
 
-        this._.rootElement.classList.remove("mjs__overlay_hidden");
+    clearTimeout(GUItimeout);
 
-        clearTimeout(GUItimeout);
-        GUItimeout = setTimeout(() => {
+    GUItimeout = setTimeout(() => {
+        if (root._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
             this._.rootElement.classList.add("mjs__overlay_hidden");
 
-            mjs_overlay_bottom.style["pointer-events"] = "none";
-            mjs_overlay_progressBar.style["pointer-events"] = "none";
-        }, 3000);
-    }
+            this._.form.overlays.bottom.style["pointer-events"] = "none";
+            this._.form.progressbar._root.style["pointer-events"] = "none";
+        }
+    }, 3000);
+}
+
+export function generateOverlay() {
+    this._.element.addEventListener("click", () => {
+        showOverlay.call(this);
+    });
 
     this._.element.addEventListener("mousemove", () => {
         showOverlay.call(this);
@@ -31,13 +36,21 @@ export function generateOverlay() {
         showOverlay.call(this);
     });
 
-    this._.element.addEventListener("mouseout", () => {
+    this._.element.addEventListener("mouseout", (event) => {
         clearTimeout(GUItimeout);
 
-        this._.rootElement.classList.add("mjs__overlay_hidden");
+        let pos = getPosInElement(this._.element, event);
 
-        document.getElementById("mjs_overlay_bottom").style["pointer-events"] = "none";
-        document.getElementById("mjs_overlay_progressBar").style["pointer-events"] = "none";
+        if (pos.x > 0 && pos.y > 0 && pos.x < this._.element.offsetWidth && pos.y < this._.element.offsetHeight) {
+            return null;
+        } else {
+            if (this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
+                this._.rootElement.classList.add("mjs__overlay_hidden");
+
+                this._.form.overlays.bottom.style["pointer-events"] = "none";
+                this._.form.progressbar._root.style["pointer-events"] = "none";
+            }
+        }
     });
 
     this._.form.overlays = {
@@ -46,7 +59,6 @@ export function generateOverlay() {
         }, () => {
         }),
         bottom: createElement("div", {
-            id: "mjs_overlay_bottom",
             class: "mjs__overlay-bottom",
         }),
         top: createElement("div", {
@@ -60,17 +72,15 @@ export function generateOverlay() {
     this._.form.overlays.bottom.appendChild(this._.form.buttons.backward10);
     this._.form.overlays.bottom.appendChild(this._.form.buttons.forward10);
 
-    let dataset = load_ds.call(this, "ds_series.json");
-
-    if (dataset !== null) {
-        let index = dataset.findIndex((url) => url === decodeURIComponent(window.location.pathname));
+    if (this._.ds_series !== null) {
+        let index = this._.ds_series.findIndex((url) => (url === decodeURIComponent(window.location.pathname)));
 
         if (index !== -1) {
             if ((index - 1) >= 0) {
                 this._.form.overlays.bottom.appendChild(this._.form.buttons.skip_previous);
             }
 
-            if ((index + 1) < dataset.length) {
+            if ((index + 1) < this._.ds_series.length) {
                 this._.form.overlays.bottom.appendChild(this._.form.buttons.skip_next);
             }
         }
@@ -84,66 +94,65 @@ export function generateOverlay() {
         style: "flex: auto",
     }));
 
-    let overlay_sts = createElement("div", {
-        id: "overlay_sts",
-        style: (localStorage.getItem("mt_set_newsegments") === "true") ? "display: block; padding-top: 8px;" : "display: none; padding-top: 8px;"
-    });
+    this._.form.overlays.overlay_sts = {
+        root: createElement("div", {
+            class: (localStorage.getItem("mt_set_newsegments") === "true") ? "overlay_sts_root" : "overlay_sts_root_hide"
+        }),
 
-    let start = createElement("label", {
-        id: "send_time_start",
-        style: "background-color: green; cursor: pointer; padding: 3px 8px; border-radius: 5px; margin-right: 5px;"
-    }, (el) => {
-        el.onclick = () => {
-            skip_time["s"] = this._.form.video.currentTime;
-            el.innerText = secondsToTime(this._.form.video.currentTime);
-        }
-    });
-    start.innerText = "НАЧАЛО";
-    overlay_sts.appendChild(start);
-
-    let end = createElement("label", {
-        id: "send_time_end",
-        style: "background-color: orange; cursor: pointer; padding: 3px 8px; border-radius: 5px; margin-right: 5px;"
-    }, (el) => {
-        el.onclick = () => {
-            skip_time["e"] = this._.form.video.currentTime;
-            el.innerText = secondsToTime(this._.form.video.currentTime);
-        }
-    });
-    end.innerText = "КОНЕЦ";
-    overlay_sts.appendChild(end);
-
-    let send = createElement("label", {
-        style: "background-color: blue; cursor: pointer; padding: 3px 8px; border-radius: 5px; margin-right: 5px;"
-    }, (el) => {
-        el.onclick = () => {
-            if ((skip_time["e"] > skip_time["s"]) && (skip_time["s"] > 0) && (skip_time["e"] > 0)) {
-                if (confirm("Время начала: " + secondsToTime(skip_time["s"]) + "\nВремя конца: " + secondsToTime(skip_time["e"]) + "\n\nВсе верно? Отправлять сегмент?")) {
-                    let xhr = new XMLHttpRequest();
-                    xhr.open("GET", this._.sts_url + "?id=" + encodeURIComponent(window.location.pathname) + "&start=" + parseInt(skip_time["s"]) + "&end=" + parseInt(skip_time["e"]), false);
-                    xhr.send();
-
-                    if (xhr.status !== 200) {
-                        alert("При отправке сегмента произошла ошибка:\n\n" + xhr.status + ": " + xhr.statusText);
-                    }
-                }
-
-                skip_time = {"s": 0, "e": 0};
-
-                let send_time_start = document.getElementById("send_time_start");
-                send_time_start.innerText = "НАЧАЛО";
-
-                let send_time_end = document.getElementById("send_time_end");
-                send_time_end.innerText = "КОНЕЦ";
-            } else {
-                alert("1. Время начала или конца не может быть пустым.\n\n2. Время конца всегда должно быть больше чем начало.");
+        start: createElement("label", {
+            class: "overlay_sts_start",
+        }, (el) => {
+            el.onclick = () => {
+                skip_time["s"] = this._.form.video.currentTime;
+                el.innerText = secondsToTime(this._.form.video.currentTime);
             }
-        }
-    });
-    send.innerText = "ОТПРАВИТЬ";
-    overlay_sts.appendChild(send);
+        }),
 
-    this._.form.overlays.bottom.appendChild(overlay_sts);
+        end: createElement("label", {
+            class: "overlay_sts_end",
+        }, (el) => {
+            el.onclick = () => {
+                skip_time["e"] = this._.form.video.currentTime;
+                el.innerText = secondsToTime(this._.form.video.currentTime);
+            }
+        }),
+
+        send: createElement("label", {
+            class: "overlay_sts_send",
+        }, (el) => {
+            el.onclick = () => {
+                if ((skip_time["e"] > skip_time["s"]) && (skip_time["s"] > 0) && (skip_time["e"] > 0)) {
+                    if (confirm("Время начала: " + secondsToTime(skip_time["s"]) + "\nВремя конца: " + secondsToTime(skip_time["e"]) + "\n\nВсе верно? Отправлять сегмент?")) {
+                        let xhr = new XMLHttpRequest();
+                        xhr.open("GET", this._.sts_url + "?id=" + decodeURIComponent(window.location.pathname) + "&start=" + parseInt(skip_time["s"]) + "&end=" + parseInt(skip_time["e"]), false);
+                        xhr.send();
+
+                        if (xhr.status !== 200) {
+                            alert("При отправке сегмента произошла ошибка:\n\n" + xhr.status + ": " + xhr.statusText);
+                        }
+                    }
+
+                    skip_time = {"s": 0, "e": 0};
+
+                    this._.form.overlays.overlay_sts.start.innerText = "НАЧАЛО";
+                    this._.form.overlays.overlay_sts.end.innerText = "КОНЕЦ";
+                } else {
+                    alert("1. Время начала или конца не может быть пустым.\n\n2. Время конца всегда должно быть больше чем начало.");
+                }
+            }
+        })
+    }
+
+    this._.form.overlays.overlay_sts.start.innerText = "НАЧАЛО";
+    this._.form.overlays.overlay_sts.root.appendChild(this._.form.overlays.overlay_sts.start);
+
+    this._.form.overlays.overlay_sts.end.innerText = "КОНЕЦ";
+    this._.form.overlays.overlay_sts.root.appendChild(this._.form.overlays.overlay_sts.end);
+
+    this._.form.overlays.overlay_sts.send.innerText = "ОТПРАВИТЬ";
+    this._.form.overlays.overlay_sts.root.appendChild(this._.form.overlays.overlay_sts.send);
+
+    this._.form.overlays.bottom.appendChild(this._.form.overlays.overlay_sts.root);
 
     this._.form.overlays.bottom.appendChild(createElement("div", {
         style: "flex: auto",

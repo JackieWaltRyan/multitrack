@@ -46,6 +46,29 @@ class MultitrackJSLoader {
             const preferredQuality = episodeData.videos.find((video) => parseInt(video, 10) <= 1080);
             const preferredVideoName = preferredQuality ? preferredQuality + "p" : null;
 
+            let ds_series;
+            let ds_times;
+
+            let xhr_ds_series = new XMLHttpRequest();
+            xhr_ds_series.open("GET", "ds_series.json", false);
+            xhr_ds_series.send();
+
+            if (xhr_ds_series.status === 200) {
+                ds_series = JSON.parse(xhr_ds_series.responseText);
+            } else {
+                ds_series = null;
+            }
+
+            let xhr_ds_times = new XMLHttpRequest();
+            xhr_ds_times.open("GET", "ds_times.json", false);
+            xhr_ds_times.send();
+
+            if (xhr_ds_times.status === 200) {
+                ds_times = JSON.parse(xhr_ds_times.responseText);
+            } else {
+                ds_times = null;
+            }
+            
             return new MultitrackJS(data.el, {
                 videos: videos,
                 audios: audios,
@@ -54,6 +77,8 @@ class MultitrackJSLoader {
                 preview: episodeData.path + "preview.webp",
                 preferredVideoName: preferredVideoName,
                 title: episodeData.title,
+                ds_series: ds_series,
+                ds_times: ds_times,
                 sts_url: "https://sts.jwr.pw/sts"
             });
         } else {

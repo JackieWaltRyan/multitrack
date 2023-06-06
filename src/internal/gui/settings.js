@@ -2,6 +2,7 @@ import {createElement, getPosInElement, LogoInfoBlock, URLparams} from "../utils
 import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
 import {setSpeed} from "../playback";
 import {hotkeys, settings_hotkeys} from "./hotkeys";
+import {showOverlay} from "./overlay";
 
 class SettingsButtons {
     constructor(name = null) {
@@ -10,7 +11,7 @@ class SettingsButtons {
         this.Content = createElement("div");
     }
 
-    appendButton(name, action, checkbox) {
+    appendButton(name, action, checkbox, checkbox_list) {
         let btn = createElement("div", {
             class: "mjs__settings_element"
         });
@@ -32,6 +33,7 @@ class SettingsButtons {
             });
 
             input.checked = (localStorage.getItem(checkbox) === "true");
+            checkbox_list[checkbox] = input;
             btn.appendChild(input);
         }
 
@@ -92,6 +94,8 @@ function set_timeout() {
             this._.form.settings.opened = false;
         }, 3000);
     }
+
+    showOverlay.call(this);
 }
 
 export function toggleSettings(event) {
@@ -180,47 +184,43 @@ export function generateSettings() {
     this._.form.settings.menu.playbackRate = new SettingsRadioButtons("Скорость");
     this._.form.settings.menu.settings = new SettingsButtons("Дополнительно");
 
+    this._.form.checkbox = {};
+
     this._.form.settings.menu.settings.appendButton("Запоминать позицию", () => {
         let trigger = (localStorage.getItem("mt_set_position") !== "true");
         localStorage.setItem("mt_set_position", encodeURIComponent(trigger));
-        let input = document.getElementById("mt_set_position");
-        input.checked = trigger;
-    }, "mt_set_position");
+        this._.form.checkbox.mt_set_position.checked = trigger;
+    }, "mt_set_position", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendButton("Запоминать громкость", () => {
         let trigger = (localStorage.getItem("mt_set_volume") !== "true");
         localStorage.setItem("mt_set_volume", encodeURIComponent(trigger));
-        let input = document.getElementById("mt_set_volume");
-        input.checked = trigger;
-    }, "mt_set_volume");
+        this._.form.checkbox.mt_set_volume.checked = trigger;
+    }, "mt_set_volume", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendButton("Запоминать качество", () => {
         let trigger = (localStorage.getItem("mt_set_quality") !== "true");
         localStorage.setItem("mt_set_quality", encodeURIComponent(trigger));
-        let input = document.getElementById("mt_set_quality");
-        input.checked = trigger;
-    }, "mt_set_quality");
+        this._.form.checkbox.mt_set_quality.checked = trigger;
+    }, "mt_set_quality", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendButton("Запоминать озвучки", () => {
         let trigger = (localStorage.getItem("mt_set_voiceovers") !== "true");
         localStorage.setItem("mt_set_voiceovers", encodeURIComponent(trigger));
-        let input = document.getElementById("mt_set_voiceovers");
-        input.checked = trigger;
-    }, "mt_set_voiceovers");
+        this._.form.checkbox.mt_set_voiceovers.checked = trigger;
+    }, "mt_set_voiceovers", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendButton("Запоминать субтитры", () => {
         let trigger = (localStorage.getItem("mt_set_subtitles") !== "true");
         localStorage.setItem("mt_set_subtitles", encodeURIComponent(trigger));
-        let input = document.getElementById("mt_set_subtitles");
-        input.checked = trigger;
-    }, "mt_set_subtitles");
+        this._.form.checkbox.mt_set_subtitles.checked = trigger;
+    }, "mt_set_subtitles", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendButton("Запоминать скорость", () => {
         let trigger = (localStorage.getItem("mt_set_speed") !== "true");
         localStorage.setItem("mt_set_speed", encodeURIComponent(trigger));
-        let input = document.getElementById("mt_set_speed");
-        input.checked = trigger;
-    }, "mt_set_speed");
+        this._.form.checkbox.mt_set_speed.checked = trigger;
+    }, "mt_set_speed", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendElement("hr", {
         style: "border-style: inset; border-width: 1px;"
@@ -229,17 +229,15 @@ export function generateSettings() {
     this._.form.settings.menu.settings.appendButton("Переходить на следующее видео", () => {
         let trigger = (localStorage.getItem("mt_set_nextvideo") !== "true");
         localStorage.setItem("mt_set_nextvideo", encodeURIComponent(trigger));
-        let input = document.getElementById("mt_set_nextvideo");
-        input.checked = trigger;
-    }, "mt_set_nextvideo");
+        this._.form.checkbox.mt_set_nextvideo.checked = trigger;
+    }, "mt_set_nextvideo", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendButton("Пропускать заставку и титры", () => {
         let trigger = (localStorage.getItem("mt_set_skip") !== "true");
         localStorage.setItem("mt_set_skip", encodeURIComponent(trigger));
-        let input = document.getElementById("mt_set_skip");
-        input.checked = trigger;
+        this._.form.checkbox.mt_set_skip.checked = trigger;
         this._.form.video.dispatchEvent(new ProgressEvent("progress"));
-    }, "mt_set_skip");
+    }, "mt_set_skip", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendElement("hr", {
         style: "border-style: inset; border-width: 1px;"
@@ -248,23 +246,20 @@ export function generateSettings() {
     this._.form.settings.menu.settings.appendButton("Добавление новых сегментов", () => {
         let trigger = (localStorage.getItem("mt_set_newsegments") !== "true");
         localStorage.setItem("mt_set_newsegments", encodeURIComponent(trigger));
-        let input = document.getElementById("mt_set_newsegments");
-        input.checked = trigger;
-        let overlay_sts = document.getElementById("overlay_sts");
+        this._.form.checkbox.mt_set_newsegments.checked = trigger;
 
         if (trigger) {
-            overlay_sts.style.display = "block";
+            this._.form.overlays.overlay_sts.root.style.display = "block";
         } else {
-            overlay_sts.style.display = "none";
+            this._.form.overlays.overlay_sts.root.style.display = "none";
         }
-    }, "mt_set_newsegments");
+    }, "mt_set_newsegments", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendButton("Скрывать меню при неактивности", () => {
         let trigger = (localStorage.getItem("mt_set_hidemenu") !== "true");
         localStorage.setItem("mt_set_hidemenu", encodeURIComponent(trigger));
-        let input = document.getElementById("mt_set_hidemenu");
-        input.checked = trigger;
-    }, "mt_set_hidemenu");
+        this._.form.checkbox.mt_set_hidemenu.checked = trigger;
+    }, "mt_set_hidemenu", this._.form.checkbox);
 
     this._.form.settings.menu.hotkeys = new SettingsPage("Управление");
     this._.form.settings.menu.hotkeys.Content = createElement("div", {
@@ -315,7 +310,6 @@ export function generateSettings() {
 
     this._.form.settings.menuSwitcher = new SettingsButtons();
     this._.form.settings._root = createElement("div", {
-        id: "mjs_settings",
         class: "mjs__settings"
     });
 
@@ -330,14 +324,14 @@ export function generateSettings() {
     let preferredVideoIndex = 0;
 
     if (this._.preferredVideoName) {
-        const index = this._.videos.findIndex((video) => video.name === this._.preferredVideoName);
+        const index = this._.videos.findIndex((video) => (video.name === this._.preferredVideoName));
         if (index !== -1) {
             preferredVideoIndex = index;
         }
     }
 
     if (localStorage.getItem("mt_mark_quality") && (localStorage.getItem("mt_set_quality") === "true")) {
-        const index = this._.videos.findIndex((video) => video.name === localStorage.getItem("mt_mark_quality"));
+        const index = this._.videos.findIndex((video) => (video.name === localStorage.getItem("mt_mark_quality")));
         if (index !== -1) {
             preferredVideoIndex = index;
         }
@@ -356,14 +350,14 @@ export function generateSettings() {
     let preferredAudioIndex = 0;
 
     if (localStorage.getItem("mt_mark_dubs") && (localStorage.getItem("mt_set_voiceovers") === "true")) {
-        const index = this._.audios.findIndex((audio) => audio.code === localStorage.getItem("mt_mark_dubs"));
+        const index = this._.audios.findIndex((audio) => (audio.code === localStorage.getItem("mt_mark_dubs")));
         if (index !== -1) {
             preferredAudioIndex = index;
         }
     }
 
     if ("a" in URLparams()) {
-        const index = this._.audios.findIndex((audio) => audio.code === URLparams()["a"]);
+        const index = this._.audios.findIndex((audio) => (audio.code === URLparams()["a"]));
         if (index !== -1) {
             preferredAudioIndex = index;
         }
@@ -388,14 +382,14 @@ export function generateSettings() {
     let preferredSubtitleIndex = 0;
 
     if (localStorage.getItem("mt_mark_subtitles") && (localStorage.getItem("mt_set_subtitles") === "true")) {
-        const index = this._.subtitles.findIndex((subtitle) => subtitle.code === localStorage.getItem("mt_mark_subtitles"));
+        const index = this._.subtitles.findIndex((subtitle) => (subtitle.code === localStorage.getItem("mt_mark_subtitles")));
         if (index !== -1) {
             preferredSubtitleIndex = index;
         }
     }
 
     if ("s" in URLparams()) {
-        const index = this._.subtitles.findIndex((subtitle) => subtitle.code === URLparams()["s"]);
+        const index = this._.subtitles.findIndex((subtitle) => (subtitle.code === URLparams()["s"]));
         if (index !== -1) {
             preferredSubtitleIndex = index;
         }
@@ -409,7 +403,7 @@ export function generateSettings() {
 
         this._.form.settings.menu.playbackRate.selected.setAttribute("style", "width: " + (85 * ((val - 0.25) / (2 - 0.25))) + "%");
 
-        LogoInfoBlock(val);
+        LogoInfoBlock.call(this, val);
 
         setSpeed.call(this, val);
     });
@@ -420,7 +414,7 @@ export function generateSettings() {
         let release = (event) => {
             this._.form.settings.menu.playbackRate.updateStyle = false;
             // Получение координаты и вычисление позиции (от 0 до 1)
-            let element_1 = document.getElementById("speed_root_background");
+            let element_1 = this._.form.settings.menu.playbackRate.speed_root_background;
             let pos_1 = getPosInElement(element_1, event).x / element_1.clientWidth;
 
             if (pos_1 < 0) {
@@ -435,14 +429,14 @@ export function generateSettings() {
 
             let convert = ((2 - 0.25) * pos_1) + 0.25;
 
-            LogoInfoBlock(convert.toString().slice(0, 4));
+            LogoInfoBlock.call(this, convert.toString().slice(0, 4));
             setSpeed.call(this, convert);
         };
 
         let move = (event) => {
             if (this._.form.settings.menu.playbackRate.updateStyle) {
                 // Получение координаты и вычисление позиции (от 0 до 1)
-                let element_2 = document.getElementById("speed_root_background");
+                let element_2 = this._.form.settings.menu.playbackRate.speed_root_background;
                 let pos_2 = getPosInElement(element_2, event).x / element_2.clientWidth;
 
                 if (pos_2 < 0) {
@@ -457,7 +451,7 @@ export function generateSettings() {
 
                 let convert = ((2 - 0.25) * pos_2) + 0.25;
 
-                LogoInfoBlock(convert.toString().slice(0, 4));
+                LogoInfoBlock.call(this, convert.toString().slice(0, 4));
                 setSpeed.call(this, convert);
             }
         };
@@ -485,10 +479,10 @@ export function generateSettings() {
     this._.form.settings.menu.playbackRate.min.innerText = "0.25";
     this._.form.settings.menu.playbackRate.speed_root.appendChild(this._.form.settings.menu.playbackRate.min);
 
-    this._.form.settings.menu.playbackRate.speed_root.appendChild(createElement("div", {
-        id: "speed_root_background",
+    this._.form.settings.menu.playbackRate.speed_root_background = createElement("div", {
         class: "speed_root-background"
-    }));
+    });
+    this._.form.settings.menu.playbackRate.speed_root.appendChild(this._.form.settings.menu.playbackRate.speed_root_background);
 
     this._.form.settings.menu.playbackRate.selected = createElement("div", {
         class: "speed_root-selected"
@@ -517,6 +511,7 @@ export function generateSettings() {
 
         this._.form.settings.menuSwitcher.appendButton(menu.Name, () => {
             resetMenu.call(this);
+
             this._.form.settings.header.setAttribute("showIcon", "true");
             this._.form.settings.title.innerText = menu.Name;
             menu.Content.removeAttribute("style");
@@ -541,6 +536,10 @@ export function generateSettings() {
     this._.form.settings.header.appendChild(this._.form.settings.title);
     this._.form.settings._root.appendChild(this._.form.settings.header);
     this._.form.settings._root.appendChild(this._.form.settings.body);
+
+    this._.form.settings._root.addEventListener("click", () => {
+        set_timeout.call(this);
+    });
 
     this._.form.settings._root.addEventListener("mousemove", () => {
         set_timeout.call(this);

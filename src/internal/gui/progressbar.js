@@ -27,7 +27,6 @@ export function generateProgressbar() {
             }
         ),
         _root: createElement("div", {
-                id: "mjs_overlay_progressBar",
                 class: "mjs__overlay-progressBar",
             }, (el) => {
                 let updatePopup = (cursorX, position) => {
@@ -84,7 +83,7 @@ export function generateProgressbar() {
 
                     updatePopup(cursor.x, position);
 
-                    LogoInfoBlock(secondsToTime(this.duration * position));
+                    LogoInfoBlock.call(this, secondsToTime(this.duration * position));
                 };
 
                 let release = (event) => {
@@ -92,7 +91,7 @@ export function generateProgressbar() {
                     this._.form.progressbar.popup.classList.remove("mjs__overlay-progressPopup-show");
                     this.currentTime = (this.duration * getPosInElement(el, event).x) / el.clientWidth;
 
-                    LogoInfoBlock(secondsToTime(this.currentTime));
+                    LogoInfoBlock.call(this, secondsToTime(this.currentTime));
                 };
 
                 el.addEventListener("mousedown", () => {

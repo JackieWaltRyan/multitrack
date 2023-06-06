@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
 export function setVideo(link) {
     let currentTimeVideo = this.currentTime;
 
-    if (localStorage.getItem("mt_mark_time_" + encodeURIComponent(window.location.pathname)) && (localStorage.getItem("mt_set_position") === "true")) {
-        currentTimeVideo = parseFloat(localStorage.getItem("mt_mark_time_" + encodeURIComponent(window.location.pathname)));
+    if (localStorage.getItem("mt_mark_time_" + decodeURIComponent(window.location.pathname)) && (localStorage.getItem("mt_set_position") === "true")) {
+        currentTimeVideo = parseFloat(localStorage.getItem("mt_mark_time_" + decodeURIComponent(window.location.pathname)));
     }
 
     if ("t" in URLparams()) {
@@ -32,8 +32,8 @@ export function setVideo(link) {
 export function setAudio(link, code) {
     let currentTimeAudio = this.currentTime;
 
-    if (localStorage.getItem("mt_mark_time_" + encodeURIComponent(window.location.pathname)) && (localStorage.getItem("mt_set_position") === "true")) {
-        currentTimeAudio = parseFloat(localStorage.getItem("mt_mark_time_" + encodeURIComponent(window.location.pathname)));
+    if (localStorage.getItem("mt_mark_time_" + decodeURIComponent(window.location.pathname)) && (localStorage.getItem("mt_set_position") === "true")) {
+        currentTimeAudio = parseFloat(localStorage.getItem("mt_mark_time_" + decodeURIComponent(window.location.pathname)));
     }
 
     if ("t" in URLparams()) {

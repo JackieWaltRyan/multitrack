@@ -34,22 +34,19 @@ export function gui() {
     });
 
     this._.form.logo_spiner = createElement("div", {
-        id: "logo_spiner"
+        class: "logo_spiner"
     });
 
     this._.form.logo_play = createElement("div", {
-        id: "logo_play",
-        class: "all_logo"
+        class: "all_logo logo_play"
     });
 
     this._.form.logo_pause = createElement("div", {
-        id: "logo_pause",
-        class: "all_logo"
+        class: "all_logo logo_pause"
     });
 
     this._.form.logo_info_block = createElement("div", {
-        id: "logo_info_block",
-        class: "all_logo"
+        class: "all_logo logo_info_block"
     });
 
     // Кнопки (массив)

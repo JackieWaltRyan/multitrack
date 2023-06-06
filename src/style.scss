@@ -400,7 +400,7 @@
     }
 }
 
-#logo_spiner {
+.logo_spiner {
     border: 15px solid #ffffff;
     border-radius: 200px;
     border-bottom-color: transparent;
@@ -437,15 +437,15 @@
     filter: drop-shadow(0px 0px 15px #000);
 }
 
-#logo_play {
+.logo_play {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z' fill='white'/%3E%3C/svg%3E");
 }
 
-#logo_pause {
+.logo_pause {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 19h4V5H6v14zm8-14v14h4V5h-4z' fill='white'/%3E%3C/svg%3E");
 }
 
-#logo_info_block {
+.logo_info_block {
     text-align: center;
     font-size: 150px;
     font-weight: bold;
@@ -522,4 +522,38 @@
 
 .settings_hotkeys_infoBlock {
     padding: 9px;
+}
+
+.overlay_sts_root {
+    display: block;
+    padding-top: 8px;
+}
+
+.overlay_sts_root_hide {
+    display: none;
+    padding-top: 8px;
+}
+
+.overlay_sts_start {
+    background-color: green;
+    cursor: pointer;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.overlay_sts_end {
+    background-color: orange;
+    cursor: pointer;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.overlay_sts_send {
+    background-color: blue;
+    cursor: pointer;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-right: 5px;
 }
