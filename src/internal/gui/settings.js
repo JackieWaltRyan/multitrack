@@ -27,9 +27,8 @@ class SettingsButtons {
             });
             btn.appendChild(div);
             let input = createElement("input", {
-                id: checkbox,
                 type: "checkbox",
-                style: "top: 21%; position: relative; display: inline-block;"
+                class: "checkbox"
             });
 
             input.checked = (localStorage.getItem(checkbox) === "true");
@@ -223,7 +222,7 @@ export function generateSettings() {
     }, "mt_set_speed", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendElement("hr", {
-        style: "border-style: inset; border-width: 1px;"
+        class: "hr"
     });
 
     this._.form.settings.menu.settings.appendButton("Переходить на следующее видео", () => {
@@ -240,7 +239,7 @@ export function generateSettings() {
     }, "mt_set_skip", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendElement("hr", {
-        style: "border-style: inset; border-width: 1px;"
+        class: "hr"
     });
 
     this._.form.settings.menu.settings.appendButton("Добавление новых сегментов", () => {

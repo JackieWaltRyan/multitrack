@@ -4,8 +4,6 @@ Player for the site "[ТО "Магия Дружбы"](https://bronyru.info/%D1%8
 
 Online Test: [dist/index.html](https://jackiewaltryan.github.io/multitrack/dist/index.html)
 
-Change History: [change_history.log](https://raw.githubusercontent.com/JackieWaltRyan/multitrack/development/change_history.log)
-
 ### License
 
 The source code is provided free of charge, without any restrictions or conditions.  If someone needs something, take it and do what you want.

@@ -142,7 +142,7 @@ export function settings_hotkeys(el) {
     el.appendChild(KeyF);
 
     el.appendChild(createElement("hr", {
-        style: "border-style: inset; border-width: 1px;"
+        class: "hr"
     }));
 
     let ArrowLeft = createElement("div", {
@@ -222,7 +222,7 @@ export function settings_hotkeys(el) {
     el.appendChild(KeyL);
 
     el.appendChild(createElement("hr", {
-        style: "border-style: inset; border-width: 1px;"
+        class: "hr"
     }));
 
     let KeyM = createElement("div", {
@@ -283,7 +283,7 @@ export function settings_hotkeys(el) {
     el.appendChild(ArrowDown);
 
     el.appendChild(createElement("hr", {
-        style: "border-style: inset; border-width: 1px;"
+        class: "hr"
     }));
 
     let Digit0_Numpad0 = createElement("div", {
@@ -477,7 +477,7 @@ export function settings_hotkeys(el) {
     el.appendChild(Digit9_Numpad9);
 
     el.appendChild(createElement("hr", {
-        style: "border-style: inset; border-width: 1px;"
+        class: "hr"
     }));
 
     let Comma = createElement("div", {

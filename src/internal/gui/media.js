@@ -72,7 +72,7 @@ function appendEvents(element) {
 
     // Обработка событий загрузки
     function onwaiting() {
-        this._.form.logo_spiner.style.display = "block";
+        root._.form.logo_spiner.style.display = "block";
 
         downloadStatusUpdate.call(root);
     }
@@ -116,7 +116,7 @@ function appendEvents(element) {
         canvas.fillStyle = "white";
         canvas.clearRect(0, 0, element2.width, 1);
 
-        for (let i = 0; i < element.buffered.length; i += 2) {
+        for (let i = 0; i < buffered_list.length; i += 2) {
             const startX = (buffered_list[i] * element2.width) / root.duration;
             const endX = (buffered_list[i + 1] * element2.width) / root.duration;
             const width = endX - startX;
@@ -169,7 +169,7 @@ function appendEvents(element) {
 
         if (((root.duration - element.currentTime) < 2) && (localStorage.getItem("mt_mark_time_" + decodeURIComponent(window.location.pathname)))) {
             localStorage.setItem("mt_mark_time_" + decodeURIComponent(window.location.pathname), encodeURIComponent(0));
-            skip.call(this, true);
+            skip.call(root, true);
         }
 
         if (localStorage.getItem("mt_set_skip") === "true") {
