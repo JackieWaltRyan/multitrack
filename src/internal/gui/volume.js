@@ -1,5 +1,6 @@
 import {createElement, getPosInElement, LogoInfoBlock} from "../utils";
 import {mute} from "../volume";
+import {tooltip} from "./buttons";
 
 export function generateVolume() {
     (this._.form.buttons.volume = createElement("button", {
@@ -7,17 +8,42 @@ export function generateVolume() {
         icon: "volume",
         iconVar: 3
     }, (el) => {
-        el.addEventListener("click", () => {
+        el.onclick = (event) => {
             mute.call(this, true);
-        });
+            this.muted ? tooltip.call(this, event, true, "Включить звук") : tooltip.call(this, event, true, "Отключить звук");
+        };
+
+        el.onmousemove = (event) => {
+            this.muted ? tooltip.call(this, event, true, "Включить звук") : tooltip.call(this, event, true, "Отключить звук");
+        };
+
+        el.onmouseout = () => {
+            tooltip.call(this, false);
+        };
     }));
 
     (this._.form.volumebar = {
         line: createElement("div", {
             class: "mjs__overlay-volumeBar-background"
+        }, (el) => {
+            el.onmousemove = (event) => {
+                tooltip.call(this, event, true, "Громкость");
+            };
+
+            el.onmouseout = () => {
+                tooltip.call(this, false);
+            };
         }),
         selected: createElement("div", {
             class: "mjs__overlay-volumeBar-selected"
+        }, (el) => {
+            el.onmousemove = (event) => {
+                tooltip.call(this, event, true, "Громкость");
+            };
+
+            el.onmouseout = () => {
+                tooltip.call(this, false);
+            };
         }),
         _root: createElement("div", {
             class: "mjs__overlay-volumeBar"
@@ -58,23 +84,31 @@ export function generateVolume() {
                 }
             };
 
-            el.addEventListener("mousedown", () => {
+            el.onmousedown = () => {
                 this._.form.volumebar.updateStyle = true;
                 this._.form.audio.lastVolume = this._.form.audio.volume;
                 Object(this._.moveEvents).push({
                     move: move,
                     release: release,
                 });
-            });
+            };
 
-            el.addEventListener("touchstart", () => {
+            el.ontouchstart = () => {
                 this._.form.volumebar.updateStyle = true;
                 this._.form.audio.lastVolume = this._.form.audio.volume;
                 Object(this._.moveEvents).push({
                     move: move,
                     release: release,
                 });
-            });
+            };
+
+            el.onmousemove = (event) => {
+                tooltip.call(this, event, true, "Громкость");
+            };
+
+            el.onmouseout = () => {
+                tooltip.call(this, false);
+            };
         }),
     });
 

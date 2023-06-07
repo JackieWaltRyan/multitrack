@@ -49,6 +49,10 @@ export function gui() {
         class: "all_logo logo_info_block"
     });
 
+    this._.form.tooltip = createElement("div", {
+        class: "tooltip"
+    });
+
     // Кнопки (массив)
     generateButtons.call(this);
     generateProgressbar.call(this);
@@ -65,6 +69,7 @@ export function gui() {
     this._.element.appendChild(this._.form.logo_play);
     this._.element.appendChild(this._.form.logo_pause);
     this._.element.appendChild(this._.form.logo_info_block);
+    this._.element.appendChild(this._.form.tooltip);
 
     gestures.call(this);
     hotkeys.call(this);

@@ -167,7 +167,7 @@ function appendEvents(element) {
 
         localStorage.setItem("mt_mark_time_" + decodeURIComponent(window.location.pathname), encodeURIComponent(element.currentTime));
 
-        if (((root.duration - element.currentTime) < 2) && (localStorage.getItem("mt_mark_time_" + decodeURIComponent(window.location.pathname)))) {
+        if (((root.duration - element.currentTime) < 2) && (localStorage.getItem("mt_set_nextvideo") === "true")) {
             localStorage.setItem("mt_mark_time_" + decodeURIComponent(window.location.pathname), encodeURIComponent(0));
             skip.call(root, true);
         }

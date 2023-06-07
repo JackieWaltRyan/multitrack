@@ -2,6 +2,38 @@ import {createElement, logError} from "../utils";
 import {toggleSettings} from "./settings";
 import {seek, skip} from "../playback";
 
+export function tooltip(event, trigger, name) {
+    if (trigger) {
+        this._.form.tooltip.style.display = "block";
+        this._.form.tooltip.innerHTML = name;
+
+        let offsetLeft = event.srcElement.offsetLeft;
+        let offsetWidth = event.srcElement.offsetWidth;
+
+        if (offsetLeft === 0) {
+            offsetLeft = event.srcElement.offsetParent.offsetLeft;
+            offsetWidth = event.srcElement.offsetParent.offsetWidth;
+        }
+
+        let left = (offsetLeft - (this._.form.tooltip.offsetWidth / 2) + (offsetWidth / 2));
+
+        if (left < 0) {
+            this._.form.tooltip.style.right = "auto";
+            this._.form.tooltip.style.left = "0px";
+        } else {
+            if ((left + this._.form.tooltip.offsetWidth) > this._.element.offsetWidth) {
+                this._.form.tooltip.style.left = "auto";
+                this._.form.tooltip.style.right = "0px";
+            } else {
+                this._.form.tooltip.style.left = left + "px";
+            }
+        }
+    } else {
+        this._.form.tooltip.style.display = "none";
+    }
+}
+
+
 export function toggleFullscreen() {
     if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
         if (document.exitFullscreen) {
@@ -45,8 +77,17 @@ export function generateButtons() {
                 icon: "playBtn",
                 class: "mjs__overlay-button",
             }, (el) => {
-                el.onclick = () => {
+                el.onclick = (event) => {
                     this._.playing ? this.pause() : this.play();
+                    this._.playing ? tooltip.call(this, event, true, "Пауза") : tooltip.call(this, event, true, "Воспроизведение");
+                };
+
+                el.onmousemove = (event) => {
+                    this._.playing ? tooltip.call(this, event, true, "Пауза") : tooltip.call(this, event, true, "Воспроизведение");
+                };
+
+                el.onmouseout = () => {
+                    tooltip.call(this, false);
                 };
             }
         ),
@@ -58,6 +99,14 @@ export function generateButtons() {
                 el.onclick = () => {
                     seek.call(this, -10);
                 };
+
+                el.onmousemove = (event) => {
+                    tooltip.call(this, event, true, "Изменить позицию на -10 секунд");
+                };
+
+                el.onmouseout = () => {
+                    tooltip.call(this, false);
+                };
             }
         ),
         // Перемотать на 10 секунд
@@ -67,6 +116,14 @@ export function generateButtons() {
             }, (el) => {
                 el.onclick = () => {
                     seek.call(this, 10);
+                };
+
+                el.onmousemove = (event) => {
+                    tooltip.call(this, event, true, "Изменить позицию на +10 секунд");
+                };
+
+                el.onmouseout = () => {
+                    tooltip.call(this, false);
                 };
             }
         ),
@@ -78,6 +135,14 @@ export function generateButtons() {
                 el.onclick = () => {
                     skip.call(this, false);
                 };
+
+                el.onmousemove = (event) => {
+                    tooltip.call(this, event, true, "Предыдущая серия");
+                };
+
+                el.onmouseout = () => {
+                    tooltip.call(this, false);
+                };
             }
         ),
         // Следующий трек
@@ -88,6 +153,14 @@ export function generateButtons() {
                 el.onclick = () => {
                     skip.call(this, true);
                 };
+
+                el.onmousemove = (event) => {
+                    tooltip.call(this, event, true, "Следующая серия");
+                };
+
+                el.onmouseout = () => {
+                    tooltip.call(this, false);
+                };
             }
         ),
         // Кнопка полного экрана
@@ -95,8 +168,17 @@ export function generateButtons() {
                 icon: "fullscreenOn",
                 class: "mjs__overlay-button",
             }, (el) => {
-                el.onclick = () => {
+                el.onclick = (event) => {
                     toggleFullscreen.call(this);
+                    (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) ? tooltip.call(this, event, true, "Отключить полноэкранный режим") : tooltip.call(this, event, true, "Включить полноэкранный режим");
+                };
+
+                el.onmousemove = (event) => {
+                    (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) ? tooltip.call(this, event, true, "Отключить полноэкранный режим") : tooltip.call(this, event, true, "Включить полноэкранный режим");
+                };
+
+                el.onmouseout = () => {
+                    tooltip.call(this, false);
                 };
             }
         ),
@@ -121,24 +203,42 @@ export function generateButtons() {
                         logError.call(this, "Извините, при создании ссылки произошла ошибка.");
                     }
                 };
+
+                el.onmousemove = (event) => {
+                    tooltip.call(this, event, true, "Скопировать ссылку с временем, озвучкой и субтитрами");
+                };
+
+                el.onmouseout = () => {
+                    tooltip.call(this, false);
+                };
             }
         ),
         pip: createElement("button", {
                 icon: "pipOn",
                 class: "mjs__overlay-button",
             }, (el) => {
-                el.onclick = () => {
+                el.onclick = (event) => {
                     if ("pictureInPictureEnabled" in document) {
                         if (this._.form.video !== document.pictureInPictureElement) {
                             this._.form.video.requestPictureInPicture().then(r => r);
                             el.setAttribute("icon", "pipOff");
+                            tooltip.call(this, event, true, "Отключить режим «картинка в картинке»")
                         } else {
                             document.exitPictureInPicture().then(r => r);
                             el.setAttribute("icon", "pipOn");
+                            tooltip.call(this, event, true, "Включить режим «картинка в картинке»")
                         }
                     } else {
                         logError.call(this, "К сожалению, ваш браузер не поддерживает функцию «картинка в картинке».");
                     }
+                };
+
+                el.onmousemove = (event) => {
+                    this._.form.video !== document.pictureInPictureElement ? tooltip.call(this, event, true, "Включить режим «картинка в картинке»") : tooltip.call(this, event, true, "Отключить режим «картинка в картинке»");
+                };
+
+                el.onmouseout = () => {
+                    tooltip.call(this, false);
                 };
             }
         ),
@@ -147,9 +247,17 @@ export function generateButtons() {
                 icon: "menu",
                 class: "mjs__overlay-button",
             }, (el) => {
-                el.addEventListener("click", () => {
+                el.onclick = () => {
                     toggleSettings.call(this);
-                });
+                };
+
+                el.onmousemove = (event) => {
+                    tooltip.call(this, event, true, "Настройки");
+                };
+
+                el.onmouseout = () => {
+                    tooltip.call(this, false);
+                };
             }
         ),
     };

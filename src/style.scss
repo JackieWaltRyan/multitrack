@@ -567,3 +567,17 @@
     border-width: 1px;
     color: white;
 }
+
+.tooltip {
+    position: absolute;
+    border-radius: 4px;
+    display: none;
+    background-color: #1c1c1ce6;
+    padding: 5px 10px;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: small;
+    max-width: 200px;
+    bottom: 55px;
+    text-align: center;
+    width: fit-content;
+}
