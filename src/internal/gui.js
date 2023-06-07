@@ -5,7 +5,7 @@ import {generateMedia} from "./gui/media";
 import {generateVolume} from "./gui/volume";
 import {generateSettings} from "./gui/settings";
 import {generateProgressbar} from "./gui/progressbar";
-import {generateButtons} from "./gui/buttons";
+import {generateButtons, tooltip} from "./gui/buttons";
 import {generateOverlay} from "./gui/overlay";
 
 export function gui() {
@@ -25,6 +25,14 @@ export function gui() {
 
     this._.form.time = createElement("div", {
         class: "mjs__overlay-time"
+    }, (el) => {
+        el.onmousemove = (event) => {
+            tooltip.call(this, event, true, "Время");
+        };
+
+        el.onmouseout = () => {
+            tooltip.call(this, false);
+        };
     });
 
     this._.form.time.innerText = "--:-- / --:--";

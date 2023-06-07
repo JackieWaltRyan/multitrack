@@ -101,7 +101,7 @@ export function generateButtons() {
                 };
 
                 el.onmousemove = (event) => {
-                    tooltip.call(this, event, true, "Изменить позицию на -10 секунд");
+                    tooltip.call(this, event, true, "Изменить позицию на  -10 секунд");
                 };
 
                 el.onmouseout = () => {

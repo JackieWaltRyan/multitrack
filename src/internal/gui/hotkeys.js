@@ -1,7 +1,7 @@
-import {mute} from "../volume";
 import {toggleFullscreen} from "./buttons";
 import {seek} from "../playback";
 import {createElement, LogoInfoBlock} from "../utils";
+import {mute} from "./volume";
 
 export function hotkeys() {
     document.addEventListener("keydown", (event) => {
