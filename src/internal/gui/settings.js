@@ -284,15 +284,14 @@ export function generateSettings() {
             const infoBlock = createElement("div", {
                 style: "line-height: 20px; padding: 4px 8px;"
             }, (inf) => {
-                inf.innerHTML += "Версия: " + require("/package.json").version + "<br>Исходный код плеера: <a href='https://github.com/JackieWaltRyan/multitrack' style='color: #ffccff' target='_blank'>JackieWaltRyan/multitrack</a>";
+                inf.innerHTML += "Версия: " + require("/package.json").version + "<br>Дата сборки: " + new Date(__TIMESTAMP__).toLocaleString("ru").toString();
             });
-
             bl.appendChild(infoBlock);
         });
 
         el.appendChild(authorBlock);
 
-        el.innerHTML += "Дата сборки: " + new Date(__TIMESTAMP__).toLocaleString("ru").toString();
+        el.innerHTML += "Исходный код плеера: <a href='" + require("/package.json").homepage + "' style='color: #ffccff' target='_blank'>JackieWaltRyan/multitrack</a><br>Баги и предложения: <a href='" + require("/package.json").bugs.url + "' style='color: #ffccff' target='_blank'>GitHub Issues</a>";
     });
 
     this._.form.settings.title = createElement("div", {
