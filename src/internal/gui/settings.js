@@ -1,4 +1,4 @@
-import {createElement, getPosInElement, LogoInfoBlock, URLparams} from "../utils";
+import {createElement, getPosInElement, LogoInfoBlock, mobileCheck, URLparams} from "../utils";
 import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
 import {setSpeed} from "../playback";
 import {hotkeys, settings_hotkeys} from "./hotkeys";
@@ -13,7 +13,7 @@ class SettingsButtons {
 
     appendButton(name, action, checkbox, checkbox_list) {
         let btn = createElement("div", {
-            class: "mjs__settings_element"
+            class: "mt_settings_element"
         });
 
         btn.innerText = name;
@@ -28,7 +28,7 @@ class SettingsButtons {
             btn.appendChild(div);
             let input = createElement("input", {
                 type: "checkbox",
-                class: "checkbox"
+                class: "mt_checkbox"
             });
 
             input.checked = (localStorage.getItem(checkbox) === "true");
@@ -57,7 +57,7 @@ class SettingsRadioButtons {
 
     appendButton(name, action) {
         let btn = createElement("div", {
-            class: "mjs__settings_element"
+            class: "mt_settings_element"
         });
 
         btn.innerText = name;
@@ -89,7 +89,7 @@ function set_timeout() {
 
     if (localStorage.getItem("mt_set_hidemenu") === "true") {
         SettingsTimeout = setTimeout(() => {
-            this._.rootElement.classList.remove("mjs__settings_show");
+            this._.rootElement.classList.remove("mt_settings_show");
             this._.form.settings.opened = false;
         }, 3000);
     }
@@ -99,13 +99,13 @@ function set_timeout() {
 
 export function toggleSettings(event) {
     if (this._.form.settings.opened) {
-        this._.rootElement.classList.remove("mjs__settings_show");
+        this._.rootElement.classList.remove("mt_settings_show");
 
         clearTimeout(SettingsTimeout);
     } else {
         resetMenu.call(this);
 
-        this._.rootElement.classList.add("mjs__settings_show");
+        this._.rootElement.classList.add("mt_settings_show");
 
         set_timeout.call(this);
 
@@ -191,11 +191,13 @@ export function generateSettings() {
         this._.form.checkbox.mt_set_position.checked = trigger;
     }, "mt_set_position", this._.form.checkbox);
 
-    this._.form.settings.menu.settings.appendButton("Запоминать громкость", () => {
-        let trigger = (localStorage.getItem("mt_set_volume") !== "true");
-        localStorage.setItem("mt_set_volume", encodeURIComponent(trigger));
-        this._.form.checkbox.mt_set_volume.checked = trigger;
-    }, "mt_set_volume", this._.form.checkbox);
+    if (!mobileCheck()) {
+        this._.form.settings.menu.settings.appendButton("Запоминать громкость", () => {
+            let trigger = (localStorage.getItem("mt_set_volume") !== "true");
+            localStorage.setItem("mt_set_volume", encodeURIComponent(trigger));
+            this._.form.checkbox.mt_set_volume.checked = trigger;
+        }, "mt_set_volume", this._.form.checkbox);
+    }
 
     this._.form.settings.menu.settings.appendButton("Запоминать качество", () => {
         let trigger = (localStorage.getItem("mt_set_quality") !== "true");
@@ -222,7 +224,7 @@ export function generateSettings() {
     }, "mt_set_speed", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendElement("hr", {
-        class: "hr"
+        class: "mt_hr"
     });
 
     this._.form.settings.menu.settings.appendButton("Переходить на следующее видео", () => {
@@ -239,7 +241,7 @@ export function generateSettings() {
     }, "mt_set_skip", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendElement("hr", {
-        class: "hr"
+        class: "mt_hr"
     });
 
     this._.form.settings.menu.settings.appendButton("Добавление новых сегментов", () => {
@@ -260,12 +262,14 @@ export function generateSettings() {
         this._.form.checkbox.mt_set_hidemenu.checked = trigger;
     }, "mt_set_hidemenu", this._.form.checkbox);
 
-    this._.form.settings.menu.hotkeys = new SettingsPage("Управление");
-    this._.form.settings.menu.hotkeys.Content = createElement("div", {
-        blockName: "hotkeys"
-    }, (el) => {
-        settings_hotkeys.call(this, el);
-    });
+    if (!mobileCheck()) {
+        this._.form.settings.menu.hotkeys = new SettingsPage("Управление");
+        this._.form.settings.menu.hotkeys.Content = createElement("div", {
+            blockName: "hotkeys"
+        }, (el) => {
+            settings_hotkeys.call(this, el);
+        });
+    }
 
     this._.form.settings.menu.info = new SettingsPage("Информация о плеере");
     this._.form.settings.menu.info.Content = createElement("div", {
@@ -295,11 +299,11 @@ export function generateSettings() {
     });
 
     this._.form.settings.title = createElement("div", {
-        class: "mjs__settingsHeader-title"
+        class: "mt_settings_header-title"
     });
 
     this._.form.settings.header = createElement("div", {
-        class: "mjs__settingsHeader"
+        class: "mt_settings_header"
     }, (el) => {
         el.addEventListener("click", () => {
             resetMenu.call(this);
@@ -308,7 +312,7 @@ export function generateSettings() {
 
     this._.form.settings.menuSwitcher = new SettingsButtons();
     this._.form.settings._root = createElement("div", {
-        class: "mjs__settings"
+        class: "mt_settings"
     });
 
     // Добавление видео
@@ -407,7 +411,7 @@ export function generateSettings() {
     });
 
     this._.form.settings.menu.playbackRate.speed_root = createElement("div", {
-        class: "speed_root"
+        class: "mt_speed_root"
     }, (el) => {
         let release = (event) => {
             this._.form.settings.menu.playbackRate.updateStyle = false;
@@ -472,23 +476,23 @@ export function generateSettings() {
     });
 
     this._.form.settings.menu.playbackRate.min = createElement("div", {
-        class: "speed_root-min"
+        class: "mt_speed_root_min"
     });
     this._.form.settings.menu.playbackRate.min.innerText = "0.25";
     this._.form.settings.menu.playbackRate.speed_root.appendChild(this._.form.settings.menu.playbackRate.min);
 
     this._.form.settings.menu.playbackRate.speed_root_background = createElement("div", {
-        class: "speed_root-background"
+        class: "mt_speed_root_background"
     });
     this._.form.settings.menu.playbackRate.speed_root.appendChild(this._.form.settings.menu.playbackRate.speed_root_background);
 
     this._.form.settings.menu.playbackRate.selected = createElement("div", {
-        class: "speed_root-selected"
+        class: "mt_speed_root_selected"
     });
     this._.form.settings.menu.playbackRate.speed_root.appendChild(this._.form.settings.menu.playbackRate.selected);
 
     this._.form.settings.menu.playbackRate.max = createElement("div", {
-        class: "speed_root-max"
+        class: "mt_speed_root_max"
     });
     this._.form.settings.menu.playbackRate.max.innerText = "2";
     this._.form.settings.menu.playbackRate.speed_root.appendChild(this._.form.settings.menu.playbackRate.max);
@@ -519,7 +523,7 @@ export function generateSettings() {
 
     // AppendMenus
     this._.form.settings.body = createElement("div", {
-        class: "mjs__settingsBody"
+        class: "mt_settings_body"
     });
 
     this._.form.settings.body.appendChild(this._.form.settings.menuSwitcher.Content);

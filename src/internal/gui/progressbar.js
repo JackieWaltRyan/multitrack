@@ -3,36 +3,36 @@ import {createElement, getPosInElement, LogoInfoBlock, secondsToTime} from "../u
 export function generateProgressbar() {
     this._.form.progressbar = {
         line: createElement("div", {
-            class: "mjs__overlay-progressBar-background",
+            class: "mt_overlay_progress_bar_background",
         }),
         loaded: createElement("canvas", {
-                class: "mjs__overlay-progressBar-loaded",
+                class: "mt_overlay_progress_bar_loaded",
                 height: 1,
             }, (el) => {
                 el._canvas = el.getContext("2d");
             }
         ),
         played: createElement("div", {
-            class: "mjs__overlay-progressBar-played",
+            class: "mt_overlay_progress_bar_played",
         }),
         popup: createElement("div", {
-                class: "mjs__overlay-progressPopup",
+                class: "mt_overlay_progress_popup",
             }, (el) => {
                 el.text = createElement("div", {
-                    class: "mjs__overlay-progressPopup-time",
+                    class: "mt_overlay_progress_popup_time",
                 });
                 el.image = createElement("div", {
-                    class: "mjs__overlay-progressPopup-image",
+                    class: "mt_overlay_progress_popup_image",
                 });
             }
         ),
         _root: createElement("div", {
-                class: "mjs__overlay-progressBar",
+                class: "mt_overlay_progress_bar",
             }, (el) => {
                 let updatePopup = (cursorX, position) => {
                     // Обновление всплывающего пузырька
                     this._.form.progressbar.popup.text.innerText = secondsToTime(this.duration * position);
-                    this._.form.progressbar.popup.classList.add("mjs__overlay-progressPopup-show");
+                    this._.form.progressbar.popup.classList.add("mt_overlay_progress_popup_show");
 
                     if (this._.form.progressbar.popup.clientWidth !== 0) {
                         this._.form.progressbar.popup.halfWidth = this._.form.progressbar.popup.clientWidth / 2;
@@ -88,7 +88,7 @@ export function generateProgressbar() {
 
                 let release = (event) => {
                     this._.form.progressbar.updateStyle = false;
-                    this._.form.progressbar.popup.classList.remove("mjs__overlay-progressPopup-show");
+                    this._.form.progressbar.popup.classList.remove("mt_overlay_progress_popup_show");
                     this.currentTime = (this.duration * getPosInElement(el, event).x) / el.clientWidth;
 
                     LogoInfoBlock.call(this, secondsToTime(this.currentTime));
@@ -125,12 +125,12 @@ export function generateProgressbar() {
                     if (this._.form.progressbar.updateStyle || (cursor.y > 0)) {
                         updatePopup(cursor.x, position);
                     } else {
-                        this._.form.progressbar.popup.classList.remove("mjs__overlay-progressPopup-show");
+                        this._.form.progressbar.popup.classList.remove("mt_overlay_progress_popup_show");
                     }
                 });
 
                 el.addEventListener("mouseout", () => {
-                    this._.form.progressbar.popup.classList.remove("mjs__overlay-progressPopup-show");
+                    this._.form.progressbar.popup.classList.remove("mt_overlay_progress_popup_show");
                 });
             }
         ),

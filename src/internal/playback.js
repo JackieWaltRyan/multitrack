@@ -13,8 +13,8 @@ export function synchronize(target = null) {
         const playbackRate = root.playbackRate;
         const diff = video.currentTime - audio.currentTime;
 
-        audio.mjs_setRate(playbackRate);
-        video.mjs_setRate(playbackRate);
+        audio.mt_setRate(playbackRate);
+        video.mt_setRate(playbackRate);
 
         if (video.syncTimeout) {
             clearTimeout(video.syncTimeout);
@@ -35,13 +35,13 @@ export function synchronize(target = null) {
                         console.log("Sync: Rate changed to " + scale);
                     }
 
-                    video.mjs_setRate(scale);
+                    video.mt_setRate(scale);
                     video.syncTimeout = setTimeout(() => {
                         if (process.env.NODE_ENV !== "production") {
                             console.log("Sync: Rate changed back");
                         }
 
-                        video.mjs_setRate(playbackRate);
+                        video.mt_setRate(playbackRate);
                         video.syncTimeout = null;
                     }, 1000);
 
@@ -56,7 +56,7 @@ export function synchronize(target = null) {
                     console.log("Sync: Seeked to " + audio.currentTime);
                 }
 
-                video.mjs_setTime(audio.currentTime);
+                video.mt_setTime(audio.currentTime);
                 resolve();
             }
         } else {
@@ -79,8 +79,8 @@ export function downloadStatusUpdate() {
 
     if (this._.playing || (("p" in URLparams()) && trigger)) {
         if (allowedStates.includes(video.readyState) && allowedStates.includes(audio.readyState)) {
-            audio.mjs_play();
-            video.mjs_play();
+            audio.mt_play();
+            video.mt_play();
 
             this._.playing = true;
             this.trySync = true;
@@ -90,11 +90,11 @@ export function downloadStatusUpdate() {
             trigger = false;
         } else {
             if (!allowedStates.includes(video.readyState) && document.hasFocus()) {
-                audio.mjs_pause();
+                audio.mt_pause();
             }
 
             if (!allowedStates.includes(audio.readyState)) {
-                video.mjs_pause();
+                video.mt_pause();
             }
         }
     }
@@ -102,30 +102,30 @@ export function downloadStatusUpdate() {
 
 export function changePlaying(val) {
     if (val) {
-        this._.form.video.mjs_play();
-        this._.form.audio.mjs_play();
+        this._.form.video.mt_play();
+        this._.form.audio.mt_play();
         this._.form.buttons.play.setAttribute("icon", "pauseBtn");
 
         this._.form.logo_play.style.display = "block";
         this._.form.logo_play.style.animation = "none";
 
         setTimeout(() => {
-            this._.form.logo_play.style.animation = "change_opacity 1s forwards";
+            this._.form.logo_play.style.animation = "mt_change_opacity 1s forwards";
 
             setTimeout(() => {
                 this._.form.logo_play.style.display = "none";
             }, 1000);
         }, 100);
     } else {
-        this._.form.video.mjs_pause();
-        this._.form.audio.mjs_pause();
+        this._.form.video.mt_pause();
+        this._.form.audio.mt_pause();
         this._.form.buttons.play.setAttribute("icon", "playBtn");
 
         this._.form.logo_pause.style.display = "block";
         this._.form.logo_pause.style.animation = "none";
 
         setTimeout(() => {
-            this._.form.logo_pause.style.animation = "change_opacity 1s forwards";
+            this._.form.logo_pause.style.animation = "mt_change_opacity 1s forwards";
 
             setTimeout(() => {
                 this._.form.logo_pause.style.display = "none";
@@ -159,8 +159,8 @@ export function seek(val) {
         val = 0;
     }
 
-    this._.form.audio.mjs_setTime(val);
-    this._.form.video.mjs_setTime(val);
+    this._.form.audio.mt_setTime(val);
+    this._.form.video.mt_setTime(val);
 }
 
 export function skip(val) {
@@ -178,9 +178,9 @@ export function skip(val) {
 }
 
 export function setTime(val, isVideo = false) {
-    this._.form.audio.mjs_setTime(val);
+    this._.form.audio.mt_setTime(val);
     if (!isVideo) {
-        this._.form.video.mjs_setTime(val);
+        this._.form.video.mt_setTime(val);
     }
 }
 

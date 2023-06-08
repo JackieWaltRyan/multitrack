@@ -1,4 +1,4 @@
-import {createElement, getPosInElement, LogoInfoBlock} from "../utils";
+import {createElement, getPosInElement, LogoInfoBlock, mobileCheck} from "../utils";
 import {tooltip} from "./buttons";
 
 export function mute(undoLast = false) {
@@ -13,7 +13,7 @@ export function mute(undoLast = false) {
 
 export function generateVolume() {
     (this._.form.buttons.volume = createElement("button", {
-        class: "mjs__overlay-button",
+        class: "mt_overlay_button",
         icon: "volume",
         iconVar: 3
     }, (el) => {
@@ -33,7 +33,7 @@ export function generateVolume() {
 
     (this._.form.volumebar = {
         line: createElement("div", {
-            class: "mjs__overlay-volumeBar-background"
+            class: "mt_overlay_volume_bar_background"
         }, (el) => {
             el.onmousemove = (event) => {
                 tooltip.call(this, event, true, "Громкость");
@@ -44,7 +44,7 @@ export function generateVolume() {
             };
         }),
         selected: createElement("div", {
-            class: "mjs__overlay-volumeBar-selected"
+            class: "mt_overlay_volume_bar_selected"
         }, (el) => {
             el.onmousemove = (event) => {
                 tooltip.call(this, event, true, "Громкость");
@@ -55,7 +55,7 @@ export function generateVolume() {
             };
         }),
         _root: createElement("div", {
-            class: "mjs__overlay-volumeBar"
+            class: "mt_overlay_volume_bar"
         }, (el) => {
             let vol_val;
 
@@ -121,6 +121,8 @@ export function generateVolume() {
         }),
     });
 
-    this._.form.volumebar._root.appendChild(this._.form.volumebar.line);
-    this._.form.volumebar._root.appendChild(this._.form.volumebar.selected);
+    if (!mobileCheck()) {
+        this._.form.volumebar._root.appendChild(this._.form.volumebar.line);
+        this._.form.volumebar._root.appendChild(this._.form.volumebar.selected);
+    }
 }

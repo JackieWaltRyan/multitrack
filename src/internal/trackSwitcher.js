@@ -19,13 +19,13 @@ export function setVideo(link) {
     }
 
     const playbackRate = this.playbackRate;
-    this._.form.video.mjs_pause();
+    this._.form.video.mt_pause();
     this._.form.video.src = link;
-    this._.form.video.mjs_setTime(currentTimeVideo);
-    this._.form.video.mjs_setRate(playbackRate);
+    this._.form.video.mt_setTime(currentTimeVideo);
+    this._.form.video.mt_setRate(playbackRate);
 
     if (this._.playing) {
-        this._.form.video.mjs_play();
+        this._.form.video.mt_play();
     }
 }
 
@@ -41,17 +41,17 @@ export function setAudio(link, code) {
     }
 
     const playbackRate = this.playbackRate;
-    this._.form.audio.mjs_pause();
+    this._.form.audio.mt_pause();
     this._.form.audio.src = link;
-    this._.form.audio.mjs_setTime(currentTimeAudio);
-    this._.form.audio.mjs_setRate(playbackRate);
+    this._.form.audio.mt_setTime(currentTimeAudio);
+    this._.form.audio.mt_setRate(playbackRate);
 
     if (localStorage.getItem("mt_mark_volume") && (localStorage.getItem("mt_set_volume") === "true")) {
         this.volume = parseFloat(localStorage.getItem("mt_mark_volume"));
     }
 
     if (this._.playing) {
-        this._.form.audio.mjs_play();
+        this._.form.audio.mt_play();
     }
 }
 

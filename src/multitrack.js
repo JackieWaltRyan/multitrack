@@ -1,7 +1,7 @@
 import "./style.scss";
 import {init} from "./internal/init";
 import {pause, play, setSpeed, setTime, synchronize} from "./internal/playback";
-import {sleep} from "./internal/utils";
+import {mobileCheck, sleep} from "./internal/utils";
 
 export default class {
     get currentTime() {
@@ -62,27 +62,31 @@ export default class {
 
     set volume(value) {
         if (typeof value === "number") {
-            if (value < 0) {
-                value = 0;
+            if (mobileCheck()) {
+                this._.form.audio.volume = 1;
+            } else {
+                if (value < 0) {
+                    value = 0;
+                }
+
+                if (value > 1) {
+                    value = 1;
+                }
+
+                const audio = this._.form.audio;
+                audio.volume = value;
+
+                localStorage.setItem("mt_mark_volume", encodeURIComponent(value));
+
+                let iconNum = Math.ceil(audio.volume * 3);
+
+                if (audio.muted) {
+                    iconNum = 0;
+                }
+
+                this._.form.buttons.volume.setAttribute("iconVar", iconNum);
+                this._.form.volumebar.selected.setAttribute("style", "width: " + (100 * value) + "%");
             }
-
-            if (value > 1) {
-                value = 1;
-            }
-
-            const audio = this._.form.audio;
-            audio.volume = value;
-
-            localStorage.setItem("mt_mark_volume", encodeURIComponent(value));
-
-            let iconNum = Math.ceil(audio.volume * 3);
-
-            if (audio.muted) {
-                iconNum = 0;
-            }
-
-            this._.form.buttons.volume.setAttribute("iconVar", iconNum);
-            this._.form.volumebar.selected.setAttribute("style", "width: " + (100 * value) + "%");
         }
     }
 

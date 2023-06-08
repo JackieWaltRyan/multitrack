@@ -14,7 +14,7 @@ function appendEvents(element) {
 
     element.addEventListener("playing", onplaying);
 
-    element.mjs_play = () => {
+    element.mt_play = () => {
         element.removeEventListener("playing", onplaying);
         element.play().then(() => {
             element.addEventListener("playing", onplaying);
@@ -34,7 +34,7 @@ function appendEvents(element) {
 
     element.addEventListener("pause", onpause);
 
-    element.mjs_pause = () => {
+    element.mt_pause = () => {
         element.removeEventListener("pause", onpause);
         element.pause();
         setTimeout(() => {
@@ -48,7 +48,7 @@ function appendEvents(element) {
 
     element.addEventListener("seeking", onseeking);
 
-    element.mjs_setTime = (val) => {
+    element.mt_setTime = (val) => {
         element.removeEventListener("seeking", onseeking);
         element.currentTime = val;
         setTimeout(() => {
@@ -62,7 +62,7 @@ function appendEvents(element) {
 
     element.addEventListener("ratechange", onratechange);
 
-    element.mjs_setRate = (val) => {
+    element.mt_setRate = (val) => {
         element.removeEventListener("ratechange", onratechange);
         element.playbackRate = val;
         setTimeout(() => {

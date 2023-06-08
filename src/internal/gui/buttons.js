@@ -1,9 +1,9 @@
-import {createElement, logError} from "../utils";
+import {createElement, logError, mobileCheck} from "../utils";
 import {toggleSettings} from "./settings";
 import {seek, skip} from "../playback";
 
 export function tooltip(event, trigger, name) {
-    if (trigger) {
+    if (trigger && !mobileCheck()) {
         this._.form.tooltip.style.display = "block";
         this._.form.tooltip.innerHTML = name;
 
@@ -32,7 +32,6 @@ export function tooltip(event, trigger, name) {
         this._.form.tooltip.style.display = "none";
     }
 }
-
 
 export function toggleFullscreen() {
     if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
@@ -75,7 +74,8 @@ export function generateButtons() {
         // Плей/пауза
         play: createElement("button", {
                 icon: "playBtn",
-                class: "mjs__overlay-button",
+                class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile",
+                style: !mobileCheck() ? "" : "background-size: 55px;"
             }, (el) => {
                 el.onclick = (event) => {
                     this._.playing ? this.pause() : this.play();
@@ -94,7 +94,7 @@ export function generateButtons() {
         // Отмотать на 10 секунд
         backward10: createElement("button", {
                 icon: "backward10",
-                class: "mjs__overlay-button",
+                class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
                 el.onclick = () => {
                     seek.call(this, -10);
@@ -112,7 +112,7 @@ export function generateButtons() {
         // Перемотать на 10 секунд
         forward10: createElement("button", {
                 icon: "forward10",
-                class: "mjs__overlay-button",
+                class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
                 el.onclick = () => {
                     seek.call(this, 10);
@@ -130,7 +130,7 @@ export function generateButtons() {
         // Предыдущий трек
         skip_previous: createElement("button", {
                 icon: "skip_previous",
-                class: "mjs__overlay-button",
+                class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
                 el.onclick = () => {
                     skip.call(this, false);
@@ -148,7 +148,7 @@ export function generateButtons() {
         // Следующий трек
         skip_next: createElement("button", {
                 icon: "skip_next",
-                class: "mjs__overlay-button",
+                class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
                 el.onclick = () => {
                     skip.call(this, true);
@@ -166,7 +166,7 @@ export function generateButtons() {
         // Кнопка полного экрана
         fullscreen: createElement("button", {
                 icon: "fullscreenOn",
-                class: "mjs__overlay-button",
+                class: "mt_overlay_button"
             }, (el) => {
                 el.onclick = (event) => {
                     toggleFullscreen.call(this);
@@ -185,7 +185,7 @@ export function generateButtons() {
         // Кнопка "Скопировать"
         copy_url: createElement("button", {
                 icon: "copy",
-                class: "mjs__overlay-button",
+                class: "mt_overlay_button"
             }, (el) => {
                 el.onclick = () => {
                     try {
@@ -215,7 +215,7 @@ export function generateButtons() {
         ),
         pip: createElement("button", {
                 icon: "pipOn",
-                class: "mjs__overlay-button",
+                class: "mt_overlay_button"
             }, (el) => {
                 el.onclick = (event) => {
                     if ("pictureInPictureEnabled" in document) {
@@ -245,7 +245,7 @@ export function generateButtons() {
         // Открыть меню
         menu: createElement("button", {
                 icon: "menu",
-                class: "mjs__overlay-button",
+                class: "mt_overlay_button"
             }, (el) => {
                 el.onclick = () => {
                     toggleSettings.call(this);

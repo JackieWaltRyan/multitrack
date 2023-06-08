@@ -1,4 +1,4 @@
-import {createElement} from "./utils";
+import {createElement, mobileCheck} from "./utils";
 import {hotkeys} from "./gui/hotkeys";
 import {gestures} from "./gui/gestures";
 import {generateMedia} from "./gui/media";
@@ -6,13 +6,13 @@ import {generateVolume} from "./gui/volume";
 import {generateSettings} from "./gui/settings";
 import {generateProgressbar} from "./gui/progressbar";
 import {generateButtons, tooltip} from "./gui/buttons";
-import {generateOverlay} from "./gui/overlay";
+import {generateMobileOverlay, generateOverlay} from "./gui/overlay";
 
 export function gui() {
-    this._.rootElement.classList.add("mjs");
+    this._.rootElement.classList.add("mt");
 
     this._.element = createElement("div", {
-        class: "mjs__root"
+        class: "mt_root"
     });
 
     this._.form = {};
@@ -20,11 +20,11 @@ export function gui() {
     generateMedia.call(this);
 
     this._.form.subtitles = createElement("div", {
-        class: "mjs__subtitles"
+        class: "mt_subtitles"
     });
 
     this._.form.time = createElement("div", {
-        class: "mjs__overlay-time"
+        class: "mt_overlay_time"
     }, (el) => {
         el.onmousemove = (event) => {
             tooltip.call(this, event, true, "Время");
@@ -38,35 +38,44 @@ export function gui() {
     this._.form.time.innerText = "--:-- / --:--";
 
     this._.form.title = createElement("div", {
-        class: "mjs__overlay-title"
+        class: "mt_overlay_title"
     });
 
     this._.form.logo_spiner = createElement("div", {
-        class: "logo_spiner"
+        class: !mobileCheck() ? "mt_logo_spiner" : "mt_logo_spiner_mobile"
     });
 
     this._.form.logo_play = createElement("div", {
-        class: "all_logo logo_play"
+        class: !mobileCheck() ? "mt_all_logo mt_logo_play" : "mt_all_logo_mobile mt_logo_play"
     });
 
     this._.form.logo_pause = createElement("div", {
-        class: "all_logo logo_pause"
+        class: !mobileCheck() ? "mt_all_logo mt_logo_pause" : "mt_all_logo_mobile mt_logo_pause"
     });
 
     this._.form.logo_info_block = createElement("div", {
-        class: "all_logo logo_info_block"
+        class: !mobileCheck() ? "mt_all_logo mt_logo_info_block" : "mt_all_logo_mobile mt_logo_info_block_mobile"
     });
 
     this._.form.tooltip = createElement("div", {
-        class: "tooltip"
+        class: "mt_tooltip"
     });
 
     // Кнопки (массив)
     generateButtons.call(this);
     generateProgressbar.call(this);
-    generateVolume.call(this);
+
+    if (!mobileCheck()) {
+        generateVolume.call(this);
+    }
+
     generateSettings.call(this);
-    generateOverlay.call(this);
+
+    if (mobileCheck()) {
+        generateMobileOverlay.call(this);
+    } else {
+        generateOverlay.call(this);
+    }
 
     this._.element.appendChild(this._.form.video);
     this._.element.appendChild(this._.form.audio);
@@ -80,7 +89,10 @@ export function gui() {
     this._.element.appendChild(this._.form.tooltip);
 
     gestures.call(this);
-    hotkeys.call(this);
+
+    if (!mobileCheck()) {
+        hotkeys.call(this);
+    }
 
     this._.rootElement.appendChild(this._.element);
 }
