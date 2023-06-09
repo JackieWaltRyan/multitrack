@@ -208,7 +208,6 @@ export function showMobileOverlay(event) {
             for (let child of this._.form.overlays.mobile.children) {
                 child.style.pointerEvents = "all";
             }
-
         }, 300);
 
         clearTimeout(GUItimeout);
