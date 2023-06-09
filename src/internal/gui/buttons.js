@@ -69,7 +69,9 @@ export function toggleFullscreen() {
         this._.form.buttons.fullscreen.setAttribute("icon", "fullscreenOff");
     }
 
-    overlay_block.call(this, false);
+    setTimeout(() => {
+        overlay_block.call(this, false);
+    }, 300);
 }
 
 export function generateButtons() {
