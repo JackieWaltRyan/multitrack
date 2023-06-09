@@ -1,6 +1,5 @@
 import {toggleSettings} from "./settings";
 import {toggleFullscreen} from "./buttons";
-import {overlay_block} from "./overlay";
 
 export function gestures() {
     this._.moveEvents = [];
@@ -34,8 +33,6 @@ export function gestures() {
 
     this._.form.overlays._root.addEventListener("dblclick", (event) => {
         if (event.target === this._.form.overlays._root || event.target === this._.form.overlays.mobile) {
-            overlay_block.call(this, true);
-
             toggleFullscreen.call(this);
         }
     }, false);

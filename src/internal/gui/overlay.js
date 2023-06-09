@@ -2,11 +2,6 @@ import {createElement, getPosInElement, secondsToTime} from "../utils";
 
 let skip_time = {"s": null, "e": null};
 let GUItimeout;
-let block_overlay = false;
-
-export function overlay_block(trigger) {
-    block_overlay = trigger;
-}
 
 export function showOverlay() {
     let root = this;
@@ -184,39 +179,35 @@ export function generateOverlay() {
 }
 
 export function showMobileOverlay(event) {
-    setTimeout(() => {
-        if (block_overlay === false) {
-            if (event !== undefined && event.target === this._.form.overlays.mobile) {
-                clearTimeout(GUItimeout);
+    if (event !== undefined && event.target === this._.form.overlays.mobile) {
+        clearTimeout(GUItimeout);
 
+        this._.rootElement.classList.add("mt_overlay_hidden");
+
+        this._.form.overlays.bottom.style.pointerEvents = "none";
+        this._.form.progressbar._root.style.pointerEvents = "none";
+        this._.form.overlays.mobile.style.pointerEvents = "none";
+    } else {
+        this._.rootElement.classList.remove("mt_overlay_hidden");
+
+        setTimeout(() => {
+            this._.form.overlays.bottom.style.pointerEvents = "all";
+            this._.form.progressbar._root.style.pointerEvents = "all";
+            this._.form.overlays.mobile.style.pointerEvents = "all";
+        }, 100);
+
+        clearTimeout(GUItimeout);
+
+        if (this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
+            GUItimeout = setTimeout(() => {
                 this._.rootElement.classList.add("mt_overlay_hidden");
 
                 this._.form.overlays.bottom.style.pointerEvents = "none";
                 this._.form.progressbar._root.style.pointerEvents = "none";
                 this._.form.overlays.mobile.style.pointerEvents = "none";
-            } else {
-                this._.rootElement.classList.remove("mt_overlay_hidden");
-
-                setTimeout(() => {
-                    this._.form.overlays.bottom.style.pointerEvents = "all";
-                    this._.form.progressbar._root.style.pointerEvents = "all";
-                    this._.form.overlays.mobile.style.pointerEvents = "all";
-                }, 300);
-
-                clearTimeout(GUItimeout);
-
-                if (this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
-                    GUItimeout = setTimeout(() => {
-                        this._.rootElement.classList.add("mt_overlay_hidden");
-
-                        this._.form.overlays.bottom.style.pointerEvents = "none";
-                        this._.form.progressbar._root.style.pointerEvents = "none";
-                        this._.form.overlays.mobile.style.pointerEvents = "none";
-                    }, 3000);
-                }
-            }
+            }, 3000);
         }
-    }, 100);
+    }
 }
 
 export function generateMobileOverlay() {
