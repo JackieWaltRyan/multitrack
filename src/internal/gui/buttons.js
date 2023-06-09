@@ -71,7 +71,7 @@ export function toggleFullscreen() {
 
     setTimeout(() => {
         overlay_block.call(this, false);
-    }, 300);
+    }, 500);
 }
 
 export function generateButtons() {
