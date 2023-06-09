@@ -184,8 +184,8 @@ export function generateOverlay() {
 }
 
 export function showMobileOverlay(event) {
-    if (block_overlay === false) {
-        setTimeout(() => {
+    setTimeout(() => {
+        if (block_overlay === false) {
             if (event !== undefined && event.target === this._.form.overlays.mobile) {
                 clearTimeout(GUItimeout);
 
@@ -215,8 +215,8 @@ export function showMobileOverlay(event) {
                     }, 3000);
                 }
             }
-        }, 100);
-    }
+        }
+    }, 100);
 }
 
 export function generateMobileOverlay() {
