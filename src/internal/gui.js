@@ -24,7 +24,8 @@ export function gui() {
     });
 
     this._.form.time = createElement("div", {
-        class: "mt_overlay_time"
+        class: "mt_overlay_time",
+        style: !mobileCheck() ? "" : "pointer-events: none;"
     }, (el) => {
         el.onmousemove = (event) => {
             tooltip.call(this, event, true, "Время");

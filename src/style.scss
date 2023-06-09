@@ -101,6 +101,11 @@
                 }
             }
 
+            .mt_settings_element_mobile {
+                height: 37px;
+                line-height: 37px;
+            }
+
             div[blockname="info"] {
                 padding: 12px;
                 line-height: 20px;
@@ -488,6 +493,8 @@
     .mt_overlay_button_mobile {
         width: 20%;
         margin: auto;
+        background-size: 10vw;
+        height: 10vw;
     }
 
     .mt_all_logo {

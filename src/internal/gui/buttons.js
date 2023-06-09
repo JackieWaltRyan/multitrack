@@ -75,7 +75,7 @@ export function generateButtons() {
         play: createElement("button", {
                 icon: "playBtn",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile",
-                style: !mobileCheck() ? "" : "background-size: 55px;"
+                style: !mobileCheck() ? "" : "background-size: 20vw; height: 20vw;"
             }, (el) => {
                 el.onclick = (event) => {
                     this._.playing ? this.pause() : this.play();

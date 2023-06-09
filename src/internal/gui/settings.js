@@ -2,7 +2,7 @@ import {createElement, getPosInElement, LogoInfoBlock, mobileCheck, URLparams} f
 import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
 import {setSpeed} from "../playback";
 import {hotkeys, settings_hotkeys} from "./hotkeys";
-import {showOverlay} from "./overlay";
+import {showMobileOverlay, showOverlay} from "./overlay";
 
 class SettingsButtons {
     constructor(name = null) {
@@ -13,7 +13,7 @@ class SettingsButtons {
 
     appendButton(name, action, checkbox, checkbox_list) {
         let btn = createElement("div", {
-            class: "mt_settings_element"
+            class: !mobileCheck() ? "mt_settings_element" : "mt_settings_element mt_settings_element_mobile"
         });
 
         btn.innerText = name;
@@ -57,7 +57,7 @@ class SettingsRadioButtons {
 
     appendButton(name, action) {
         let btn = createElement("div", {
-            class: "mt_settings_element"
+            class: !mobileCheck() ? "mt_settings_element" : "mt_settings_element mt_settings_element_mobile"
         });
 
         btn.innerText = name;
@@ -94,7 +94,11 @@ function set_timeout() {
         }, 3000);
     }
 
-    showOverlay.call(this);
+    if (mobileCheck()) {
+        showMobileOverlay.call(this);
+    } else {
+        showOverlay.call(this);
+    }
 }
 
 export function toggleSettings(event) {
@@ -109,7 +113,7 @@ export function toggleSettings(event) {
 
         set_timeout.call(this);
 
-        if (event !== undefined) {
+        if (event !== undefined && !mobileCheck()) {
             let pos = getPosInElement(this._.element, event);
 
             if ((this._.element.offsetWidth - pos.x) >= this._.form.settings._root.offsetWidth) {

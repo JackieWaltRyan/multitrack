@@ -1,6 +1,5 @@
 import {toggleSettings} from "./settings";
 import {toggleFullscreen} from "./buttons";
-import {mobileCheck} from "../utils";
 
 export function gestures() {
     this._.moveEvents = [];
@@ -33,7 +32,7 @@ export function gestures() {
     }, false);
 
     this._.form.overlays._root.addEventListener("dblclick", (event) => {
-        if (event.target === this._.form.overlays._root) {
+        if (event.target === this._.form.overlays._root || event.target === this._.form.overlays.mobile) {
             toggleFullscreen.call(this);
         }
     }, false);
@@ -41,9 +40,7 @@ export function gestures() {
     this._.element.addEventListener("contextmenu", (event) => {
         event.preventDefault();
 
-        if (!mobileCheck()) {
-            toggleSettings.call(this, event);
-        }
+        toggleSettings.call(this, event);
 
         return false;
     }, false);

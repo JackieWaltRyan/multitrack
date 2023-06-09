@@ -55,14 +55,14 @@ export function generateOverlay() {
 
     this._.form.overlays = {
         _root: createElement("div", {
-            class: "mt_overlay",
+            class: "mt_overlay"
         }, () => {
         }),
         bottom: createElement("div", {
-            class: "mt_overlay_bottom",
+            class: "mt_overlay_bottom"
         }),
         top: createElement("div", {
-            class: "mt_overlay_top",
+            class: "mt_overlay_top"
         })
     };
 
@@ -91,7 +91,7 @@ export function generateOverlay() {
     this._.form.overlays.bottom.appendChild(this._.form.time);
 
     this._.form.overlays.bottom.appendChild(createElement("div", {
-        style: "flex: auto",
+        style: "flex: auto"
     }));
 
     this._.form.overlays.overlay_sts = {
@@ -101,7 +101,7 @@ export function generateOverlay() {
         }),
 
         start: createElement("label", {
-            class: "mt_overlay_sts_start",
+            class: "mt_overlay_sts_start"
         }, (el) => {
             el.onclick = () => {
                 skip_time["s"] = this._.form.video.currentTime;
@@ -110,7 +110,7 @@ export function generateOverlay() {
         }),
 
         end: createElement("label", {
-            class: "mt_overlay_sts_end",
+            class: "mt_overlay_sts_end"
         }, (el) => {
             el.onclick = () => {
                 skip_time["e"] = this._.form.video.currentTime;
@@ -119,7 +119,7 @@ export function generateOverlay() {
         }),
 
         send: createElement("label", {
-            class: "mt_overlay_sts_send",
+            class: "mt_overlay_sts_send"
         }, (el) => {
             el.onclick = () => {
                 if ((skip_time["e"] > skip_time["s"]) && (skip_time["s"] !== null) && (skip_time["e"] !== null)) {
@@ -156,7 +156,7 @@ export function generateOverlay() {
     this._.form.overlays.bottom.appendChild(this._.form.overlays.overlay_sts.root);
 
     this._.form.overlays.bottom.appendChild(createElement("div", {
-        style: "flex: auto",
+        style: "flex: auto"
     }));
 
     this._.form.overlays.bottom.appendChild(this._.form.buttons.copy_url);
@@ -178,41 +178,45 @@ export function generateOverlay() {
     });
 }
 
-export function showMobileOverlay() {
-    let root = this;
+export function showMobileOverlay(event) {
+    if (event !== undefined && event.target === this._.form.overlays.mobile) {
+        clearTimeout(GUItimeout);
 
-    root._.rootElement.classList.remove("mt_overlay_hidden");
+        this._.rootElement.classList.add("mt_overlay_hidden");
 
-    setTimeout(() => {
-        this._.form.overlays.bottom.style.pointerEvents = "all";
-        this._.form.progressbar._root.style.pointerEvents = "all";
-        this._.form.overlays.mobile.style.pointerEvents = "all";
-    }, 300)
+        this._.form.overlays.bottom.style.pointerEvents = "none";
+        this._.form.progressbar._root.style.pointerEvents = "none";
+        this._.form.overlays.mobile.style.pointerEvents = "none";
+    } else {
+        this._.rootElement.classList.remove("mt_overlay_hidden");
 
-    clearTimeout(GUItimeout);
+        setTimeout(() => {
+            this._.form.overlays.bottom.style.pointerEvents = "all";
+            this._.form.progressbar._root.style.pointerEvents = "all";
+            this._.form.overlays.mobile.style.pointerEvents = "all";
+        }, 300);
 
-    if (root._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
-        GUItimeout = setTimeout(() => {
-            this._.rootElement.classList.add("mt_overlay_hidden");
+        clearTimeout(GUItimeout);
 
-            this._.form.overlays.bottom.style.pointerEvents = "none";
-            this._.form.progressbar._root.style.pointerEvents = "none";
-            this._.form.overlays.mobile.style.pointerEvents = "none";
-        }, 3000)
+        if (this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
+            GUItimeout = setTimeout(() => {
+                this._.rootElement.classList.add("mt_overlay_hidden");
+
+                this._.form.overlays.bottom.style.pointerEvents = "none";
+                this._.form.progressbar._root.style.pointerEvents = "none";
+                this._.form.overlays.mobile.style.pointerEvents = "none";
+            }, 3000);
+        }
     }
 }
 
 export function generateMobileOverlay() {
-    this._.element.addEventListener("click", () => {
-        showMobileOverlay.call(this,);
-    });
-
-    this._.element.addEventListener("mousemove", () => {
-        showMobileOverlay.call(this,);
+    this._.element.addEventListener("click", (event) => {
+        showMobileOverlay.call(this, event);
     });
 
     this._.element.addEventListener("touchmove", () => {
-        showMobileOverlay.call(this,);
+        showMobileOverlay.call(this);
     });
 
     this._.element.addEventListener("mouseout", (event) => {
@@ -235,17 +239,18 @@ export function generateMobileOverlay() {
 
     this._.form.overlays = {
         _root: createElement("div", {
-            class: "mt_overlay",
+            class: "mt_overlay"
         }, () => {
         }),
         bottom: createElement("div", {
-            class: "mt_overlay_bottom",
+            class: "mt_overlay_bottom"
         }),
         top: createElement("div", {
             class: "mt_overlay_top",
+            style: "pointer-events: none;"
         }),
         mobile: createElement("div", {
-            class: "mt_overlay_mobile",
+            class: "mt_overlay_mobile"
         })
     };
 
@@ -278,7 +283,7 @@ export function generateMobileOverlay() {
     this._.form.overlays.bottom.appendChild(this._.form.time);
 
     this._.form.overlays.bottom.appendChild(createElement("div", {
-        style: "flex: auto",
+        style: "flex: auto; pointer-events: none;"
     }));
 
     this._.form.overlays.overlay_sts = {
@@ -288,7 +293,7 @@ export function generateMobileOverlay() {
         }),
 
         start: createElement("label", {
-            class: "mt_overlay_sts_start",
+            class: "mt_overlay_sts_start"
         }, (el) => {
             el.onclick = () => {
                 skip_time["s"] = this._.form.video.currentTime;
@@ -297,7 +302,7 @@ export function generateMobileOverlay() {
         }),
 
         end: createElement("label", {
-            class: "mt_overlay_sts_end",
+            class: "mt_overlay_sts_end"
         }, (el) => {
             el.onclick = () => {
                 skip_time["e"] = this._.form.video.currentTime;
@@ -306,7 +311,7 @@ export function generateMobileOverlay() {
         }),
 
         send: createElement("label", {
-            class: "mt_overlay_sts_send",
+            class: "mt_overlay_sts_send"
         }, (el) => {
             el.onclick = () => {
                 if ((skip_time["e"] > skip_time["s"]) && (skip_time["s"] !== null) && (skip_time["e"] !== null)) {
@@ -341,7 +346,7 @@ export function generateMobileOverlay() {
     this._.form.overlays.overlay_sts.root.appendChild(this._.form.overlays.overlay_sts.send);
 
     this._.form.overlays.bottom.appendChild(createElement("div", {
-        style: "flex: auto",
+        style: "flex: auto; pointer-events: none;"
     }));
 
     this._.form.overlays.bottom.appendChild(this._.form.buttons.copy_url);
