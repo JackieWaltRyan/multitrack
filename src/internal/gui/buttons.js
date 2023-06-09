@@ -1,6 +1,7 @@
 import {createElement, logError, mobileCheck} from "../utils";
 import {toggleSettings} from "./settings";
 import {seek, skip} from "../playback";
+import {overlay_block} from "./overlay";
 
 export function tooltip(event, trigger, name) {
     if (trigger && !mobileCheck()) {
@@ -67,6 +68,8 @@ export function toggleFullscreen() {
 
         this._.form.buttons.fullscreen.setAttribute("icon", "fullscreenOff");
     }
+
+    overlay_block.call(this, false);
 }
 
 export function generateButtons() {
