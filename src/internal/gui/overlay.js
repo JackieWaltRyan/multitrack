@@ -2,6 +2,7 @@ import {createElement, getPosInElement, secondsToTime} from "../utils";
 
 let skip_time = {"s": null, "e": null};
 let GUItimeout;
+let OVERtimeout;
 
 export function showOverlay() {
     let root = this;
@@ -184,17 +185,31 @@ export function showMobileOverlay(event) {
 
         this._.rootElement.classList.add("mt_overlay_hidden");
 
+        clearTimeout(OVERtimeout);
+
+        this._.form.overlays.mobile.style.pointerEvents = "none";
         this._.form.overlays.bottom.style.pointerEvents = "none";
         this._.form.progressbar._root.style.pointerEvents = "none";
-        this._.form.overlays.mobile.style.pointerEvents = "none";
+
+        for (let child of this._.form.overlays.mobile.children) {
+            child.style.pointerEvents = "none";
+        }
     } else {
         this._.rootElement.classList.remove("mt_overlay_hidden");
 
-        setTimeout(() => {
+        this._.form.overlays.mobile.style.pointerEvents = "all";
+
+        clearTimeout(OVERtimeout);
+
+        OVERtimeout = setTimeout(() => {
             this._.form.overlays.bottom.style.pointerEvents = "all";
             this._.form.progressbar._root.style.pointerEvents = "all";
-            this._.form.overlays.mobile.style.pointerEvents = "all";
-        }, 100);
+
+            for (let child of this._.form.overlays.mobile.children) {
+                child.style.pointerEvents = "all";
+            }
+
+        }, 300);
 
         clearTimeout(GUItimeout);
 
@@ -202,9 +217,15 @@ export function showMobileOverlay(event) {
             GUItimeout = setTimeout(() => {
                 this._.rootElement.classList.add("mt_overlay_hidden");
 
+                clearTimeout(OVERtimeout);
+
+                this._.form.overlays.mobile.style.pointerEvents = "none";
                 this._.form.overlays.bottom.style.pointerEvents = "none";
                 this._.form.progressbar._root.style.pointerEvents = "none";
-                this._.form.overlays.mobile.style.pointerEvents = "none";
+
+                for (let child of this._.form.overlays.mobile.children) {
+                    child.style.pointerEvents = "none";
+                }
             }, 3000);
         }
     }
@@ -230,9 +251,15 @@ export function generateMobileOverlay() {
             if (this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
                 this._.rootElement.classList.add("mt_overlay_hidden");
 
+                clearTimeout(OVERtimeout);
+
+                this._.form.overlays.mobile.style.pointerEvents = "none";
                 this._.form.overlays.bottom.style.pointerEvents = "none";
                 this._.form.progressbar._root.style.pointerEvents = "none";
-                this._.form.overlays.mobile.style.pointerEvents = "none";
+
+                for (let child of this._.form.overlays.mobile.children) {
+                    child.style.pointerEvents = "none";
+                }
             }
         }
     });
