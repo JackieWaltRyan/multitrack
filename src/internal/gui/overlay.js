@@ -9,25 +9,23 @@ export function overlay_block(trigger) {
 }
 
 export function showOverlay() {
-    if (block_overlay === false) {
-        let root = this;
+    let root = this;
 
-        root._.form.overlays.bottom.style.pointerEvents = "all";
-        root._.form.progressbar._root.style.pointerEvents = "all";
+    root._.form.overlays.bottom.style.pointerEvents = "all";
+    root._.form.progressbar._root.style.pointerEvents = "all";
 
-        root._.rootElement.classList.remove("mt_overlay_hidden");
+    root._.rootElement.classList.remove("mt_overlay_hidden");
 
-        clearTimeout(GUItimeout);
+    clearTimeout(GUItimeout);
 
-        GUItimeout = setTimeout(() => {
-            if (root._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
-                this._.rootElement.classList.add("mt_overlay_hidden");
+    GUItimeout = setTimeout(() => {
+        if (root._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
+            this._.rootElement.classList.add("mt_overlay_hidden");
 
-                this._.form.overlays.bottom.style.pointerEvents = "none";
-                this._.form.progressbar._root.style.pointerEvents = "none";
-            }
-        }, 3000);
-    }
+            this._.form.overlays.bottom.style.pointerEvents = "none";
+            this._.form.progressbar._root.style.pointerEvents = "none";
+        }
+    }, 3000);
 }
 
 export function generateOverlay() {
@@ -187,35 +185,37 @@ export function generateOverlay() {
 
 export function showMobileOverlay(event) {
     if (block_overlay === false) {
-        if (event !== undefined && event.target === this._.form.overlays.mobile) {
-            clearTimeout(GUItimeout);
+        setTimeout(() => {
+            if (event !== undefined && event.target === this._.form.overlays.mobile) {
+                clearTimeout(GUItimeout);
 
-            this._.rootElement.classList.add("mt_overlay_hidden");
+                this._.rootElement.classList.add("mt_overlay_hidden");
 
-            this._.form.overlays.bottom.style.pointerEvents = "none";
-            this._.form.progressbar._root.style.pointerEvents = "none";
-            this._.form.overlays.mobile.style.pointerEvents = "none";
-        } else {
-            this._.rootElement.classList.remove("mt_overlay_hidden");
+                this._.form.overlays.bottom.style.pointerEvents = "none";
+                this._.form.progressbar._root.style.pointerEvents = "none";
+                this._.form.overlays.mobile.style.pointerEvents = "none";
+            } else {
+                this._.rootElement.classList.remove("mt_overlay_hidden");
 
-            setTimeout(() => {
-                this._.form.overlays.bottom.style.pointerEvents = "all";
-                this._.form.progressbar._root.style.pointerEvents = "all";
-                this._.form.overlays.mobile.style.pointerEvents = "all";
-            }, 300);
+                setTimeout(() => {
+                    this._.form.overlays.bottom.style.pointerEvents = "all";
+                    this._.form.progressbar._root.style.pointerEvents = "all";
+                    this._.form.overlays.mobile.style.pointerEvents = "all";
+                }, 300);
 
-            clearTimeout(GUItimeout);
+                clearTimeout(GUItimeout);
 
-            if (this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
-                GUItimeout = setTimeout(() => {
-                    this._.rootElement.classList.add("mt_overlay_hidden");
+                if (this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
+                    GUItimeout = setTimeout(() => {
+                        this._.rootElement.classList.add("mt_overlay_hidden");
 
-                    this._.form.overlays.bottom.style.pointerEvents = "none";
-                    this._.form.progressbar._root.style.pointerEvents = "none";
-                    this._.form.overlays.mobile.style.pointerEvents = "none";
-                }, 3000);
+                        this._.form.overlays.bottom.style.pointerEvents = "none";
+                        this._.form.progressbar._root.style.pointerEvents = "none";
+                        this._.form.overlays.mobile.style.pointerEvents = "none";
+                    }, 3000);
+                }
             }
-        }
+        }, 100);
     }
 }
 

@@ -3,6 +3,7 @@
 Player for the site "[ТО "Магия Дружбы"](https://bronyru.info/%D1%81%D1%82%D0%B0%D1%84%D1%84/%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE/)".
 
 Online Test: [dist/index.html](https://jackiewaltryan.github.io/multitrack/dist/index.html)
+
 Online Test Mobile: [dist/index.html](https://jackiewaltryan.github.io/multitrack/dist/mobile.html)
 
 ### License
