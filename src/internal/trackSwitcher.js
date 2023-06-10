@@ -2,23 +2,22 @@ import {logError, URLparams} from "./utils";
 
 let ASS;
 
-// Надо ждать, пока загрузится страница, а иначе - ошибка
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     ASS = require("assjs").default;
 });
 
 export function setVideo(link) {
     let currentTimeVideo = this.currentTime;
 
-    if (localStorage.getItem("mt_mark_time_" + decodeURIComponent(window.location.pathname)) && (localStorage.getItem("mt_set_position") === "true")) {
-        currentTimeVideo = parseFloat(localStorage.getItem("mt_mark_time_" + decodeURIComponent(window.location.pathname)));
+    if (localStorage.getItem("mt_mark_time_" + decodeURIComponent(location.pathname)) && (localStorage.getItem("mt_set_position") === "true")) {
+        currentTimeVideo = parseFloat(localStorage.getItem("mt_mark_time_" + decodeURIComponent(location.pathname)));
     }
 
     if ("t" in URLparams()) {
         currentTimeVideo = parseInt(URLparams()["t"]);
     }
 
-    const playbackRate = this.playbackRate;
+    let playbackRate = this.playbackRate;
     this._.form.video.mt_pause();
     this._.form.video.src = link;
     this._.form.video.mt_setTime(currentTimeVideo);
@@ -29,18 +28,18 @@ export function setVideo(link) {
     }
 }
 
-export function setAudio(link, code) {
+export function setAudio(link) {
     let currentTimeAudio = this.currentTime;
 
-    if (localStorage.getItem("mt_mark_time_" + decodeURIComponent(window.location.pathname)) && (localStorage.getItem("mt_set_position") === "true")) {
-        currentTimeAudio = parseFloat(localStorage.getItem("mt_mark_time_" + decodeURIComponent(window.location.pathname)));
+    if (localStorage.getItem("mt_mark_time_" + decodeURIComponent(location.pathname)) && (localStorage.getItem("mt_set_position") === "true")) {
+        currentTimeAudio = parseFloat(localStorage.getItem("mt_mark_time_" + decodeURIComponent(location.pathname)));
     }
 
     if ("t" in URLparams()) {
         currentTimeAudio = parseFloat(URLparams()["t"]);
     }
 
-    const playbackRate = this.playbackRate;
+    let playbackRate = this.playbackRate;
     this._.form.audio.mt_pause();
     this._.form.audio.src = link;
     this._.form.audio.mt_setTime(currentTimeAudio);
@@ -55,7 +54,7 @@ export function setAudio(link, code) {
     }
 }
 
-export function setSubtitles(url, code) {
+export function setSubtitles(url) {
     clearTimeout(this._.subtitlesDownloader);
 
     if (this._.ass !== undefined) {

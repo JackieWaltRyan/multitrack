@@ -1,2 +1,2 @@
-const MultitrackJS = require("./multitrack.js").default;
+let MultitrackJS = require("./multitrack.js").default;
 module.exports = MultitrackJS;

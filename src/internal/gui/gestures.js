@@ -3,6 +3,7 @@ import {toggleFullscreen} from "./buttons";
 
 export function gestures() {
     this._.moveEvents = [];
+
     document.addEventListener("mousemove", (event) => {
         for (let func of this._.moveEvents) {
             func.move(event);

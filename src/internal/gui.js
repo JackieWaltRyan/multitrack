@@ -16,7 +16,6 @@ export function gui() {
     });
 
     this._.form = {};
-    // Генерация элементов GUI
     generateMedia.call(this);
 
     this._.form.subtitles = createElement("div", {
@@ -25,15 +24,15 @@ export function gui() {
 
     this._.form.time = createElement("div", {
         class: "mt_overlay_time",
-        style: !mobileCheck() ? "" : "pointer-events: none;"
+        style: !mobileCheck() ? "" : "pointer-events: none"
     }, (el) => {
-        el.onmousemove = (event) => {
+        el.addEventListener("mousemove", (event) => {
             tooltip.call(this, event, true, "Время");
-        };
+        });
 
-        el.onmouseout = () => {
+        el.addEventListener("mouseout", () => {
             tooltip.call(this, false);
-        };
+        });
     });
 
     this._.form.time.innerText = "--:-- / --:--";
@@ -62,7 +61,6 @@ export function gui() {
         class: "mt_tooltip"
     });
 
-    // Кнопки (массив)
     generateButtons.call(this);
     generateProgressbar.call(this);
 

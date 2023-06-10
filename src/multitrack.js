@@ -5,7 +5,9 @@ import {mobileCheck, sleep} from "./internal/utils";
 
 export default class {
     get currentTime() {
-        return this._.form.audio.currentTime;
+        let root = this;
+
+        return root._.form.audio.currentTime;
     }
 
     set currentTime(val) {
@@ -13,27 +15,37 @@ export default class {
     }
 
     get duration() {
-        return this._.form.audio.duration;
+        let root = this;
+
+        return root._.form.audio.duration;
     }
 
     get ended() {
-        const video = this._.form.video;
-        const audio = this._.form.audio;
+        let root = this;
+
+        let video = root._.form.video;
+        let audio = root._.form.audio;
 
         return video.ended || audio.ended;
     }
 
     get paused() {
-        return !this._.playing;
+        let root = this;
+
+        return !root._.playing;
     }
 
     get muted() {
-        return this._.form.audio.muted;
+        let root = this;
+
+        return root._.form.audio.muted;
     }
 
     set muted(val) {
+        let root = this;
+
         val = val === true;
-        const audio = this._.form.audio;
+        let audio = root._.form.audio;
         audio.muted = val;
         let iconNum = Math.ceil(audio.volume * 3);
 
@@ -41,11 +53,13 @@ export default class {
             iconNum = 0;
         }
 
-        this._.form.buttons.volume.setAttribute("iconVar", iconNum);
+        root._.form.buttons.volume.setAttribute("iconVar", iconNum);
     }
 
     get playbackRate() {
-        return this._.playbackRate;
+        let root = this;
+
+        return root._.playbackRate;
     }
 
     set playbackRate(val) {
@@ -53,17 +67,21 @@ export default class {
     }
 
     get volume() {
+        let root = this;
+
         if (localStorage.getItem("mt_mark_volume") && (localStorage.getItem("mt_set_volume") === "true")) {
             return parseFloat(localStorage.getItem("mt_mark_volume"));
         } else {
-            return this._.form.audio.volume;
+            return root._.form.audio.volume;
         }
     }
 
     set volume(value) {
+        let root = this;
+
         if (typeof value === "number") {
             if (mobileCheck()) {
-                this._.form.audio.volume = 1;
+                root._.form.audio.volume = 1;
             } else {
                 if (value < 0) {
                     value = 0;
@@ -73,7 +91,7 @@ export default class {
                     value = 1;
                 }
 
-                const audio = this._.form.audio;
+                let audio = root._.form.audio;
                 audio.volume = value;
 
                 localStorage.setItem("mt_mark_volume", encodeURIComponent(value));
@@ -84,18 +102,20 @@ export default class {
                     iconNum = 0;
                 }
 
-                this._.form.buttons.volume.setAttribute("iconVar", iconNum);
-                this._.form.volumebar.selected.setAttribute("style", "width: " + (100 * value) + "%");
+                root._.form.buttons.volume.setAttribute("iconVar", iconNum);
+                root._.form.volumebar.selected.style.width = ((100 * value) + "%");
             }
         }
     }
 
     get trySync() {
-        return this._.enable_sync;
+        let root = this;
+
+        return root._.enable_sync;
     }
 
     set trySync(val) {
-        const root = this;
+        let root = this;
 
         if (val === true) {
             val = true;
@@ -105,8 +125,8 @@ export default class {
             val = false;
         }
 
-        const old = this._.enable_sync;
-        this._.enable_sync = val;
+        let old = root._.enable_sync;
+        root._.enable_sync = val;
 
         if ((val === true) && (old !== true)) {
             (async function () {
@@ -141,8 +161,10 @@ export default class {
     }
 
     resize() {
-        if (this._.ass !== undefined) {
-            this._.ass.resize();
+        let root = this;
+
+        if (root._.ass !== undefined) {
+            root._.ass.resize();
         }
     }
 }

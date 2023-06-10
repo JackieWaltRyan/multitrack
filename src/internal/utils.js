@@ -1,5 +1,7 @@
 import {clear_old_seek} from "./playback";
 
+let LIBtimeout;
+
 export function getPosInElement(element, event) {
     return {
         x: event.clientX - element.getBoundingClientRect().x,
@@ -20,27 +22,27 @@ export function mobileCheck() {
 }
 
 export function URLparams() {
-    return window.location.search.replace("?", "").split("&").reduce(function (p, e) {
+    return location.search.replace("?", "").split("&").reduce(function (p, e) {
         let a = e.split("=");
         p[decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
         return p;
     }, {});
 }
 
-let LIBtimeout;
-
 export function LogoInfoBlock(text) {
-    if (this._.form.logo_info_block !== null) {
-        this._.form.logo_info_block.innerText = text.toString();
-        this._.form.logo_info_block.style.display = "block";
-        this._.form.logo_info_block.style.animation = "none";
+    let root = this;
+
+    if (root._.form.logo_info_block !== null) {
+        root._.form.logo_info_block.innerText = text.toString();
+        root._.form.logo_info_block.style.display = "block";
+        root._.form.logo_info_block.style.animation = "none";
 
         clearTimeout(LIBtimeout);
         LIBtimeout = setTimeout(() => {
-            this._.form.logo_info_block.style.animation = "mt_change_opacity 1s forwards";
+            root._.form.logo_info_block.style.animation = "mt_change_opacity 1s forwards";
 
             LIBtimeout = setTimeout(() => {
-                this._.form.logo_info_block.style.display = "none";
+                root._.form.logo_info_block.style.display = "none";
 
                 clear_old_seek();
             }, 1000);
@@ -62,9 +64,9 @@ export function secondsToTime(sec) {
 
 export function createElement(tag, params = {}, actions = () => {
 }) {
-    const el = document.createElement(tag);
+    let el = document.createElement(tag);
 
-    for (const name in params) {
+    for (let name in params) {
         el.setAttribute(name, params[name]);
     }
 

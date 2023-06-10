@@ -1,17 +1,16 @@
 import {LogoInfoBlock, URLparams} from "./utils";
 
-export function synchronize(target = null) {
-    if (process.env.NODE_ENV !== "production") {
-        console.log("Sync: Call");
-    }
+let trigger = true;
+let old_seek = 0;
 
-    const root = target ? target : this;
+export function synchronize(target = null) {
+    let root = target ? target : this;
 
     return new Promise((resolve) => {
-        const video = root._.form.video;
-        const audio = root._.form.audio;
-        const playbackRate = root.playbackRate;
-        const diff = video.currentTime - audio.currentTime;
+        let video = root._.form.video;
+        let audio = root._.form.audio;
+        let playbackRate = root.playbackRate;
+        let diff = video.currentTime - audio.currentTime;
 
         audio.mt_setRate(playbackRate);
         video.mt_setRate(playbackRate);
@@ -23,24 +22,12 @@ export function synchronize(target = null) {
         video.syncTimeout = null;
 
         if (root._.playing && (Math.abs(diff) > 1 / 60)) {
-            if (process.env.NODE_ENV !== "production") {
-                console.log("Sync: Need to sync");
-            }
-
             let scale = playbackRate - diff;
 
             if ((0.25 <= scale) && (scale <= 4)) {
                 if (document.hasFocus()) {
-                    if (process.env.NODE_ENV !== "production") {
-                        console.log("Sync: Rate changed to " + scale);
-                    }
-
                     video.mt_setRate(scale);
                     video.syncTimeout = setTimeout(() => {
-                        if (process.env.NODE_ENV !== "production") {
-                            console.log("Sync: Rate changed back");
-                        }
-
                         video.mt_setRate(playbackRate);
                         video.syncTimeout = null;
                     }, 1000);
@@ -52,10 +39,6 @@ export function synchronize(target = null) {
                     resolve();
                 }
             } else {
-                if (process.env.NODE_ENV !== "production") {
-                    console.log("Sync: Seeked to " + audio.currentTime);
-                }
-
                 video.mt_setTime(audio.currentTime);
                 resolve();
             }
@@ -65,13 +48,11 @@ export function synchronize(target = null) {
     });
 }
 
-let trigger = true;
-
 export function downloadStatusUpdate() {
-    const allowedStates = [3, 4];
-    const video = this._.form.video;
-    const audio = this._.form.audio;
-    const button_play = this._.form.buttons.play;
+    let allowedStates = [3, 4];
+    let video = this._.form.video;
+    let audio = this._.form.audio;
+    let button_play = this._.form.buttons.play;
 
     if (allowedStates.includes(video.readyState) && allowedStates.includes(audio.readyState)) {
         this._.form.logo_spiner.style.display = "none";
@@ -144,8 +125,6 @@ export function pause() {
     changePlaying.call(this, false);
 }
 
-let old_seek = 0;
-
 export function clear_old_seek() {
     old_seek = 0;
 }
@@ -165,13 +144,13 @@ export function seek(val) {
 
 export function skip(val) {
     if (this._.ds_series !== null) {
-        let index = this._.ds_series.findIndex((url) => (url === decodeURIComponent(window.location.pathname)));
+        let index = this._.ds_series.findIndex((url) => (url === decodeURIComponent(location.pathname)));
 
         if (index !== -1) {
             if (val) {
-                location.href = decodeURIComponent(window.location.origin) + this._.ds_series[index + 1] + "?p=1";
+                location.href = decodeURIComponent(location.origin) + this._.ds_series[index + 1] + "?p=1";
             } else {
-                location.href = decodeURIComponent(window.location.origin) + this._.ds_series[index - 1] + "?p=1";
+                location.href = decodeURIComponent(location.origin) + this._.ds_series[index - 1] + "?p=1";
             }
         }
     }

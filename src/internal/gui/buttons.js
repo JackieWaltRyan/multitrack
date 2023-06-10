@@ -25,7 +25,7 @@ export function tooltip(event, trigger, name) {
                 this._.form.tooltip.style.left = "auto";
                 this._.form.tooltip.style.right = "0px";
             } else {
-                this._.form.tooltip.style.left = left + "px";
+                this._.form.tooltip.style.left = (left + "px");
             }
         }
     } else {
@@ -58,8 +58,8 @@ export function toggleFullscreen() {
         } else if (element.msRequestFullscreen) {
             element.msRequestFullscreen();
         } else {
-            // For stupid users with iPhone
             element = this._.form.video;
+
             if (element.webkitEnterFullscreen) {
                 element.webkitEnterFullscreen();
             }
@@ -71,130 +71,129 @@ export function toggleFullscreen() {
 
 export function generateButtons() {
     this._.form.buttons = {
-        // Плей/пауза
         play: createElement("button", {
                 icon: "playBtn",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile",
-                style: !mobileCheck() ? "" : "background-size: 20vw; height: 20vw;"
+                style: !mobileCheck() ? "" : "background-size: 20vw; height: 20vw"
             }, (el) => {
-                el.onclick = (event) => {
+                el.addEventListener("click", (event) => {
                     this._.playing ? this.pause() : this.play();
                     this._.playing ? tooltip.call(this, event, true, "Пауза") : tooltip.call(this, event, true, "Воспроизведение");
-                };
+                });
 
-                el.onmousemove = (event) => {
+                el.addEventListener("mousemove", (event) => {
                     this._.playing ? tooltip.call(this, event, true, "Пауза") : tooltip.call(this, event, true, "Воспроизведение");
-                };
+                });
 
-                el.onmouseout = () => {
+                el.addEventListener("mouseout", () => {
                     tooltip.call(this, false);
-                };
+                });
             }
         ),
-        // Отмотать на 10 секунд
+
         backward10: createElement("button", {
                 icon: "backward10",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
-                el.onclick = () => {
+                el.addEventListener("click", () => {
                     seek.call(this, -10);
-                };
+                });
 
-                el.onmousemove = (event) => {
+                el.addEventListener("mousemove", (event) => {
                     tooltip.call(this, event, true, "Изменить позицию на  -10 секунд");
-                };
+                });
 
-                el.onmouseout = () => {
+                el.addEventListener("mouseout", () => {
                     tooltip.call(this, false);
-                };
+                });
             }
         ),
-        // Перемотать на 10 секунд
+
         forward10: createElement("button", {
                 icon: "forward10",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
-                el.onclick = () => {
+                el.addEventListener("click", () => {
                     seek.call(this, 10);
-                };
+                });
 
-                el.onmousemove = (event) => {
+                el.addEventListener("mousemove", (event) => {
                     tooltip.call(this, event, true, "Изменить позицию на +10 секунд");
-                };
+                });
 
-                el.onmouseout = () => {
+                el.addEventListener("mouseout", () => {
                     tooltip.call(this, false);
-                };
+                });
             }
         ),
-        // Предыдущий трек
+
         skip_previous: createElement("button", {
                 icon: "skip_previous",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
-                el.onclick = () => {
+                el.addEventListener("click", () => {
                     skip.call(this, false);
-                };
+                });
 
-                el.onmousemove = (event) => {
+                el.addEventListener("mousemove", (event) => {
                     tooltip.call(this, event, true, "Предыдущая серия");
-                };
+                });
 
-                el.onmouseout = () => {
+                el.addEventListener("mouseout", () => {
                     tooltip.call(this, false);
-                };
+                });
             }
         ),
-        // Следующий трек
+
         skip_next: createElement("button", {
                 icon: "skip_next",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
-                el.onclick = () => {
+                el.addEventListener("click", () => {
                     skip.call(this, true);
-                };
+                });
 
-                el.onmousemove = (event) => {
+                el.addEventListener("mousemove", (event) => {
                     tooltip.call(this, event, true, "Следующая серия");
-                };
+                });
 
-                el.onmouseout = () => {
+                el.addEventListener("mouseout", () => {
                     tooltip.call(this, false);
-                };
+                });
             }
         ),
-        // Кнопка полного экрана
+
         fullscreen: createElement("button", {
                 icon: "fullscreenOn",
                 class: "mt_overlay_button"
             }, (el) => {
-                el.onclick = (event) => {
+                el.addEventListener("click", (event) => {
                     toggleFullscreen.call(this);
                     (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) ? tooltip.call(this, event, true, "Отключить полноэкранный режим") : tooltip.call(this, event, true, "Включить полноэкранный режим");
-                };
+                });
 
-                el.onmousemove = (event) => {
+                el.addEventListener("mousemove", (event) => {
                     (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) ? tooltip.call(this, event, true, "Отключить полноэкранный режим") : tooltip.call(this, event, true, "Включить полноэкранный режим");
-                };
+                });
 
-                el.onmouseout = () => {
+                el.addEventListener("mouseout", () => {
                     tooltip.call(this, false);
-                };
+                });
             }
         ),
-        // Кнопка "Скопировать"
+
         copy_url: createElement("button", {
                 icon: "copy",
                 class: "mt_overlay_button"
             }, (el) => {
-                el.onclick = () => {
+                el.addEventListener("click", () => {
                     try {
-                        if (window.isSecureContext && navigator.clipboard) {
-                            navigator.clipboard.writeText(decodeURIComponent(window.location.origin + window.location.pathname) + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles")).then(r => r);
+                        if (isSecureContext && navigator.clipboard) {
+                            navigator.clipboard.writeText(decodeURIComponent(location.origin + location.pathname) + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles")).then(r => r);
                         } else {
                             let input = document.createElement("input");
                             this._.rootElement.appendChild(input);
-                            input.value = decodeURIComponent(window.location.origin + window.location.pathname) + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles");
+                            input.value = decodeURIComponent(location.origin + location.pathname) + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles");
                             input.select();
                             document.execCommand("copy");
                             input.remove();
@@ -202,22 +201,23 @@ export function generateButtons() {
                     } catch {
                         logError.call(this, "Извините, при создании ссылки произошла ошибка.");
                     }
-                };
+                });
 
-                el.onmousemove = (event) => {
+                el.addEventListener("mousemove", (event) => {
                     tooltip.call(this, event, true, "Скопировать ссылку с временем, озвучкой и субтитрами");
-                };
+                });
 
-                el.onmouseout = () => {
+                el.addEventListener("mouseout", () => {
                     tooltip.call(this, false);
-                };
+                });
             }
         ),
+
         pip: createElement("button", {
                 icon: "pipOn",
                 class: "mt_overlay_button"
             }, (el) => {
-                el.onclick = (event) => {
+                el.addEventListener("click", (event) => {
                     if ("pictureInPictureEnabled" in document) {
                         if (this._.form.video !== document.pictureInPictureElement) {
                             this._.form.video.requestPictureInPicture().then(r => r);
@@ -231,33 +231,33 @@ export function generateButtons() {
                     } else {
                         logError.call(this, "К сожалению, ваш браузер не поддерживает функцию «картинка в картинке».");
                     }
-                };
+                });
 
-                el.onmousemove = (event) => {
+                el.addEventListener("mousemove", (event) => {
                     this._.form.video !== document.pictureInPictureElement ? tooltip.call(this, event, true, "Включить режим «картинка в картинке»") : tooltip.call(this, event, true, "Отключить режим «картинка в картинке»");
-                };
+                });
 
-                el.onmouseout = () => {
+                el.addEventListener("mouseout", () => {
                     tooltip.call(this, false);
-                };
+                });
             }
         ),
-        // Открыть меню
+
         menu: createElement("button", {
                 icon: "menu",
                 class: "mt_overlay_button"
             }, (el) => {
-                el.onclick = () => {
+                el.addEventListener("click", () => {
                     toggleSettings.call(this);
-                };
+                });
 
-                el.onmousemove = (event) => {
+                el.addEventListener("mousemove", (event) => {
                     tooltip.call(this, event, true, "Настройки");
-                };
+                });
 
-                el.onmouseout = () => {
+                el.addEventListener("mouseout", () => {
                     tooltip.call(this, false);
-                };
+                });
             }
         ),
     };

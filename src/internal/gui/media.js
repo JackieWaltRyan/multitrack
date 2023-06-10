@@ -5,9 +5,8 @@ let video;
 let audio;
 
 function appendEvents(element) {
-    const root = this;
+    let root = this;
 
-    // Обработка событий плей/пауза
     function onplaying() {
         changePlaying.call(root, true);
     }
@@ -16,12 +15,12 @@ function appendEvents(element) {
 
     element.mt_play = () => {
         element.removeEventListener("playing", onplaying);
+
         element.play().then(() => {
             element.addEventListener("playing", onplaying);
         }).catch(() => {
-            // Заменить костыль с Catch на что-то другое, более нормальное
-            // Тут тип "фикс" ошибки "Unhandled Promise Rejection: AbortError: The operation was aborted." на устройства iOS
             element.addEventListener("playing", onplaying);
+
             changePlaying.call(root, false);
         });
     };
@@ -36,7 +35,9 @@ function appendEvents(element) {
 
     element.mt_pause = () => {
         element.removeEventListener("pause", onpause);
+
         element.pause();
+
         setTimeout(() => {
             element.addEventListener("pause", onpause);
         }, 16);
@@ -50,7 +51,9 @@ function appendEvents(element) {
 
     element.mt_setTime = (val) => {
         element.removeEventListener("seeking", onseeking);
+
         element.currentTime = val;
+
         setTimeout(() => {
             element.addEventListener("seeking", onseeking);
         }, 16);
@@ -64,13 +67,14 @@ function appendEvents(element) {
 
     element.mt_setRate = (val) => {
         element.removeEventListener("ratechange", onratechange);
+
         element.playbackRate = val;
+
         setTimeout(() => {
             element.addEventListener("ratechange", onratechange);
         }, 16);
     };
 
-    // Обработка событий загрузки
     function onwaiting() {
         root._.form.logo_spiner.style.display = "block";
 

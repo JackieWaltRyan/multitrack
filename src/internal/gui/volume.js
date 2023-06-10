@@ -17,43 +17,45 @@ export function generateVolume() {
         icon: "volume",
         iconVar: 3
     }, (el) => {
-        el.onclick = (event) => {
+        el.addEventListener("click", (event) => {
             mute.call(this, true);
             this.muted ? tooltip.call(this, event, true, "Включить звук") : tooltip.call(this, event, true, "Отключить звук");
-        };
+        });
 
-        el.onmousemove = (event) => {
+        el.addEventListener("mousemove", (event) => {
             this.muted ? tooltip.call(this, event, true, "Включить звук") : tooltip.call(this, event, true, "Отключить звук");
-        };
+        });
 
-        el.onmouseout = () => {
+        el.addEventListener("mouseout", () => {
             tooltip.call(this, false);
-        };
+        });
     }));
 
     (this._.form.volumebar = {
         line: createElement("div", {
             class: "mt_overlay_volume_bar_background"
         }, (el) => {
-            el.onmousemove = (event) => {
+            el.addEventListener("mousemove", (event) => {
                 tooltip.call(this, event, true, "Громкость");
-            };
+            });
 
-            el.onmouseout = () => {
+            el.addEventListener("mouseout", () => {
                 tooltip.call(this, false);
-            };
+            });
         }),
+
         selected: createElement("div", {
             class: "mt_overlay_volume_bar_selected"
         }, (el) => {
-            el.onmousemove = (event) => {
+            el.addEventListener("mousemove", (event) => {
                 tooltip.call(this, event, true, "Громкость");
-            };
+            });
 
-            el.onmouseout = () => {
+            el.addEventListener("mouseout", () => {
                 tooltip.call(this, false);
-            };
+            });
         }),
+
         _root: createElement("div", {
             class: "mt_overlay_volume_bar"
         }, (el) => {
@@ -61,7 +63,6 @@ export function generateVolume() {
 
             let release = (event) => {
                 this._.form.volumebar.updateStyle = false;
-                // Получение координаты и вычисление позиции (от 0 до 1)
                 this.volume = getPosInElement(el, event).x / el.clientWidth;
 
                 if ((getPosInElement(el, event).x / el.clientWidth) > 1) {
@@ -77,8 +78,7 @@ export function generateVolume() {
 
             let move = (event) => {
                 if (this._.form.volumebar.updateStyle) {
-                    // Получение координаты и вычисление позиции (от 0 до 1)
-                    const cursorX = getPosInElement(el, event).x;
+                    let cursorX = getPosInElement(el, event).x;
                     this.volume = cursorX / el.clientWidth;
 
                     if ((cursorX / el.clientWidth) > 1) {
@@ -93,31 +93,31 @@ export function generateVolume() {
                 }
             };
 
-            el.onmousedown = () => {
+            el.addEventListener("mousedown", () => {
                 this._.form.volumebar.updateStyle = true;
                 this._.form.audio.lastVolume = this._.form.audio.volume;
                 Object(this._.moveEvents).push({
                     move: move,
                     release: release,
                 });
-            };
+            });
 
-            el.ontouchstart = () => {
+            el.addEventListener("touchstart", () => {
                 this._.form.volumebar.updateStyle = true;
                 this._.form.audio.lastVolume = this._.form.audio.volume;
                 Object(this._.moveEvents).push({
                     move: move,
                     release: release,
                 });
-            };
+            });
 
-            el.onmousemove = (event) => {
+            el.addEventListener("mousemove", (event) => {
                 tooltip.call(this, event, true, "Громкость");
-            };
+            });
 
-            el.onmouseout = () => {
+            el.addEventListener("mouseout", () => {
                 tooltip.call(this, false);
-            };
+            });
         }),
     });
 
