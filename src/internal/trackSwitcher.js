@@ -76,6 +76,10 @@ export function setSubtitles(url) {
 
                     this.resize();
                 } catch {
+                    setTimeout(() => {
+                        setSubtitles.call(this, url);
+                    }, 500);
+
                     logError.call(this, "Не могу использовать библиотеку ASS.");
                 }
             }

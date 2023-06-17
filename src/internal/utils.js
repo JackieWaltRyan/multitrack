@@ -50,16 +50,20 @@ export function LogoInfoBlock(text) {
     }
 }
 
-export function secondsToTime(sec) {
+export function secondsToTime(sec, clear = false) {
     sec = Math.floor(sec);
     let seconds = sec % 60;
     let minutes = Math.floor(sec / 60) % 60;
     let hours = Math.floor(sec / 3600);
 
-    minutes = minutes.toString().padStart(2, "0");
-    seconds = seconds.toString().padStart(2, "0");
+    let Sminutes = minutes.toString().padStart(2, "0");
+    let Sseconds = seconds.toString().padStart(2, "0");
 
-    return hours > 0 ? hours + ":" + minutes + ":" + seconds : minutes + ":" + seconds;
+    if (clear) {
+        return (hours > 0) ? [seconds, minutes, hours] : [seconds, minutes];
+    } else {
+        return (hours > 0) ? (hours + ":" + Sminutes + ":" + Sseconds) : (Sminutes + ":" + Sseconds);
+    }
 }
 
 export function createElement(tag, params = {}, actions = () => {

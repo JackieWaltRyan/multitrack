@@ -1,11 +1,12 @@
 import {createElement, logError, mobileCheck} from "../utils";
 import {toggleSettings} from "./settings";
 import {seek, skip} from "../playback";
+import {repeat, set_repeat} from "./media";
 
 export function tooltip(event, trigger, name) {
     if (trigger && !mobileCheck()) {
         this._.form.tooltip.style.display = "block";
-        this._.form.tooltip.innerHTML = name;
+        this._.form.tooltip.innerText = name;
 
         let offsetLeft = event.srcElement.offsetLeft;
         let offsetWidth = event.srcElement.offsetWidth;
@@ -163,6 +164,33 @@ export function generateButtons() {
             }
         ),
 
+        repeat: createElement("button", {
+                icon: "repeatOff",
+                class: "mt_overlay_button"
+            }, (el) => {
+                el.addEventListener("click", (event) => {
+                    set_repeat.call(this);
+
+                    let text = (repeat().length === 0) ? "Установить начало повтора" : ((repeat().length === 1) ? "Установить конец повтора" : "Отключить повтор");
+                    tooltip.call(this, event, true, text);
+
+                    let icon = (repeat().length === 0) ? "repeatOff" : ((repeat().length === 1) ? "repeatA" : "repeatB");
+                    this._.form.buttons.repeat.setAttribute("icon", icon);
+
+                    this._.form.video.dispatchEvent(new ProgressEvent("timeupdate"));
+                });
+
+                el.addEventListener("mousemove", (event) => {
+                    let text = (repeat().length === 0) ? "Установить начало повтора" : ((repeat().length === 1) ? "Установить конец повтора" : "Отключить повтор");
+                    tooltip.call(this, event, true, text);
+                });
+
+                el.addEventListener("mouseout", () => {
+                    tooltip.call(this, false);
+                });
+            }
+        ),
+
         fullscreen: createElement("button", {
                 icon: "fullscreenOn",
                 class: "mt_overlay_button"
@@ -234,7 +262,7 @@ export function generateButtons() {
                 });
 
                 el.addEventListener("mousemove", (event) => {
-                    this._.form.video !== document.pictureInPictureElement ? tooltip.call(this, event, true, "Включить режим «картинка в картинке»") : tooltip.call(this, event, true, "Отключить режим «картинка в картинке»");
+                    (this._.form.video !== document.pictureInPictureElement) ? tooltip.call(this, event, true, "Включить режим «картинка в картинке»") : tooltip.call(this, event, true, "Отключить режим «картинка в картинке»");
                 });
 
                 el.addEventListener("mouseout", () => {

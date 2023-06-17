@@ -1,6 +1,10 @@
 import {createElement, getPosInElement, secondsToTime} from "../utils";
 
-let skip_time = {"s": null, "e": null};
+let skip_time = {
+    "s": null,
+    "e": null
+};
+
 let GUItimeout;
 let OVERtimeout;
 
@@ -57,7 +61,7 @@ function overley_append() {
 }
 
 function show() {
-    if (this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
+    if ((this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) && !this._.form.timeset.open) {
         this._.rootElement.classList.add("mt_overlay_hidden");
 
         this._.form.overlays.bottom.style.pointerEvents = "none";
@@ -75,7 +79,7 @@ export function showOverlay() {
 
     GUItimeout = setTimeout(() => {
         show.call(this);
-    }, 3000);
+    }, 3100);
 }
 
 export function generateOverlay() {
@@ -138,6 +142,7 @@ export function generateOverlay() {
         }
     }
 
+    this._.form.overlays.bottom.appendChild(this._.form.buttons.repeat);
     this._.form.overlays.bottom.appendChild(this._.form.buttons.volume);
     this._.form.overlays.bottom.appendChild(this._.form.volumebar._root);
     this._.form.overlays.bottom.appendChild(this._.form.time);
@@ -226,11 +231,11 @@ export function showMobileOverlay(event) {
 
         clearTimeout(GUItimeout);
 
-        if (this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
-            GUItimeout = setTimeout(() => {
+        GUItimeout = setTimeout(() => {
+            if ((this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) && !this._.form.timeset.open) {
                 showMobile.call(this);
-            }, 3000);
-        }
+            }
+        }, 3100);
     }
 }
 
@@ -251,7 +256,7 @@ export function generateMobileOverlay() {
         if (pos.x > 0 && pos.y > 0 && pos.x < this._.element.offsetWidth && pos.y < this._.element.offsetHeight) {
             return null;
         } else {
-            if (this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) {
+            if ((this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) && !this._.form.timeset.open) {
                 showMobile.call(this);
             }
         }
@@ -304,6 +309,7 @@ export function generateMobileOverlay() {
     }
 
     this._.form.overlays.bottom.appendChild(this._.form.time);
+    this._.form.overlays.bottom.appendChild(this._.form.buttons.repeat);
 
     this._.form.overlays.bottom.appendChild(createElement("div", {
         style: "flex: auto; pointer-events: none"

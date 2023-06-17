@@ -59,9 +59,9 @@ export function generateProgressbar() {
 
                         let offsetX = (frame % this._.parameters.frames.x) / (this._.parameters.frames.x - 1);
                         let offsetY = Math.floor(frame / this._.parameters.frames.x) / (this._.parameters.frames.y - 1);
-                        this._.form.progressbar.popup.image.style.backgroundPosition = (offsetX * 100) + "% " + (offsetY * 100) + "%";
-                        this._.form.progressbar.popup.image.style.backgroundSize = (this._.parameters.frames.x * 100) + "%";
-                        this._.form.progressbar.popup.image.style.backgroundImage = "url(" + this._.parameters.frames.image + ")";
+                        this._.form.progressbar.popup.image.style.backgroundPosition = ((offsetX * 100) + "% " + (offsetY * 100) + "%");
+                        this._.form.progressbar.popup.image.style.backgroundSize = ((this._.parameters.frames.x * 100) + "%");
+                        this._.form.progressbar.popup.image.style.backgroundImage = ("url(" + this._.parameters.frames.image + ")");
                     } else {
                         this._.form.progressbar.popup.image.style.display = "none";
                     }
@@ -80,7 +80,7 @@ export function generateProgressbar() {
                     }
 
                     if (this._.form.progressbar.updateStyle) {
-                        this._.form.progressbar.played.style.width = (100 * position) + "%";
+                        this._.form.progressbar.played.style.width = ((100 * position) + "%");
                     }
 
                     updatePopup(cursor.x, position);

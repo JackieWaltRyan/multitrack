@@ -115,7 +115,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Воспроизведение / Пауза";
+            inf.innerText = "Воспроизведение / Пауза";
         });
         bl.appendChild(infoBlock);
     });
@@ -134,7 +134,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Включить / Отключить полноэкранный режим.";
+            inf.innerText = "Включить / Отключить полноэкранный режим.";
         });
         bl.appendChild(infoBlock);
     });
@@ -157,7 +157,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Изменить позицию видео на -5 секунд.";
+            inf.innerText = "Изменить позицию видео на -5 секунд.";
         });
         bl.appendChild(infoBlock);
     });
@@ -176,7 +176,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Изменить позицию видео на +5 секунд.";
+            inf.innerText = "Изменить позицию видео на +5 секунд.";
         });
         bl.appendChild(infoBlock);
     });
@@ -195,7 +195,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Изменить позицию видео на -10 секунд.";
+            inf.innerText = "Изменить позицию видео на -10 секунд.";
         });
         bl.appendChild(infoBlock);
     });
@@ -214,7 +214,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Изменить позицию видео на +10 секунд.";
+            inf.innerText = "Изменить позицию видео на +10 секунд.";
         });
         bl.appendChild(infoBlock);
     });
@@ -237,7 +237,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Полностью отключить / включить звук.";
+            inf.innerText = "Полностью отключить / включить звук.";
         });
         bl.appendChild(infoBlock);
     });
@@ -256,7 +256,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Изменить громкость видео на +5.";
+            inf.innerText = "Изменить громкость видео на +5.";
         });
         bl.appendChild(infoBlock);
     });
@@ -275,7 +275,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Изменить громкость видео на -5.";
+            inf.innerText = "Изменить громкость видео на -5.";
         });
         bl.appendChild(infoBlock);
     });
@@ -298,7 +298,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на самое начало видео.";
+            inf.innerText = "Перейти на самое начало видео.";
         });
         bl.appendChild(infoBlock);
     });
@@ -317,7 +317,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на главу 1 (10% длительности видео).";
+            inf.innerText = "Перейти на главу 1 (10% длительности видео).";
         });
         bl.appendChild(infoBlock);
     });
@@ -336,7 +336,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на главу 2 (20% длительности видео).";
+            inf.innerText = "Перейти на главу 2 (20% длительности видео).";
         });
         bl.appendChild(infoBlock);
     });
@@ -355,7 +355,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на главу 3 (30% длительности видео).";
+            inf.innerText = "Перейти на главу 3 (30% длительности видео).";
         });
         bl.appendChild(infoBlock);
     });
@@ -374,7 +374,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на главу 4 (40% длительности видео).";
+            inf.innerText = "Перейти на главу 4 (40% длительности видео).";
         });
         bl.appendChild(infoBlock);
     });
@@ -393,7 +393,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на главу 5 (50% длительности видео).";
+            inf.innerText = "Перейти на главу 5 (50% длительности видео).";
         });
         bl.appendChild(infoBlock);
     });
@@ -412,7 +412,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на главу 6 (60% длительности видео).";
+            inf.innerText = "Перейти на главу 6 (60% длительности видео).";
         });
         bl.appendChild(infoBlock);
     });
@@ -431,7 +431,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на главу 7 (70% длительности видео).";
+            inf.innerText = "Перейти на главу 7 (70% длительности видео).";
         });
         bl.appendChild(infoBlock);
     });
@@ -450,7 +450,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на главу 8 (80% длительности видео).";
+            inf.innerText = "Перейти на главу 8 (80% длительности видео).";
         });
         bl.appendChild(infoBlock);
     });
@@ -469,7 +469,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на главу 9 (90% длительности видео).";
+            inf.innerText = "Перейти на главу 9 (90% длительности видео).";
         });
         bl.appendChild(infoBlock);
     });
@@ -492,7 +492,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на предыдущий кадр (-1/30 секунды).";
+            inf.innerText = "Перейти на предыдущий кадр (-1/30 секунды).";
         });
         bl.appendChild(infoBlock);
     });
@@ -511,7 +511,7 @@ export function settings_hotkeys(el) {
         let infoBlock = createElement("div", {
             class: "mt_settings_hotkeys_info_block"
         }, (inf) => {
-            inf.innerHTML = "Перейти на следующий кадр (+1/30 секунды).";
+            inf.innerText = "Перейти на следующий кадр (+1/30 секунды).";
         });
         bl.appendChild(infoBlock);
     });

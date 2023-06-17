@@ -3,6 +3,39 @@ import {changePlaying, downloadStatusUpdate, setSpeed, setTime, skip} from "../p
 
 let video;
 let audio;
+let repeat_data = [];
+
+export function repeat() {
+    return repeat_data;
+}
+
+export function set_repeat() {
+    if (repeat_data.length === 2) {
+        repeat_data = [];
+    } else {
+        repeat_data.push(audio.currentTime);
+    }
+}
+
+export function upcan() {
+    let canvas = this._.form.embient;
+    let video = this._.form.video;
+
+    canvas.width = (screen.width / 100);
+    canvas.height = (screen.height / 100);
+
+    let ctx = canvas.getContext("2d");
+
+    if (this._.enable_embient) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        setTimeout(() => {
+            upcan.call(this);
+        }, 50);
+    } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+}
 
 function appendEvents(element) {
     let root = this;
@@ -95,7 +128,7 @@ function appendEvents(element) {
         for (let i = 0; i < audio.buffered.length; i++) {
             for (let i2 = 0; i2 < video.buffered.length; i2++) {
                 if (video.buffered.start(i2) >= audio.buffered.start(i) && video.buffered.start(i2) <= audio.buffered.end(i)) {
-                    let end = video.buffered.end(i2) <= audio.buffered.end(i) ? video.buffered.end(i2) : audio.buffered.end(i);
+                    let end = (video.buffered.end(i2) <= audio.buffered.end(i)) ? video.buffered.end(i2) : audio.buffered.end(i);
 
                     buffered_list.push(Math.floor(video.buffered.start(i2)));
                     buffered_list.push(Math.floor(end));
@@ -106,7 +139,7 @@ function appendEvents(element) {
         for (let i = 0; i < video.buffered.length; i++) {
             for (let i2 = 0; i2 < audio.buffered.length; i2++) {
                 if (audio.buffered.start(i2) >= video.buffered.start(i) && audio.buffered.start(i2) <= video.buffered.end(i)) {
-                    let end = audio.buffered.end(i2) <= video.buffered.end(i) ? audio.buffered.end(i2) : video.buffered.end(i);
+                    let end = (audio.buffered.end(i2) <= video.buffered.end(i)) ? audio.buffered.end(i2) : video.buffered.end(i);
 
                     buffered_list.push(Math.floor(audio.buffered.start(i2)));
                     buffered_list.push(Math.floor(end));
@@ -130,7 +163,7 @@ function appendEvents(element) {
 
         if (localStorage.getItem("mt_set_skip") === "true") {
             if (root._.ds_times !== null) {
-                let time_2 = root._.ds_times[decodeURIComponent(window.location.pathname)];
+                let time_2 = root._.ds_times[decodeURIComponent(location.pathname)];
 
                 if (time_2 !== undefined) {
                     if (time_2.length >= 1) {
@@ -159,6 +192,19 @@ function appendEvents(element) {
                 }
             }
         }
+
+        if (repeat_data.length === 2) {
+            canvas.fillStyle = "orange";
+            const startS = (Math.min(...repeat_data) * element2.width) / root.duration;
+            const endS = (Math.max(...repeat_data) * element2.width) / root.duration;
+            const widthS = endS - startS;
+
+            canvas.fillRect(Math.floor(startS), 0, Math.floor(widthS), 1);
+
+            if ((element.currentTime < Math.min(...repeat_data)) || (element.currentTime > Math.max(...repeat_data))) {
+                setTime.call(root, Math.min(...repeat_data));
+            }
+        }
     }
 
     element.addEventListener("timeupdate", onprogress);
@@ -169,16 +215,16 @@ function appendEvents(element) {
         }
         root._.form.time.innerText = secondsToTime.call(root, element.currentTime) + " / " + secondsToTime.call(root, root.duration);
 
-        localStorage.setItem("mt_mark_time_" + decodeURIComponent(window.location.pathname), encodeURIComponent(element.currentTime));
+        localStorage.setItem("mt_mark_time_" + decodeURIComponent(location.pathname), encodeURIComponent(element.currentTime));
 
         if (((root.duration - element.currentTime) < 2) && (localStorage.getItem("mt_set_nextvideo") === "true")) {
-            localStorage.setItem("mt_mark_time_" + decodeURIComponent(window.location.pathname), encodeURIComponent(0));
+            localStorage.setItem("mt_mark_time_" + decodeURIComponent(location.pathname), encodeURIComponent(0));
             skip.call(root, true);
         }
 
         if (localStorage.getItem("mt_set_skip") === "true") {
             if (root._.ds_times !== null) {
-                let time_1 = root._.ds_times[decodeURIComponent(window.location.pathname)];
+                let time_1 = root._.ds_times[decodeURIComponent(location.pathname)];
 
                 if (time_1 !== undefined) {
                     if (time_1.length >= 1) {
@@ -205,6 +251,7 @@ function appendEvents(element) {
             }
         }
     }
+
 
     function onloadedmetadata() {
         root._.form.time.innerText = secondsToTime(element.currentTime) + " / " + secondsToTime(root.duration);

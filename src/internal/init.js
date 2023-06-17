@@ -19,10 +19,10 @@ export function init(selector, dataArray) {
         enable_sync: false,
         ds_series: dataArray.ds_series,
         ds_times: dataArray.ds_times,
-        sts_url: dataArray.sts_url
+        sts_url: dataArray.sts_url,
+        playing: false,
+        enable_embient: false
     };
-
-    this._.playing = false;
 
     if ((this._.rootElement = document.querySelector(selector))) {
         gui.call(this);

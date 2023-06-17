@@ -3,6 +3,7 @@ import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
 import {setSpeed} from "../playback";
 import {hotkeys, settings_hotkeys} from "./hotkeys";
 import {showMobileOverlay, showOverlay} from "./overlay";
+import {upcan} from "./media";
 
 let SettingsTimeout;
 
@@ -84,13 +85,15 @@ class SettingsPage {
     }
 }
 
-function set_timeout() {
+function SetSettingsTimeout() {
+    let root = this;
+
     clearTimeout(SettingsTimeout);
 
     if (localStorage.getItem("mt_set_hidemenu") === "true") {
         SettingsTimeout = setTimeout(() => {
-            this._.rootElement.classList.remove("mt_settings_show");
-            this._.form.settings.opened = false;
+            root._.rootElement.classList.remove("mt_settings_show");
+            root._.form.settings.opened = false;
         }, 3000);
     }
 
@@ -111,7 +114,7 @@ export function toggleSettings(event) {
 
         this._.rootElement.classList.add("mt_settings_show");
 
-        set_timeout.call(this);
+        SetSettingsTimeout.call(this);
 
         if (event !== undefined && !mobileCheck()) {
             let pos = getPosInElement(this._.element, event);
@@ -186,6 +189,7 @@ export function generateSettings() {
     this._.form.settings.menu.dubs = new SettingsRadioButtons("Озвучки");
     this._.form.settings.menu.subtitles = new SettingsRadioButtons("Субтитры");
     this._.form.settings.menu.playbackRate = new SettingsRadioButtons("Скорость");
+    this._.form.settings.menu.videoSize = new SettingsRadioButtons("Масштаб");
     this._.form.settings.menu.settings = new SettingsButtons("Дополнительно");
 
     this._.form.checkbox = {
@@ -195,6 +199,7 @@ export function generateSettings() {
         mt_set_voiceovers: null,
         mt_set_subtitles: null,
         mt_set_speed: null,
+        mt_set_size: null,
         mt_set_nextvideo: null,
         mt_set_skip: null,
         mt_set_newsegments: null,
@@ -239,6 +244,12 @@ export function generateSettings() {
         this._.form.checkbox.mt_set_speed.checked = trigger;
     }, "mt_set_speed", this._.form.checkbox);
 
+    this._.form.settings.menu.settings.appendButton("Запоминать масштаб", () => {
+        let trigger = (localStorage.getItem("mt_set_size") !== "true");
+        localStorage.setItem("mt_set_size", encodeURIComponent(trigger));
+        this._.form.checkbox.mt_set_size.checked = trigger;
+    }, "mt_set_size", this._.form.checkbox);
+
     this._.form.settings.menu.settings.appendElement("hr", {
         class: "mt_hr"
     });
@@ -253,7 +264,7 @@ export function generateSettings() {
         let trigger = (localStorage.getItem("mt_set_skip") !== "true");
         localStorage.setItem("mt_set_skip", encodeURIComponent(trigger));
         this._.form.checkbox.mt_set_skip.checked = trigger;
-        this._.form.video.dispatchEvent(new ProgressEvent("progress"));
+        this._.form.video.dispatchEvent(new ProgressEvent("timeupdate"));
     }, "mt_set_skip", this._.form.checkbox);
 
     this._.form.settings.menu.settings.appendElement("hr", {
@@ -291,32 +302,66 @@ export function generateSettings() {
     this._.form.settings.menu.info.Content = createElement("div", {
         blockName: "info"
     }, (el) => {
-        let authorBlock = createElement("div", {
+        el.appendChild(createElement("div", {
             style: "display: flex; padding-bottom: 12px"
-        }, (bl) => {
-            let imageBlock = createElement("img", {
+        }, (el) => {
+            el.appendChild(createElement("img", {
                 src: "https://avatars.githubusercontent.com/u/79658863?s=48",
                 width: 48,
                 height: 48
-            });
-            bl.appendChild(imageBlock);
+            }));
 
-            let infoBlock = createElement("div", {
+            el.appendChild(createElement("div", {
                 style: "line-height: 20px; padding: 4px 8px"
-            }, (inf) => {
-                inf.innerHTML += "Версия: " + require("/package.json").version + "<br>Дата сборки: " + new Date(__TIMESTAMP__).toLocaleString("ru").toString();
-            });
-            bl.appendChild(infoBlock);
-        });
+            }, (el) => {
+                el.appendChild(createElement("b", {
+                    style: "font-weight: normal"
+                }, (el) => {
+                    el.innerText = "Версия: " + require("/package.json").version;
+                }));
 
-        el.appendChild(authorBlock);
+                el.appendChild(createElement("br"));
 
-        el.innerHTML += "Исходный код плеера: <a href='" + require("/package.json").homepage + "' style='color: #ffccff' target='_blank'>JackieWaltRyan/multitrack</a><br>Баги и предложения: <a href='" + require("/package.json").bugs.url + "' style='color: #ffccff' target='_blank'>GitHub Issues</a>";
+                el.appendChild(createElement("b", {
+                    style: "font-weight: normal"
+                }, (el) => {
+                    el.innerText = "Дата сборки: " + new Date(__TIMESTAMP__).toLocaleString("ru");
+                }));
+            }));
+        }));
+
+        el.appendChild(createElement("b", {
+            style: "font-weight: normal"
+        }, (el) => {
+            el.innerText = "Исходный код плеера: ";
+        }));
+
+        el.appendChild(createElement("a", {
+            href: require("/package.json").homepage,
+            target: "_blank",
+            style: "color: #ffccff"
+        }, (el) => {
+            el.innerText = "JackieWaltRyan/multitrack";
+        }));
+
+        el.appendChild(createElement("br"));
+
+        el.appendChild(createElement("b", {
+            style: "font-weight: normal"
+        }, (el) => {
+            el.innerText = "Баги и предложения: ";
+        }));
+
+        el.appendChild(createElement("a", {
+            href: require("/package.json").bugs.url,
+            target: "_blank",
+            style: "color: #ffccff"
+        }, (el) => {
+            el.innerText = "GitHub Issues";
+        }));
     });
 
-    this._.form.settings.title = createElement("div", {
-        class: "mt_settings_header-title"
-    });
+    this._.form.settings.title = createElement("div");
 
     this._.form.settings.header = createElement("div", {
         class: "mt_settings_header"
@@ -329,6 +374,18 @@ export function generateSettings() {
     this._.form.settings.menuSwitcher = new SettingsButtons();
     this._.form.settings._root = createElement("div", {
         class: "mt_settings"
+    }, (el) => {
+        el.addEventListener("click", () => {
+            SetSettingsTimeout.call(this);
+        });
+
+        el.addEventListener("mousemove", () => {
+            SetSettingsTimeout.call(this);
+        });
+
+        el.addEventListener("touchmove", () => {
+            SetSettingsTimeout.call(this);
+        });
     });
 
     for (let video of this._.videos) {
@@ -517,6 +574,46 @@ export function generateSettings() {
         this._.form.settings.menu.playbackRate.Buttons[0].click();
     }
 
+    this._.form.settings.menu.videoSize.appendButton("По размеру экрана", () => {
+        localStorage.setItem("mt_mark_size", encodeURIComponent(0));
+        this._.form.video.style.objectFit = "contain";
+        this._.enable_embient = false;
+    });
+
+    this._.form.settings.menu.videoSize.appendButton("Эмбилайт", () => {
+        localStorage.setItem("mt_mark_size", encodeURIComponent(1));
+        this._.form.video.style.objectFit = "contain";
+        this._.enable_embient = true;
+
+        upcan.call(this);
+    });
+
+    this._.form.settings.menu.videoSize.appendButton("Растянуть", () => {
+        localStorage.setItem("mt_mark_size", encodeURIComponent(2));
+        this._.form.video.style.objectFit = "fill";
+        this._.enable_embient = false;
+    });
+
+    this._.form.settings.menu.videoSize.appendButton("Обрезать", () => {
+        localStorage.setItem("mt_mark_size", encodeURIComponent(3));
+        this._.form.video.style.objectFit = "cover";
+        this._.enable_embient = false;
+    });
+
+    this._.form.settings.menu.videoSize.appendButton("Реальный размер", () => {
+        localStorage.setItem("mt_mark_size", encodeURIComponent(4));
+        this._.form.video.style.objectFit = "none";
+        this._.enable_embient = false;
+    });
+
+    let preferredSizeIndex = 0;
+
+    if (localStorage.getItem("mt_mark_size") && (localStorage.getItem("mt_set_size") === "true")) {
+        preferredSizeIndex = parseInt(localStorage.getItem("mt_mark_size"));
+    }
+
+    this._.form.settings.menu.videoSize.Buttons[preferredSizeIndex].click();
+
     for (let menu in this._.form.settings.menu) {
         menu = this._.form.settings.menu[menu];
 
@@ -546,16 +643,4 @@ export function generateSettings() {
     this._.form.settings.header.appendChild(this._.form.settings.title);
     this._.form.settings._root.appendChild(this._.form.settings.header);
     this._.form.settings._root.appendChild(this._.form.settings.body);
-
-    this._.form.settings._root.addEventListener("click", () => {
-        set_timeout.call(this);
-    });
-
-    this._.form.settings._root.addEventListener("mousemove", () => {
-        set_timeout.call(this);
-    });
-
-    this._.form.settings._root.addEventListener("touchmove", () => {
-        set_timeout.call(this);
-    });
 }
