@@ -26,6 +26,8 @@ export function setVideo(link) {
     if (this._.playing) {
         this._.form.video.mt_play();
     }
+
+    this._.form.skip_prevent = true;
 }
 
 export function setAudio(link) {
@@ -52,6 +54,8 @@ export function setAudio(link) {
     if (this._.playing) {
         this._.form.audio.mt_play();
     }
+
+    this._.form.skip_prevent = true;
 }
 
 export function setSubtitles(url) {
@@ -85,4 +89,6 @@ export function setSubtitles(url) {
             }
         });
     }
+
+    this._.form.skip_prevent = true;
 }

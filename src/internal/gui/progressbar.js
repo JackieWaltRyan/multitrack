@@ -30,7 +30,7 @@ export function generateProgressbar() {
             }
         ),
 
-        _root: createElement("div", {
+        root: createElement("div", {
                 class: "mt_overlay_progress_bar",
             }, (el) => {
                 let updatePopup = (cursorX, position) => {
@@ -141,8 +141,8 @@ export function generateProgressbar() {
     this._.form.progressbar.popup.appendChild(this._.form.progressbar.popup.image);
     this._.form.progressbar.popup.appendChild(this._.form.progressbar.popup.text);
 
-    this._.form.progressbar._root.appendChild(this._.form.progressbar.popup);
-    this._.form.progressbar._root.appendChild(this._.form.progressbar.line);
-    this._.form.progressbar._root.appendChild(this._.form.progressbar.loaded);
-    this._.form.progressbar._root.appendChild(this._.form.progressbar.played);
+    this._.form.progressbar.root.appendChild(this._.form.progressbar.popup);
+    this._.form.progressbar.root.appendChild(this._.form.progressbar.line);
+    this._.form.progressbar.root.appendChild(this._.form.progressbar.loaded);
+    this._.form.progressbar.root.appendChild(this._.form.progressbar.played);
 }

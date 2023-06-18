@@ -52,7 +52,7 @@ export function downloadStatusUpdate() {
     let allowedStates = [3, 4];
     let video = this._.form.video;
     let audio = this._.form.audio;
-    let button_play = this._.form.buttons.play;
+    let button_play = this._.form.buttons.but_play;
 
     if (allowedStates.includes(video.readyState) && allowedStates.includes(audio.readyState)) {
         this._.form.logo_spiner.style.display = "none";
@@ -85,7 +85,7 @@ export function changePlaying(val) {
     if (val) {
         this._.form.video.mt_play();
         this._.form.audio.mt_play();
-        this._.form.buttons.play.setAttribute("icon", "pauseBtn");
+        this._.form.buttons.but_play.setAttribute("icon", "pauseBtn");
 
         this._.form.logo_play.style.display = "block";
         this._.form.logo_play.style.animation = "none";
@@ -100,7 +100,7 @@ export function changePlaying(val) {
     } else {
         this._.form.video.mt_pause();
         this._.form.audio.mt_pause();
-        this._.form.buttons.play.setAttribute("icon", "playBtn");
+        this._.form.buttons.but_play.setAttribute("icon", "playBtn");
 
         this._.form.logo_pause.style.display = "block";
         this._.form.logo_pause.style.animation = "none";

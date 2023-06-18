@@ -2,6 +2,7 @@ import {createElement, logError, mobileCheck} from "../utils";
 import {toggleSettings} from "./settings";
 import {seek, skip} from "../playback";
 import {repeat, set_repeat} from "./media";
+import {mute} from "./volume";
 
 export function tooltip(event, trigger, name) {
     if (trigger && !mobileCheck()) {
@@ -46,7 +47,7 @@ export function toggleFullscreen() {
             document.msExitFullscreen();
         }
 
-        this._.form.buttons.fullscreen.setAttribute("icon", "fullscreenOn");
+        this._.form.buttons.but_fullscreen.setAttribute("icon", "fullscreenOn");
     } else {
         let element = this._.element;
 
@@ -66,13 +67,13 @@ export function toggleFullscreen() {
             }
         }
 
-        this._.form.buttons.fullscreen.setAttribute("icon", "fullscreenOff");
+        this._.form.buttons.but_fullscreen.setAttribute("icon", "fullscreenOff");
     }
 }
 
 export function generateButtons() {
     this._.form.buttons = {
-        play: createElement("button", {
+        but_play: createElement("button", {
                 icon: "playBtn",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile",
                 style: !mobileCheck() ? "" : "background-size: 20vw; height: 20vw"
@@ -92,7 +93,7 @@ export function generateButtons() {
             }
         ),
 
-        backward10: createElement("button", {
+        but_backward_10: createElement("button", {
                 icon: "backward10",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
@@ -110,7 +111,7 @@ export function generateButtons() {
             }
         ),
 
-        forward10: createElement("button", {
+        but_forward_10: createElement("button", {
                 icon: "forward10",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
@@ -128,7 +129,7 @@ export function generateButtons() {
             }
         ),
 
-        skip_previous: createElement("button", {
+        but_skip_previous: createElement("button", {
                 icon: "skip_previous",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
@@ -146,7 +147,7 @@ export function generateButtons() {
             }
         ),
 
-        skip_next: createElement("button", {
+        but_skip_next: createElement("button", {
                 icon: "skip_next",
                 class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
@@ -164,7 +165,7 @@ export function generateButtons() {
             }
         ),
 
-        repeat: createElement("button", {
+        but_repeat: createElement("button", {
                 icon: "repeatOff",
                 class: "mt_overlay_button"
             }, (el) => {
@@ -175,7 +176,7 @@ export function generateButtons() {
                     tooltip.call(this, event, true, text);
 
                     let icon = (repeat().length === 0) ? "repeatOff" : ((repeat().length === 1) ? "repeatA" : "repeatB");
-                    this._.form.buttons.repeat.setAttribute("icon", icon);
+                    this._.form.buttons.but_repeat.setAttribute("icon", icon);
 
                     this._.form.video.dispatchEvent(new ProgressEvent("timeupdate"));
                 });
@@ -191,37 +192,37 @@ export function generateButtons() {
             }
         ),
 
-        fullscreen: createElement("button", {
-                icon: "fullscreenOn",
-                class: "mt_overlay_button"
-            }, (el) => {
-                el.addEventListener("click", (event) => {
-                    toggleFullscreen.call(this);
-                    (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) ? tooltip.call(this, event, true, "Отключить полноэкранный режим") : tooltip.call(this, event, true, "Включить полноэкранный режим");
-                });
+        but_volume: createElement("button", {
+            class: "mt_overlay_button",
+            icon: "volume",
+            iconVar: 3
+        }, (el) => {
+            el.addEventListener("click", (event) => {
+                mute.call(this, true);
+                this.muted ? tooltip.call(this, event, true, "Включить звук") : tooltip.call(this, event, true, "Отключить звук");
+            });
 
-                el.addEventListener("mousemove", (event) => {
-                    (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) ? tooltip.call(this, event, true, "Отключить полноэкранный режим") : tooltip.call(this, event, true, "Включить полноэкранный режим");
-                });
+            el.addEventListener("mousemove", (event) => {
+                this.muted ? tooltip.call(this, event, true, "Включить звук") : tooltip.call(this, event, true, "Отключить звук");
+            });
 
-                el.addEventListener("mouseout", () => {
-                    tooltip.call(this, false);
-                });
-            }
-        ),
+            el.addEventListener("mouseout", () => {
+                tooltip.call(this, false);
+            });
+        }),
 
-        copy_url: createElement("button", {
+        but_copy_url: createElement("button", {
                 icon: "copy",
                 class: "mt_overlay_button"
             }, (el) => {
                 el.addEventListener("click", () => {
                     try {
                         if (isSecureContext && navigator.clipboard) {
-                            navigator.clipboard.writeText(decodeURIComponent(location.origin + location.pathname) + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles")).then(r => r);
+                            navigator.clipboard.writeText(location.origin + location.pathname + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles")).then(r => r);
                         } else {
                             let input = document.createElement("input");
                             this._.rootElement.appendChild(input);
-                            input.value = decodeURIComponent(location.origin + location.pathname) + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles");
+                            input.value = location.origin + location.pathname + "?p=1&t=" + encodeURIComponent(parseInt(this._.form.video.currentTime)) + "&a=" + localStorage.getItem("mt_mark_dubs") + "&s=" + localStorage.getItem("mt_mark_subtitles");
                             input.select();
                             document.execCommand("copy");
                             input.remove();
@@ -241,7 +242,7 @@ export function generateButtons() {
             }
         ),
 
-        pip: createElement("button", {
+        but_pip: createElement("button", {
                 icon: "pipOn",
                 class: "mt_overlay_button"
             }, (el) => {
@@ -271,7 +272,7 @@ export function generateButtons() {
             }
         ),
 
-        menu: createElement("button", {
+        but_menu: createElement("button", {
                 icon: "menu",
                 class: "mt_overlay_button"
             }, (el) => {
@@ -288,5 +289,24 @@ export function generateButtons() {
                 });
             }
         ),
+
+        but_fullscreen: createElement("button", {
+                icon: "fullscreenOn",
+                class: "mt_overlay_button"
+            }, (el) => {
+                el.addEventListener("click", (event) => {
+                    toggleFullscreen.call(this);
+                    (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) ? tooltip.call(this, event, true, "Отключить полноэкранный режим") : tooltip.call(this, event, true, "Включить полноэкранный режим");
+                });
+
+                el.addEventListener("mousemove", (event) => {
+                    (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) ? tooltip.call(this, event, true, "Отключить полноэкранный режим") : tooltip.call(this, event, true, "Включить полноэкранный режим");
+                });
+
+                el.addEventListener("mouseout", () => {
+                    tooltip.call(this, false);
+                });
+            }
+        )
     };
 }

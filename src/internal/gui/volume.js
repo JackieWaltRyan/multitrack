@@ -12,26 +12,7 @@ export function mute(undoLast = false) {
 }
 
 export function generateVolume() {
-    (this._.form.buttons.volume = createElement("button", {
-        class: "mt_overlay_button",
-        icon: "volume",
-        iconVar: 3
-    }, (el) => {
-        el.addEventListener("click", (event) => {
-            mute.call(this, true);
-            this.muted ? tooltip.call(this, event, true, "Включить звук") : tooltip.call(this, event, true, "Отключить звук");
-        });
-
-        el.addEventListener("mousemove", (event) => {
-            this.muted ? tooltip.call(this, event, true, "Включить звук") : tooltip.call(this, event, true, "Отключить звук");
-        });
-
-        el.addEventListener("mouseout", () => {
-            tooltip.call(this, false);
-        });
-    }));
-
-    (this._.form.volumebar = {
+    this._.form.volumebar = {
         line: createElement("div", {
             class: "mt_overlay_volume_bar_background"
         }, (el) => {
@@ -56,7 +37,7 @@ export function generateVolume() {
             });
         }),
 
-        _root: createElement("div", {
+        root: createElement("div", {
             class: "mt_overlay_volume_bar"
         }, (el) => {
             let vol_val;
@@ -119,10 +100,10 @@ export function generateVolume() {
                 tooltip.call(this, false);
             });
         }),
-    });
+    };
 
     if (!mobileCheck()) {
-        this._.form.volumebar._root.appendChild(this._.form.volumebar.line);
-        this._.form.volumebar._root.appendChild(this._.form.volumebar.selected);
+        this._.form.volumebar.root.appendChild(this._.form.volumebar.line);
+        this._.form.volumebar.root.appendChild(this._.form.volumebar.selected);
     }
 }

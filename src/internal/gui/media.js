@@ -241,7 +241,7 @@ function appendEvents(element) {
                                     end = root.duration;
                                 }
 
-                                if ((start <= element.currentTime) && (element.currentTime <= end)) {
+                                if ((start <= element.currentTime) && (element.currentTime <= end) && root._.form.skip_prevent) {
                                     setTime.call(root, end + 1);
                                 }
                             }

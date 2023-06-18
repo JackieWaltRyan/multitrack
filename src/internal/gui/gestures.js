@@ -32,8 +32,8 @@ export function gestures() {
         this._.moveEvents = [];
     }, false);
 
-    this._.form.overlays._root.addEventListener("dblclick", (event) => {
-        if (event.target === this._.form.overlays._root || event.target === this._.form.overlays.mobile) {
+    this._.form.overlays.root.addEventListener("dblclick", (event) => {
+        if (event.target === this._.form.overlays.root || event.target === this._.form.overlays.mobile) {
             toggleFullscreen.call(this);
         }
     }, false);

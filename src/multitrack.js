@@ -53,7 +53,7 @@ export default class {
             iconNum = 0;
         }
 
-        root._.form.buttons.volume.setAttribute("iconVar", iconNum);
+        root._.form.buttons.but_volume.setAttribute("iconVar", iconNum);
     }
 
     get playbackRate() {
@@ -102,7 +102,7 @@ export default class {
                     iconNum = 0;
                 }
 
-                root._.form.buttons.volume.setAttribute("iconVar", iconNum);
+                root._.form.buttons.but_volume.setAttribute("iconVar", iconNum);
                 root._.form.volumebar.selected.style.width = ((100 * value) + "%");
             }
         }
