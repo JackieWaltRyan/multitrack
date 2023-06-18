@@ -1,7 +1,7 @@
 import {createElement, getPosInElement, LogoInfoBlock, mobileCheck, URLparams} from "../utils";
 import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
 import {setSpeed} from "../playback";
-import {hotkeys, settings_hotkeys} from "./hotkeys";
+import {settings_hotkeys} from "./hotkeys";
 import {showMobileOverlay, showOverlay} from "./overlay";
 import {upcan} from "./media";
 
@@ -110,6 +110,8 @@ export function toggleSettings(event) {
 
         clearTimeout(SettingsTimeout);
     } else {
+        this._.form.settings.info.trigger = false;
+
         resetMenu.call(this);
 
         this._.rootElement.classList.add("mt_settings_show");
@@ -173,13 +175,28 @@ export function toggleSettings(event) {
 function resetMenu() {
     this._.form.settings.title.innerText = "Настройки";
     this._.form.settings.header.setAttribute("showIcon", null);
+    this._.form.settings.info.root.removeAttribute("style");
 
     for (let el in this._.form.settings.menu) {
         el = this._.form.settings.menu[el];
         el.Content.style.display = "none";
     }
 
-    this._.form.settings.menuSwitcher.Content.removeAttribute("style");
+    for (let el in this._.form.settings.info.menu) {
+        el = this._.form.settings.info.menu[el];
+        el.Content.style.display = "none";
+    }
+
+    if (this._.form.settings.info.trigger) {
+        this._.form.settings.menuSwitcher.Content.style.display = "none";
+        this._.form.settings.info.menuSwitcher.Content.removeAttribute("style");
+    } else {
+        this._.form.settings.info.menuSwitcher.Content.style.display = "none";
+        this._.form.settings.menuSwitcher.Content.removeAttribute("style");
+
+        this._.form.settings.header.removeAttribute("blockname");
+        this._.form.settings.title.removeAttribute("blockname");
+    }
 }
 
 function generate_quality() {
@@ -433,7 +450,7 @@ function generate_settings() {
 }
 
 function generate_info() {
-    this._.form.settings.menu.info.Content = createElement("div", {
+    this._.form.settings.info.menu.info.Content = createElement("div", {
         blockName: "info"
     }, (el) => {
         el.appendChild(createElement("div", {
@@ -527,19 +544,45 @@ export function generateSettings() {
 
             videoSize: new SettingsRadioButtons("Масштаб"),
 
-            settings: new SettingsButtons("Дополнительно"),
-
-            hotkeys: new SettingsPage("Управление"),
-
-            info: new SettingsPage("Информация о плеере")
+            settings: new SettingsButtons("Дополнительно")
         },
 
-        title: createElement("div"),
+        info: {
+            trigger: false,
+
+            root: createElement("div", {
+                blockName: "info_title"
+            }, (el) => {
+                el.innerText = "Инфо";
+            }),
+
+            menu: {
+                hotkeys: new SettingsPage("Управление"),
+
+                info: new SettingsPage("О плеере")
+            },
+
+            menuSwitcher: new SettingsButtons()
+        },
+
+        title: createElement("div", {
+            style: "width: 100%"
+        }),
 
         header: createElement("div", {
             class: "mt_settings_header"
         }, (el) => {
-            el.addEventListener("click", () => {
+            el.addEventListener("click", (event) => {
+                if ((event.target.attributes["blockname"] !== undefined) && (event.target.attributes["blockname"].value === "info_title")) {
+                    this._.form.settings.info.trigger = true;
+                } else {
+                    this._.form.settings.info.trigger = false;
+
+                    this._.form.settings.header.removeAttribute("blockname");
+                }
+
+                this._.form.settings.title.removeAttribute("blockname");
+
                 resetMenu.call(this);
             });
         }),
@@ -646,13 +689,11 @@ export function generateSettings() {
     generate_settings.call(this);
 
     if (!mobileCheck()) {
-        this._.form.settings.menu.hotkeys.Content = createElement("div", {
-            blockName: "hotkeys"
-        }, (el) => {
+        this._.form.settings.info.menu.hotkeys.Content = createElement("div", {}, (el) => {
             settings_hotkeys.call(this, el);
         });
     } else {
-        delete this._.form.settings.menu.hotkeys;
+        delete this._.form.settings.info.menu.hotkeys;
     }
 
     generate_info.call(this);
@@ -667,19 +708,46 @@ export function generateSettings() {
             this._.form.settings.title.innerText = menu.Name;
             menu.Content.removeAttribute("style");
             this._.form.settings.menuSwitcher.Content.style.display = "none";
+            this._.form.settings.info.root.style.display = "none";
+        });
+    }
+
+    for (let menu_info in this._.form.settings.info.menu) {
+        menu_info = this._.form.settings.info.menu[menu_info];
+
+        this._.form.settings.info.menuSwitcher.appendButton(menu_info.Name, () => {
+            resetMenu.call(this);
+
+            this._.form.settings.header.setAttribute("showIcon", "true");
+            this._.form.settings.header.setAttribute("blockname", "info_title");
+
+            this._.form.settings.title.innerText = menu_info.Name;
+            this._.form.settings.title.setAttribute("blockname", "info_title");
+
+            menu_info.Content.removeAttribute("style");
+
+            this._.form.settings.info.menuSwitcher.Content.style.display = "none";
+            this._.form.settings.info.root.style.display = "none";
         });
     }
 
     this._.form.settings.body.appendChild(this._.form.settings.menuSwitcher.Content);
+    this._.form.settings.body.appendChild(this._.form.settings.info.menuSwitcher.Content);
 
     for (let menu in this._.form.settings.menu) {
         menu = this._.form.settings.menu[menu];
         this._.form.settings.body.appendChild(menu.Content);
     }
 
+    for (let menu_info in this._.form.settings.info.menu) {
+        menu_info = this._.form.settings.info.menu[menu_info];
+        this._.form.settings.body.appendChild(menu_info.Content);
+    }
+
     resetMenu.call(this);
 
     this._.form.settings.header.appendChild(this._.form.settings.title);
+    this._.form.settings.header.appendChild(this._.form.settings.info.root);
 
     this._.form.settings.root.appendChild(this._.form.settings.header);
     this._.form.settings.root.appendChild(this._.form.settings.body);
