@@ -1,4 +1,4 @@
-import {URLparams} from "./utils";
+import {setMediaSession, URLparams} from "./utils";
 
 let ASS;
 
@@ -56,6 +56,10 @@ export function setAudio(link) {
     }
 
     this._.form.skip_prevent = true;
+
+    if (navigator.mediaSession.playbackState !== "none") {
+        setMediaSession.call(this);
+    }
 }
 
 export function setSubtitles(url) {
@@ -91,4 +95,8 @@ export function setSubtitles(url) {
     }
 
     this._.form.skip_prevent = true;
+
+    if (navigator.mediaSession.playbackState !== "none") {
+        setMediaSession.call(this);
+    }
 }
