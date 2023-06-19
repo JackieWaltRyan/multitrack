@@ -1,5 +1,5 @@
 import {LogoInfoBlock, URLparams} from "./utils";
-import {setMediaSession} from "./mediasession";
+import {setMediaSession, updatePositionState} from "./mediasession";
 
 let trigger = true;
 let old_seek = 0;
@@ -147,6 +147,8 @@ export function seek(val) {
 
     this._.form.audio.mt_setTime(val);
     this._.form.video.mt_setTime(val);
+
+    updatePositionState.call(this);
 }
 
 export function skip(val) {
@@ -161,6 +163,8 @@ export function skip(val) {
             }
         }
     }
+
+    updatePositionState.call(this);
 }
 
 export function setTime(val, isVideo = false) {
@@ -168,6 +172,8 @@ export function setTime(val, isVideo = false) {
     if (!isVideo) {
         this._.form.video.mt_setTime(val);
     }
+
+    updatePositionState.call(this);
 }
 
 export function setSpeed(val) {

@@ -1,6 +1,5 @@
 import {createElement, secondsToTime} from "../utils";
 import {changePlaying, downloadStatusUpdate, setSpeed, setTime, skip} from "../playback";
-import {updatePositionState} from "../mediasession";
 
 let video;
 let audio;
@@ -251,8 +250,6 @@ function appendEvents(element) {
                 }
             }
         }
-
-        updatePositionState.call(root);
     }
 
     function onloadedmetadata() {

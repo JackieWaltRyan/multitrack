@@ -68,6 +68,8 @@ export function setMediaSession() {
         navigator.mediaSession.setActionHandler("seekto", (event) => {
             this.currentTime = event.seekTime;
         });
+
+        updatePositionState.call(this);
     }
 }
 
