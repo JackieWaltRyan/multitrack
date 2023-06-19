@@ -64,7 +64,7 @@ export function secondsToTime(sec, clear = false) {
 
 export function setMediaSession() {
     if ("mediaSession" in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
+        let metadata = new MediaMetadata({
             title: this._.title,
             artist: this._.form.currentAudios + " " + this._.form.currentSubtitles,
             artwork: [
@@ -100,6 +100,10 @@ export function setMediaSession() {
                 }
             ]
         });
+
+        if (navigator.mediaSession.metadata !== metadata) {
+            navigator.mediaSession.metadata = metadata;
+        }
 
         navigator.mediaSession.setActionHandler("play", () => {
             changePlaying.call(this, true);
