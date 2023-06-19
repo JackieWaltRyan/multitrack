@@ -9,10 +9,6 @@ export function getPosInElement(element, event) {
     };
 }
 
-export function logError(text) {
-    console.error(this._.name + " | " + text);
-}
-
 export function mobileCheck() {
     let check = false;
     (function (a) {

@@ -1,4 +1,4 @@
-import {createElement, logError, mobileCheck} from "../utils";
+import {createElement, mobileCheck} from "../utils";
 import {toggleSettings} from "./settings";
 import {seek, skip} from "../playback";
 import {repeat, set_repeat} from "./media";
@@ -228,7 +228,7 @@ export function generateButtons() {
                             input.remove();
                         }
                     } catch {
-                        logError.call(this, "Извините, при создании ссылки произошла ошибка.");
+                        console.error("Извините, при создании ссылки произошла ошибка.");
                     }
                 });
 
@@ -258,7 +258,7 @@ export function generateButtons() {
                             tooltip.call(this, event, true, "Включить режим «картинка в картинке»")
                         }
                     } else {
-                        logError.call(this, "К сожалению, ваш браузер не поддерживает функцию «картинка в картинке».");
+                        console.error("К сожалению, ваш браузер не поддерживает функцию «картинка в картинке».");
                     }
                 });
 

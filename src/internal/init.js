@@ -1,9 +1,7 @@
 import {gui} from "./gui.js";
-import {logError} from "./utils.js";
 
 export function init(selector, dataArray) {
     this._ = {
-        name: "Multitrack.JS",
         parameters: {
             frames: {
                 x: 10,
@@ -11,37 +9,37 @@ export function init(selector, dataArray) {
             },
         },
         subtitlesDownloader: null,
-        videos: dataArray.videos,
-        audios: dataArray.audios,
-        subtitles: dataArray.subtitles,
-        preferredVideoName: dataArray.preferredVideoName,
+        videos: dataArray.videos ? dataArray.videos : null,
+        audios: dataArray.audios ? dataArray.audios : null,
+        subtitles: dataArray.subtitles ? dataArray.subtitles : null,
+        preferredVideoName: dataArray.preferredVideoName ? dataArray.preferredVideoName : null,
         playbackRate: 1,
         enable_sync: false,
-        ds_series: dataArray.ds_series,
-        ds_times: dataArray.ds_times,
-        sts_url: dataArray.sts_url,
+        ds_series: dataArray.ds_series ? dataArray.ds_series : null,
+        ds_times: dataArray.ds_times ? dataArray.ds_times : null,
+        sts_url: dataArray.sts_url ? dataArray.sts_url : null,
         playing: false,
-        enable_embient: false
+        enable_embient: false,
+        title: dataArray.title ? dataArray.title : null,
+        preview: dataArray.preview ? dataArray.preview : null,
+        placeholder: dataArray.placeholder ? dataArray.placeholder : null
     };
 
     if ((this._.rootElement = document.querySelector(selector))) {
         gui.call(this);
 
-        if (dataArray.placeholder) {
-            this._.form.video.poster = dataArray.placeholder;
-        }
+        this._.form.video.poster = this._.placeholder;
 
-        if (dataArray.preview) {
-            this._.parameters.frames.image = dataArray.preview;
-        }
+        this._.parameters.frames.image = this._.preview;
 
-        this._.form.title.innerText = dataArray.title;
+        this._.form.title.innerText = this._.title;
+
         this.trySync = true;
 
         window.addEventListener("resize", () => {
             this.resize();
         });
     } else {
-        logError.call(this, "Не удается найти" + selector + "элемент.");
+        console.error("Не удается найти" + selector + "элемент.");
     }
 }

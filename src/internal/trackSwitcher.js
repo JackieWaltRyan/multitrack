@@ -1,4 +1,4 @@
-import {logError, URLparams} from "./utils";
+import {URLparams} from "./utils";
 
 let ASS;
 
@@ -84,7 +84,7 @@ export function setSubtitles(url) {
                         setSubtitles.call(this, url);
                     }, 500);
 
-                    logError.call(this, "Не могу использовать библиотеку ASS.");
+                    console.error("Не могу использовать библиотеку ASS.");
                 }
             }
         });

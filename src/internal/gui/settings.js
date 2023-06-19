@@ -1,5 +1,5 @@
 import {createElement, getPosInElement, LogoInfoBlock, mobileCheck, URLparams} from "../utils";
-import {setAudio, setSubtitles, setVideo} from "../trackSwitcher";
+import {setAudio, setSubtitles, setVideo} from "../trackswitcher";
 import {setSpeed} from "../playback";
 import {settings_hotkeys} from "./hotkeys";
 import {showMobileOverlay, showOverlay} from "./overlay";
@@ -233,10 +233,11 @@ function generate_dubs() {
     for (let audio of this._.audios) {
         this._.form.settings.menu.dubs.appendButton(audio.name, () => {
             this._.form.skip_prevent = false;
+            this._.form.currentAudios = audio.name;
 
             localStorage.setItem("mt_mark_dubs", encodeURIComponent(audio.code));
 
-            setAudio.call(this, audio.path, audio.code);
+            setAudio.call(this, audio.path);
         });
     }
 
@@ -269,10 +270,11 @@ function generate_subtitles() {
     for (let subtitle of this._.subtitles) {
         this._.form.settings.menu.subtitles.appendButton(subtitle.name, () => {
             this._.form.skip_prevent = false;
+            this._.form.currentSubtitles = (subtitle.name !== "Без субтитров") ? subtitle.name : "";
 
             localStorage.setItem("mt_mark_subtitles", encodeURIComponent(subtitle.code));
 
-            setSubtitles.call(this, subtitle.path, subtitle.code);
+            setSubtitles.call(this, subtitle.path);
         });
     }
 

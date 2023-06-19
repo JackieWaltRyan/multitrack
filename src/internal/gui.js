@@ -333,7 +333,11 @@ export function gui() {
             mt_set_hidemenu: null
         },
 
-        skip_prevent: true
+        skip_prevent: true,
+
+        currentAudios: "",
+
+        currentSubtitles: ""
     };
 
     this._.form.sts.root.appendChild(this._.form.sts.start);

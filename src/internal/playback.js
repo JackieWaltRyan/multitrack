@@ -1,4 +1,5 @@
 import {LogoInfoBlock, URLparams} from "./utils";
+import {setMediaSession} from "./mediasession";
 
 let trigger = true;
 let old_seek = 0;
@@ -97,6 +98,8 @@ export function changePlaying(val) {
                 this._.form.logo_play.style.display = "none";
             }, 1000);
         }, 100);
+
+        navigator.mediaSession.playbackState = "playing";
     } else {
         this._.form.video.mt_pause();
         this._.form.audio.mt_pause();
@@ -112,9 +115,13 @@ export function changePlaying(val) {
                 this._.form.logo_pause.style.display = "none";
             }, 1000);
         }, 100);
+
+        navigator.mediaSession.playbackState = "paused";
     }
 
     this._.playing = val;
+
+    setMediaSession.call(this);
 }
 
 export function play() {
