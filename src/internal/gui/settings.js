@@ -4,7 +4,6 @@ import {setSpeed} from "../playback";
 import {settings_hotkeys} from "./hotkeys";
 import {showMobileOverlay, showOverlay} from "./overlay";
 import {upcan} from "./media";
-import {setMediaSession} from "../mediasession";
 
 let SettingsTimeout;
 
@@ -239,7 +238,6 @@ function generate_dubs() {
             localStorage.setItem("mt_mark_dubs", encodeURIComponent(audio.code));
 
             setAudio.call(this, audio.path);
-            setMediaSession.call(this);
         });
     }
 
@@ -277,7 +275,6 @@ function generate_subtitles() {
             localStorage.setItem("mt_mark_subtitles", encodeURIComponent(subtitle.code));
 
             setSubtitles.call(this, subtitle.path);
-            setMediaSession.call(this);
         });
     }
 

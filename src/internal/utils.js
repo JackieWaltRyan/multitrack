@@ -1,4 +1,4 @@
-import {clear_old_seek} from "./playback";
+import {changePlaying, clear_old_seek, seek, skip} from "./playback";
 
 let LIBtimeout;
 
@@ -59,6 +59,81 @@ export function secondsToTime(sec, clear = false) {
         return (hours > 0) ? [seconds, minutes, hours] : [seconds, minutes];
     } else {
         return (hours > 0) ? (hours + ":" + Sminutes + ":" + Sseconds) : (Sminutes + ":" + Sseconds);
+    }
+}
+
+export function setMediaSession() {
+    if ("mediaSession" in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: this._.title,
+            artist: this._.form.currentAudios + " " + this._.form.currentSubtitles,
+            artwork: [
+                {
+                    src: this._.placeholder,
+                    sizes: "96x96",
+                    type: "image/png"
+                },
+                {
+                    src: this._.placeholder,
+                    sizes: "128x128",
+                    type: "image/png"
+                },
+                {
+                    src: this._.placeholder,
+                    sizes: "192x192",
+                    type: "image/png"
+                },
+                {
+                    src: this._.placeholder,
+                    sizes: "256x256",
+                    type: "image/png"
+                },
+                {
+                    src: this._.placeholder,
+                    sizes: "384x384",
+                    type: "image/png"
+                },
+                {
+                    src: this._.placeholder,
+                    sizes: "512x512",
+                    type: "image/png"
+                }
+            ]
+        });
+
+        navigator.mediaSession.setActionHandler("play", () => {
+            changePlaying.call(this, true);
+        });
+
+        navigator.mediaSession.setActionHandler("pause", () => {
+            changePlaying.call(this, false);
+        });
+
+        navigator.mediaSession.setActionHandler("seekbackward", () => {
+            seek.call(this, -10);
+        });
+
+        navigator.mediaSession.setActionHandler("seekforward", () => {
+            seek.call(this, 10);
+        });
+
+        if (this._.ds_series !== null) {
+            let index = this._.ds_series.findIndex((url) => (url === decodeURIComponent(location.pathname)));
+
+            if (index !== -1) {
+                if ((index - 1) >= 0) {
+                    navigator.mediaSession.setActionHandler("previoustrack", () => {
+                        skip.call(this, false);
+                    });
+                }
+
+                if ((index + 1) < this._.ds_series.length) {
+                    navigator.mediaSession.setActionHandler("nexttrack", () => {
+                        skip.call(this, true);
+                    });
+                }
+            }
+        }
     }
 }
 
