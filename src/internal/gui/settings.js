@@ -104,6 +104,12 @@ function SetSettingsTimeout() {
     }
 }
 
+export function closeSettings() {
+    this._.form.settings.opened = false;
+    this._.rootElement.classList.remove("mt_settings_show");
+    clearTimeout(SettingsTimeout);
+}
+
 export function toggleSettings(event) {
     if (this._.form.settings.opened) {
         this._.rootElement.classList.remove("mt_settings_show");
@@ -467,50 +473,38 @@ function generate_info() {
             el.appendChild(createElement("div", {
                 style: "line-height: 20px; padding: 4px 8px"
             }, (el) => {
-                el.appendChild(createElement("b", {
-                    style: "font-weight: normal"
-                }, (el) => {
+                el.appendChild(createElement("div", {}, (el) => {
                     el.innerText = "Версия: " + require("/package.json").version;
                 }));
 
-                el.appendChild(createElement("br"));
-
-                el.appendChild(createElement("b", {
-                    style: "font-weight: normal"
-                }, (el) => {
+                el.appendChild(createElement("div", {}, (el) => {
                     el.innerText = "Дата сборки: " + new Date(__TIMESTAMP__).toLocaleString("ru");
                 }));
             }));
         }));
 
-        el.appendChild(createElement("b", {
-            style: "font-weight: normal"
-        }, (el) => {
+        el.appendChild(createElement("div", {}, (el) => {
             el.innerText = "Исходный код плеера: ";
+
+            el.appendChild(createElement("a", {
+                href: require("/package.json").homepage,
+                target: "_blank",
+                style: "color: #ffccff"
+            }, (el) => {
+                el.innerText = "JackieWaltRyan/multitrack";
+            }));
         }));
 
-        el.appendChild(createElement("a", {
-            href: require("/package.json").homepage,
-            target: "_blank",
-            style: "color: #ffccff"
-        }, (el) => {
-            el.innerText = "JackieWaltRyan/multitrack";
-        }));
-
-        el.appendChild(createElement("br"));
-
-        el.appendChild(createElement("b", {
-            style: "font-weight: normal"
-        }, (el) => {
+        el.appendChild(createElement("div", {}, (el) => {
             el.innerText = "Баги и предложения: ";
-        }));
 
-        el.appendChild(createElement("a", {
-            href: require("/package.json").bugs.url,
-            target: "_blank",
-            style: "color: #ffccff"
-        }, (el) => {
-            el.innerText = "GitHub Issues";
+            el.appendChild(createElement("a", {
+                href: require("/package.json").bugs.url,
+                target: "_blank",
+                style: "color: #ffccff"
+            }, (el) => {
+                el.innerText = "GitHub Issues";
+            }));
         }));
     });
 }

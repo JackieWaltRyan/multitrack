@@ -73,24 +73,36 @@ export function setSubtitles(url) {
     if (url) {
         this._.subtitlesDownloader = setTimeout(() => {
             let xhr = new XMLHttpRequest();
-            xhr.open("GET", url, false);
-            xhr.send();
 
-            if (xhr.status === 200) {
-                try {
-                    this._.ass = new ASS(xhr.responseText, this._.form.video, {
-                        container: this._.form.subtitles,
-                    });
+            xhr.open("GET", url, true);
 
-                    this.resize();
-                } catch {
+            xhr.addEventListener("load", () => {
+                if (xhr.status === 200) {
+                    try {
+                        this._.ass = new ASS(xhr.responseText, this._.form.video, {
+                            container: this._.form.subtitles,
+                        });
+
+                        this.resize();
+                    } catch {
+                        setTimeout(() => {
+                            setSubtitles.call(this, url);
+                        }, 500);
+                    }
+                } else {
                     setTimeout(() => {
                         setSubtitles.call(this, url);
                     }, 500);
-
-                    console.error("Не могу использовать библиотеку ASS.");
                 }
-            }
+            });
+
+            xhr.addEventListener("error", () => {
+                setTimeout(() => {
+                    setSubtitles.call(this, url);
+                }, 500);
+            });
+
+            xhr.send();
         });
     }
 

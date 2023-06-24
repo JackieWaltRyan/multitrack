@@ -1,5 +1,5 @@
 import {createElement, mobileCheck} from "../utils";
-import {toggleSettings} from "./settings";
+import {closeSettings, toggleSettings} from "./settings";
 import {seek, skip} from "../playback";
 import {repeat, set_repeat} from "./media";
 import {mute} from "./volume";
@@ -36,6 +36,11 @@ export function tooltip(event, trigger, name) {
 }
 
 export function toggleFullscreen() {
+    closeSettings.call(this);
+
+    this._.form.timeset.open = false;
+    this._.form.timeset.root.style.display = "none";
+
     if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
         if (document.exitFullscreen) {
             document.exitFullscreen().then(r => r);
@@ -228,7 +233,7 @@ export function generateButtons() {
                             input.remove();
                         }
                     } catch {
-                        console.error("Извините, при создании ссылки произошла ошибка.");
+                        alert("Извините, при создании ссылки произошла ошибка.");
                     }
                 });
 
@@ -258,7 +263,7 @@ export function generateButtons() {
                             tooltip.call(this, event, true, "Включить режим «картинка в картинке»")
                         }
                     } else {
-                        console.error("К сожалению, ваш браузер не поддерживает функцию «картинка в картинке».");
+                        alert("К сожалению, ваш браузер не поддерживает функцию «картинка в картинке».");
                     }
                 });
 

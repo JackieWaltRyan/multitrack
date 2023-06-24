@@ -40,6 +40,6 @@ export function init(selector, dataArray) {
             this.resize();
         });
     } else {
-        console.error("Не удается найти" + selector + "элемент.");
+        alert("Не удается найти" + selector + "элемент.");
     }
 }

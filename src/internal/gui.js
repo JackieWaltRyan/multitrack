@@ -19,17 +19,25 @@ function send_sts() {
     if ((skip_time["e"] > skip_time["s"]) && (skip_time["s"] !== null) && (skip_time["e"] !== null)) {
         if (confirm("Время начала: " + secondsToTime(skip_time["s"]) + "\nВремя конца: " + secondsToTime(skip_time["e"]) + "\n\nВсе верно? Отправлять сегмент?")) {
             let xhr = new XMLHttpRequest();
-            xhr.open("GET", this._.sts_url + "?id=" + decodeURIComponent(location.pathname) + "&start=" + parseInt(skip_time["s"]) + "&end=" + parseInt(skip_time["e"]), false);
-            xhr.send();
 
-            if (xhr.status === 200) {
-                skip_time = {"s": null, "e": null};
+            xhr.open("GET", this._.sts_url + "?id=" + decodeURIComponent(location.pathname) + "&start=" + parseInt(skip_time["s"]) + "&end=" + parseInt(skip_time["e"]), true);
 
-                this._.form.sts.start.innerText = "НАЧАЛО";
-                this._.form.sts.end.innerText = "КОНЕЦ";
-            } else {
+            xhr.addEventListener("load", () => {
+                if (xhr.status === 200) {
+                    skip_time = {"s": null, "e": null};
+
+                    this._.form.sts.start.innerText = "НАЧАЛО";
+                    this._.form.sts.end.innerText = "КОНЕЦ";
+                } else {
+                    alert("При отправке сегмента произошла ошибка:\n\n" + xhr.status + ": " + xhr.statusText);
+                }
+            });
+
+            xhr.addEventListener("error", () => {
                 alert("При отправке сегмента произошла ошибка:\n\n" + xhr.status + ": " + xhr.statusText);
-            }
+            });
+
+            xhr.send();
         }
     } else {
         alert("1. Время начала или конца не может быть пустым.\n\n2. Время конца всегда должно быть больше чем начало.");

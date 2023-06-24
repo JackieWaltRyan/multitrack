@@ -45,6 +45,7 @@
         color: white;
         border: 1px solid #343a40;
         overflow: auto;
+        z-index: 1000;
 
         .mt_settings_header {
             display: flex;
@@ -168,11 +169,19 @@
 
             .mt_settings_hotkeys {
                 display: flex;
-                padding: 5px;
 
-                .mt_settings_hotkeys_info_block {
-                    padding: 9px;
-                    white-space: nowrap;
+                .mt_settings_hotkeys_element {
+                    display: flex;
+                    padding: 5px;
+                    margin-left: 5px;
+
+                    .mt_settings_hotkeys_info_block {
+                        padding: 0 10px;
+                        width: 200px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                    }
                 }
             }
 
