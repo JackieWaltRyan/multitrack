@@ -195,57 +195,57 @@ export function generateMobileOverlay() {
         top: createElement("div", {
             class: "mt_overlay_top",
             style: "pointer-events: none"
-        }, (mel) => {
-            mel.appendChild(this._.form.title);
+        }, (el) => {
+            el.appendChild(this._.form.title);
         }),
 
         bottom: createElement("div", {
             class: "mt_overlay_bottom"
-        }, (mel) => {
-            mel.appendChild(this._.form.time);
-            mel.appendChild(this._.form.buttons.but_repeat);
+        }, (el) => {
+            el.appendChild(this._.form.time);
+            el.appendChild(this._.form.buttons.but_repeat);
 
-            mel.appendChild(createElement("div", {
+            el.appendChild(createElement("div", {
                 style: "flex: auto; pointer-events: none"
             }));
 
-            mel.appendChild(createElement("div", {
+            el.appendChild(createElement("div", {
                 style: "flex: auto; pointer-events: none"
             }));
 
-            mel.appendChild(this._.form.buttons.but_copy_url);
+            el.appendChild(this._.form.buttons.but_copy_url);
 
             if ("pictureInPictureEnabled" in document) {
-                mel.appendChild(this._.form.buttons.but_pip);
+                el.appendChild(this._.form.buttons.but_pip);
             }
 
-            mel.appendChild(this._.form.buttons.but_menu);
-            mel.appendChild(this._.form.buttons.but_fullscreen);
+            el.appendChild(this._.form.buttons.but_menu);
+            el.appendChild(this._.form.buttons.but_fullscreen);
         }),
 
         mobile: createElement("div", {
             class: "mt_overlay_mobile"
-        }, (mel) => {
+        }, (el) => {
             if (this._.ds_series !== null) {
                 let index = this._.ds_series.findIndex((url) => (url === decodeURIComponent(location.pathname)));
 
                 if (index !== -1) {
                     if ((index - 1) >= 0) {
-                        mel.appendChild(this._.form.buttons.but_skip_previous);
+                        el.appendChild(this._.form.buttons.but_skip_previous);
                     }
                 }
             }
 
-            mel.appendChild(this._.form.buttons.but_backward_10);
-            mel.appendChild(this._.form.buttons.but_play);
-            mel.appendChild(this._.form.buttons.but_forward_10);
+            el.appendChild(this._.form.buttons.but_backward_10);
+            el.appendChild(this._.form.buttons.but_play);
+            el.appendChild(this._.form.buttons.but_forward_10);
 
             if (this._.ds_series !== null) {
                 let index = this._.ds_series.findIndex((url) => (url === decodeURIComponent(location.pathname)));
 
                 if (index !== -1) {
                     if ((index + 1) < this._.ds_series.length) {
-                        mel.appendChild(this._.form.buttons.but_skip_next);
+                        el.appendChild(this._.form.buttons.but_skip_next);
                     }
                 }
             }

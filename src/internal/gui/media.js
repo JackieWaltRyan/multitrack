@@ -121,6 +121,7 @@ function appendEvents(element) {
     }
 
     element.addEventListener("canplay", oncanplay);
+    element.addEventListener("progress", oncanplay);
 
     function onprogress() {
         let buffered_list = [];
@@ -208,6 +209,7 @@ function appendEvents(element) {
     }
 
     element.addEventListener("timeupdate", onprogress);
+    element.addEventListener("progress", onprogress);
 
     function ontimeupdate() {
         if (!root._.form.progressbar.updateStyle) {
