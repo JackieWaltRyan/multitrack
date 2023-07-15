@@ -1,7 +1,7 @@
 import "./style.scss";
 import {init} from "./internal/init";
 import {pause, play, setSpeed, setTime, synchronize} from "./internal/playback";
-import {mobileCheck, sleep} from "./internal/utils";
+import {sleep} from "./internal/utils";
 
 export default class {
     get currentTime() {
@@ -80,7 +80,7 @@ export default class {
         let root = this;
 
         if (typeof value === "number") {
-            if (mobileCheck()) {
+            if (matchMedia("(any-pointer:coarse)").matches) {
                 root._.form.audio.volume = 1;
             } else {
                 if (value < 0) {

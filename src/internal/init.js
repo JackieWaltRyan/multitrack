@@ -22,7 +22,10 @@ export function init(selector, dataArray) {
         enable_embient: false,
         title: dataArray.title ? dataArray.title : null,
         preview: dataArray.preview ? dataArray.preview : null,
-        placeholder: dataArray.placeholder ? dataArray.placeholder : null
+        placeholder: dataArray.placeholder ? dataArray.placeholder : null,
+        stats_url: dataArray.stats_url ? dataArray.stats_url : null,
+        name: dataArray.name ? dataArray.name : null,
+        stats_trigger: true
     };
 
     if ((this._.rootElement = document.querySelector(selector))) {

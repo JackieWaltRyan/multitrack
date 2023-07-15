@@ -99,6 +99,26 @@ export function changePlaying(val) {
         }, 100);
 
         navigator.mediaSession.playbackState = "playing";
+
+        if (this._.stats_trigger) {
+            let xhr = new XMLHttpRequest();
+
+            xhr.open("GET", this._.stats_url + "?id=" + decodeURIComponent(location.pathname) + "&name=" + decodeURIComponent(this._.name) + "&title=" + decodeURIComponent(this._.title) + "&placeholder=" + decodeURIComponent(this._.placeholder), true);
+
+            xhr.addEventListener("load", () => {
+                if (xhr.status === 200) {
+                    this._.stats_trigger = false;
+                } else {
+                    console.log("При отправке статистики произошла ошибка:\n\n" + xhr.status + ": " + xhr.statusText);
+                }
+            });
+
+            xhr.addEventListener("error", () => {
+                console.log("При отправке статистики произошла ошибка:\n\n" + xhr.status + ": " + xhr.statusText);
+            });
+
+            xhr.send();
+        }
     } else {
         this._.form.video.mt_pause();
         this._.form.audio.mt_pause();

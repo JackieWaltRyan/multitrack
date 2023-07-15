@@ -1,4 +1,4 @@
-import {createElement, getPosInElement, LogoInfoBlock, mobileCheck, URLparams} from "../utils";
+import {createElement, getPosInElement, LogoInfoBlock, URLparams} from "../utils";
 import {setAudio, setSubtitles, setVideo} from "../trackswitcher";
 import {setSpeed} from "../playback";
 import {settings_hotkeys} from "./hotkeys";
@@ -16,7 +16,7 @@ class SettingsButtons {
 
     appendButton(name, action, checkbox, checkbox_list) {
         let btn = createElement("div", {
-            class: !mobileCheck() ? "mt_settings_element" : "mt_settings_element mt_settings_element_mobile"
+            class: !matchMedia("(any-pointer:coarse)").matches ? "mt_settings_element" : "mt_settings_element mt_settings_element_mobile"
         });
 
         btn.innerText = name;
@@ -60,7 +60,7 @@ class SettingsRadioButtons {
 
     appendButton(name, action) {
         let btn = createElement("div", {
-            class: !mobileCheck() ? "mt_settings_element" : "mt_settings_element mt_settings_element_mobile"
+            class: !matchMedia("(any-pointer:coarse)").matches ? "mt_settings_element" : "mt_settings_element mt_settings_element_mobile"
         });
 
         btn.innerText = name;
@@ -97,7 +97,7 @@ function SetSettingsTimeout() {
         }, 3000);
     }
 
-    if (mobileCheck()) {
+    if (matchMedia("(any-pointer:coarse)").matches) {
         showMobileOverlay.call(this);
     } else {
         showOverlay.call(this);
@@ -124,7 +124,7 @@ export function toggleSettings(event) {
 
         SetSettingsTimeout.call(this);
 
-        if (event !== undefined && !mobileCheck()) {
+        if (event !== undefined && !matchMedia("(any-pointer:coarse)").matches) {
             let pos = getPosInElement(this._.element, event);
 
             if ((this._.element.offsetWidth - pos.x) >= this._.form.settings.root.offsetWidth) {
@@ -379,7 +379,7 @@ function generate_settings() {
         this._.form.checkbox.mt_set_position.checked = trigger;
     }, "mt_set_position", this._.form.checkbox);
 
-    if (!mobileCheck()) {
+    if (!matchMedia("(any-pointer:coarse)").matches) {
         this._.form.settings.menu.settings.appendButton("Запоминать громкость", () => {
             let trigger = (localStorage.getItem("mt_set_volume") !== "true");
             localStorage.setItem("mt_set_volume", encodeURIComponent(trigger));
@@ -684,7 +684,7 @@ export function generateSettings() {
     generate_videoSize.call(this);
     generate_settings.call(this);
 
-    if (!mobileCheck()) {
+    if (!matchMedia("(any-pointer:coarse)").matches) {
         this._.form.settings.info.menu.hotkeys.Content = createElement("div", {}, (el) => {
             settings_hotkeys.call(this, el);
         });

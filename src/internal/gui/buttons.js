@@ -1,11 +1,11 @@
-import {createElement, mobileCheck} from "../utils";
+import {createElement} from "../utils";
 import {closeSettings, toggleSettings} from "./settings";
 import {seek, skip} from "../playback";
 import {repeat, set_repeat} from "./media";
 import {mute} from "./volume";
 
 export function tooltip(event, trigger, name) {
-    if (trigger && !mobileCheck()) {
+    if (trigger && !matchMedia("(any-pointer:coarse)").matches) {
         this._.form.tooltip.style.display = "block";
         this._.form.tooltip.innerText = name;
 
@@ -80,8 +80,8 @@ export function generateButtons() {
     this._.form.buttons = {
         but_play: createElement("button", {
                 icon: "playBtn",
-                class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile",
-                style: !mobileCheck() ? "" : "background-size: 20vw; height: 20vw"
+                class: !matchMedia("(any-pointer:coarse)").matches ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile",
+                style: !matchMedia("(any-pointer:coarse)").matches ? "" : "background-size: 20vw; height: 20vw"
             }, (el) => {
                 el.addEventListener("click", (event) => {
                     this._.playing ? this.pause() : this.play();
@@ -100,7 +100,7 @@ export function generateButtons() {
 
         but_backward_10: createElement("button", {
                 icon: "backward10",
-                class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
+                class: !matchMedia("(any-pointer:coarse)").matches ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
                 el.addEventListener("click", () => {
                     seek.call(this, -10);
@@ -118,7 +118,7 @@ export function generateButtons() {
 
         but_forward_10: createElement("button", {
                 icon: "forward10",
-                class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
+                class: !matchMedia("(any-pointer:coarse)").matches ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
                 el.addEventListener("click", () => {
                     seek.call(this, 10);
@@ -136,7 +136,7 @@ export function generateButtons() {
 
         but_skip_previous: createElement("button", {
                 icon: "skip_previous",
-                class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
+                class: !matchMedia("(any-pointer:coarse)").matches ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
                 el.addEventListener("click", () => {
                     skip.call(this, false);
@@ -154,7 +154,7 @@ export function generateButtons() {
 
         but_skip_next: createElement("button", {
                 icon: "skip_next",
-                class: !mobileCheck() ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
+                class: !matchMedia("(any-pointer:coarse)").matches ? "mt_overlay_button" : "mt_overlay_button mt_overlay_button_mobile"
             }, (el) => {
                 el.addEventListener("click", () => {
                     skip.call(this, true);

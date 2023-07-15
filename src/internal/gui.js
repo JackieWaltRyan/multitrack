@@ -1,4 +1,4 @@
-import {createElement, LogoInfoBlock, mobileCheck, secondsToTime} from "./utils";
+import {createElement, LogoInfoBlock, secondsToTime} from "./utils";
 import {hotkeys} from "./gui/hotkeys";
 import {gestures} from "./gui/gestures";
 import {generateMedia} from "./gui/media";
@@ -56,7 +56,7 @@ function SetTimesetTimeout() {
         }, 3000);
     }
 
-    if (mobileCheck()) {
+    if (matchMedia("(any-pointer:coarse)").matches) {
         showMobileOverlay.call(this);
     } else {
         showOverlay.call(this);
@@ -81,7 +81,7 @@ export function gui() {
 
         sts: {
             root: createElement("div", {
-                class: !mobileCheck() ? "mt_overlay_sts_root" : "mt_overlay_sts_root_mobile",
+                class: !matchMedia("(any-pointer:coarse)").matches ? "mt_overlay_sts_root" : "mt_overlay_sts_root_mobile",
                 style: !(localStorage.getItem("mt_set_newsegments") === "true") ? "display: none" : "display: block"
             }),
 
@@ -308,19 +308,19 @@ export function gui() {
         }),
 
         logo_spiner: createElement("div", {
-            class: !mobileCheck() ? "mt_logo_spiner" : "mt_logo_spiner_mobile"
+            class: !matchMedia("(any-pointer:coarse)").matches ? "mt_logo_spiner" : "mt_logo_spiner_mobile"
         }),
 
         logo_play: createElement("div", {
-            class: !mobileCheck() ? "mt_all_logo mt_logo_play" : "mt_all_logo_mobile mt_logo_play"
+            class: !matchMedia("(any-pointer:coarse)").matches ? "mt_all_logo mt_logo_play" : "mt_all_logo_mobile mt_logo_play"
         }),
 
         logo_pause: createElement("div", {
-            class: !mobileCheck() ? "mt_all_logo mt_logo_pause" : "mt_all_logo_mobile mt_logo_pause"
+            class: !matchMedia("(any-pointer:coarse)").matches ? "mt_all_logo mt_logo_pause" : "mt_all_logo_mobile mt_logo_pause"
         }),
 
         logo_info_block: createElement("div", {
-            class: !mobileCheck() ? "mt_all_logo mt_logo_info_block" : "mt_all_logo_mobile mt_logo_info_block_mobile"
+            class: !matchMedia("(any-pointer:coarse)").matches ? "mt_all_logo mt_logo_info_block" : "mt_all_logo_mobile mt_logo_info_block_mobile"
         }),
 
         tooltip: createElement("div", {
@@ -368,13 +368,13 @@ export function gui() {
     generateButtons.call(this);
     generateProgressbar.call(this);
 
-    if (!mobileCheck()) {
+    if (!matchMedia("(any-pointer:coarse)").matches) {
         generateVolume.call(this);
     }
 
     generateSettings.call(this);
 
-    if (mobileCheck()) {
+    if (matchMedia("(any-pointer:coarse)").matches) {
         generateMobileOverlay.call(this);
     } else {
         generateOverlay.call(this);
@@ -395,7 +395,7 @@ export function gui() {
 
     gestures.call(this);
 
-    if (!mobileCheck()) {
+    if (!matchMedia("(any-pointer:coarse)").matches) {
         hotkeys.call(this);
     }
 

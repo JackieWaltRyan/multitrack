@@ -80,7 +80,9 @@ class MultitrackJSLoader {
                     title: episodeData.title,
                     ds_series: ds_series,
                     ds_times: ds_times,
-                    sts_url: "//sts.jwr.pw/sts"
+                    sts_url: "//sts.jwr.pw/api/add",
+                    name: data.data.episode_name,
+                    stats_url: "//sts.jwr.pw/api/stats/add"
                 });
             } else {
                 alert("При загрузке базы данных произошла ошибка:\n\n" + xhr.status + ": " + xhr.statusText);

@@ -1,4 +1,4 @@
-import {createElement, getPosInElement, LogoInfoBlock, mobileCheck} from "../utils";
+import {createElement, getPosInElement, LogoInfoBlock} from "../utils";
 import {tooltip} from "./buttons";
 
 export function mute(undoLast = false) {
@@ -102,7 +102,7 @@ export function generateVolume() {
         }),
     };
 
-    if (!mobileCheck()) {
+    if (!matchMedia("(any-pointer:coarse)").matches) {
         this._.form.volumebar.root.appendChild(this._.form.volumebar.line);
         this._.form.volumebar.root.appendChild(this._.form.volumebar.selected);
     }
