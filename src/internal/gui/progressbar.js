@@ -1,4 +1,5 @@
 import {createElement, getPosInElement, LogoInfoBlock, secondsToTime} from "../utils";
+import {downloadStatusUpdate} from "../playback";
 
 export function generateProgressbar() {
     this._.form.progressbar = {
@@ -94,6 +95,10 @@ export function generateProgressbar() {
                     this.currentTime = (this.duration * getPosInElement(el, event).x) / el.clientWidth;
 
                     LogoInfoBlock.call(this, secondsToTime(this.currentTime));
+
+                    this._.form.logo_spiner.style.display = "block";
+
+                    downloadStatusUpdate.call(this);
                 };
 
                 el.addEventListener("mousedown", () => {

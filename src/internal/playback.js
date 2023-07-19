@@ -2,6 +2,7 @@ import {LogoInfoBlock, setMediaSession, URLparams} from "./utils";
 
 let trigger = true;
 let old_seek = 0;
+let DSUtimeout;
 
 export function synchronize(target = null) {
     let root = target ? target : this;
@@ -49,6 +50,8 @@ export function synchronize(target = null) {
 }
 
 export function downloadStatusUpdate() {
+    clearTimeout(DSUtimeout);
+
     let allowedStates = [3, 4];
     let video = this._.form.video;
     let audio = this._.form.audio;
@@ -56,6 +59,10 @@ export function downloadStatusUpdate() {
 
     if (allowedStates.includes(video.readyState) && allowedStates.includes(audio.readyState)) {
         this._.form.logo_spiner.style.display = "none";
+    } else {
+        DSUtimeout = setTimeout(() => {
+            downloadStatusUpdate.call(this);
+        }, 1000);
     }
 
     if (this._.playing || (("p" in URLparams()) && trigger)) {
@@ -76,6 +83,17 @@ export function downloadStatusUpdate() {
 
             if (!allowedStates.includes(audio.readyState)) {
                 video.mt_pause();
+            }
+
+            if (allowedStates.includes(audio.readyState) && !document.hasFocus()) {
+                audio.mt_play();
+
+                this._.playing = true;
+                this.trySync = true;
+
+                button_play.setAttribute("icon", "pauseBtn");
+
+                trigger = false;
             }
         }
     }

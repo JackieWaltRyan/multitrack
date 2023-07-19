@@ -148,16 +148,17 @@ function appendEvents(element) {
             }
         }
 
-        const element2 = root._.form.progressbar.loaded;
-        const canvas = root._.form.progressbar.loaded._canvas;
+        let element2 = root._.form.progressbar.loaded;
+        let canvas = root._.form.progressbar.loaded._canvas;
+
         element2.width = element2.clientWidth;
         canvas.fillStyle = "white";
         canvas.clearRect(0, 0, element2.width, 1);
 
         for (let i = 0; i < buffered_list.length; i += 2) {
-            const startX = (buffered_list[i] * element2.width) / root.duration;
-            const endX = (buffered_list[i + 1] * element2.width) / root.duration;
-            const width = endX - startX;
+            let startX = (buffered_list[i] * element2.width) / root.duration;
+            let endX = (buffered_list[i + 1] * element2.width) / root.duration;
+            let width = endX - startX;
 
             canvas.fillRect(Math.floor(startX), 0, Math.floor(width), 1);
         }
@@ -182,9 +183,10 @@ function appendEvents(element) {
                                 }
 
                                 canvas.fillStyle = "lime";
-                                const startS = (start * element2.width) / root.duration;
-                                const endS = (end * element2.width) / root.duration;
-                                const widthS = endS - startS;
+
+                                let startS = (start * element2.width) / root.duration;
+                                let endS = (end * element2.width) / root.duration;
+                                let widthS = endS - startS;
 
                                 canvas.fillRect(Math.floor(startS), 0, Math.floor(widthS), 1);
                             }
@@ -196,9 +198,10 @@ function appendEvents(element) {
 
         if (repeat_data.length === 2) {
             canvas.fillStyle = "orange";
-            const startS = (Math.min(...repeat_data) * element2.width) / root.duration;
-            const endS = (Math.max(...repeat_data) * element2.width) / root.duration;
-            const widthS = endS - startS;
+
+            let startS = (Math.min(...repeat_data) * element2.width) / root.duration;
+            let endS = (Math.max(...repeat_data) * element2.width) / root.duration;
+            let widthS = endS - startS;
 
             canvas.fillRect(Math.floor(startS), 0, Math.floor(widthS), 1);
 
@@ -215,6 +218,7 @@ function appendEvents(element) {
         if (!root._.form.progressbar.updateStyle) {
             root._.form.progressbar.played.setAttribute("style", "width:" + ((100 * element.currentTime) / root.duration) + "%");
         }
+
         root._.form.time.innerText = secondsToTime.call(root, element.currentTime) + " / " + secondsToTime.call(root, root.duration);
 
         localStorage.setItem("mt_mark_time_" + decodeURIComponent(location.pathname), encodeURIComponent(element.currentTime));
@@ -245,6 +249,8 @@ function appendEvents(element) {
 
                                 if ((start <= element.currentTime) && (element.currentTime <= end) && root._.form.skip_prevent) {
                                     setTime.call(root, end + 1);
+
+                                    downloadStatusUpdate.call(root);
                                 }
                             }
                         }
