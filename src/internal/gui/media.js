@@ -52,6 +52,14 @@ export function screensaver(trigger) {
             this._.form.overlays.bottom.style.pointerEvents = "none";
             this._.form.progressbar.root.style.pointerEvents = "none";
 
+            if (this._.form.overlays.mobile) {
+                this._.form.overlays.mobile.style.pointerEvents = "none";
+
+                for (let child of this._.form.overlays.mobile.children) {
+                    child.style.pointerEvents = "none";
+                }
+            }
+
             let root = this._.element;
 
             this._.form.screensaver = createElement("div", {
@@ -123,7 +131,7 @@ export function screensaver(trigger) {
             });
 
             this._.element.appendChild(this._.form.screensaver);
-        }, 5000);
+        }, ((1000 * 60) * 5));
     } else {
         clearTimeout(SStimeout);
 
