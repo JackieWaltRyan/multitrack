@@ -1,4 +1,5 @@
 import {LogoInfoBlock, setMediaSession, URLparams} from "./utils";
+import {screensaver} from "./gui/media";
 
 let trigger = true;
 let old_seek = 0;
@@ -118,6 +119,8 @@ export function changePlaying(val) {
 
         navigator.mediaSession.playbackState = "playing";
 
+        screensaver.call(this, false);
+
         if (this._.stats_trigger) {
             let xhr = new XMLHttpRequest();
 
@@ -154,6 +157,8 @@ export function changePlaying(val) {
         }, 100);
 
         navigator.mediaSession.playbackState = "paused";
+
+        screensaver.call(this, true);
     }
 
     this._.playing = val;
@@ -217,6 +222,7 @@ export function setSpeed(val) {
     }
 
     this._.playbackRate = val;
+
     synchronize.call(this).then(r => r);
 
     localStorage.setItem("mt_mark_speed", encodeURIComponent(val));

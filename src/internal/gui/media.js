@@ -4,6 +4,7 @@ import {changePlaying, downloadStatusUpdate, setSpeed, setTime, skip} from "../p
 let video;
 let audio;
 let repeat_data = [];
+let SStimeout;
 
 export function repeat() {
     return repeat_data;
@@ -34,6 +35,101 @@ export function upcan() {
         }, 50);
     } else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+}
+
+export function screensaver(trigger) {
+    if (trigger) {
+        clearTimeout(SStimeout);
+
+        if (this._.form.screensaver) {
+            this._.form.screensaver.remove();
+        }
+
+        SStimeout = setTimeout(() => {
+            this._.rootElement.classList.add("mt_overlay_hidden");
+
+            this._.form.overlays.bottom.style.pointerEvents = "none";
+            this._.form.progressbar.root.style.pointerEvents = "none";
+
+            let root = this._.element;
+
+            this._.form.screensaver = createElement("div", {
+                class: "mt_screensaver"
+            }, (el) => {
+                el.appendChild(createElement("img", {
+                    src: "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 26.5.0  SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='%D0%A1%D0%BB%D0%BE%D0%B9_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 192 88' style='enable-background:new 0 0 192 88%3B' xml:space='preserve'%3E%3Cpath d='M131.2 12.9h18.2c0 0 22-1.2 21.4 10.2c-0.9 17.5-27.6 16.2-27.6 16.2l5.2-22.7h-18.2l-7.6 32.9h18.1c0 0 18 0.8 32.9-6.3c15.8-7.6 15.9-21 15.9-21c0-5.5-2.9-10.7-7.8-13.4c-9.3-5.5-21.5-6-21.5-6h-39.8L97.1 33.3L87.2 2.7H18.6l-2.5 10.2h18.2c0 0 22-1.2 21.4 10.2c-0.9 17.4-27.6 16.1-27.6 16.1l5.2-22.7H15.1L7.5 49.4h18.1c0 0 18 0.8 32.9-6.3c15.8-7.6 15.9-21 15.9-21c-0.1-1.8-0.3-3.7-0.7-5.5c-0.4-1.4-1-3.7-1-3.7h0.9L90.4 60L131.2 12.9z'/%3E%3Cpath d='M90.8 60C42 60 2.5 65.7 2.5 72.7S42 85.4 90.8 85.4s88.3-5.7 88.3-12.7S139.6 60 90.8 60z M48.1 79.6h-3.7l-7.8-13.2h5.2l4.5 8l4.5-8H56L48.1 79.6z M69 79.6h-4.8V66.4H69V79.6z M86 79.6h-6.8V66.4H86c5.2 0 9.4 2.9 9.4 6.6S91.1 79.6 86 79.6L86 79.6z M115.2 69.3h-5.7v2.2h5.4v2.9h-5.4v2.3h5.7v2.9h-10.5V66.4h10.5V69.3z M134.4 80.1c-5.9 0-10.2-3-10.2-7.3c0-4 4.9-6.8 10.2-6.8s10.2 2.8 10.2 6.8C144.6 77.1 140.4 80.1 134.4 80.1L134.4 80.1z'/%3E%3Cpath d='M134.4 69.3c2.9 0 5.2 1.7 5.2 3.5c0 2.3-2.4 3.9-5.2 3.9s-5.2-1.7-5.2-3.9C129.2 71 131.6 69.3 134.4 69.3z'/%3E%3Cpath d='M85.1 69.3H84v7.4h1.1c2.9 0 5.3-1.1 5.3-3.7C90.4 70.7 88.2 69.3 85.1 69.3z'/%3E%3C/svg%3E"
+                }, (el) => {
+                    el.style.transition = "0.1s transform linear";
+                    el.style.width = "25%";
+
+                    let filters = [
+                        "invert(27%) sepia(77%) saturate(6808%) hue-rotate(278deg) brightness(94%) contrast(136%)",
+                        "invert(87%) sepia(76%) saturate(4483%) hue-rotate(111deg) brightness(104%) contrast(109%)",
+                        "invert(49%) sepia(98%) saturate(1502%) hue-rotate(0deg) brightness(102%) contrast(106%)",
+                        "invert(11%) sepia(100%) saturate(5486%) hue-rotate(237deg) brightness(101%) contrast(126%)",
+                        "invert(96%) sepia(81%) saturate(5421%) hue-rotate(353deg) brightness(100%) contrast(103%)",
+                        "invert(28%) sepia(67%) saturate(7498%) hue-rotate(9deg) brightness(105%) contrast(110%)",
+                        "invert(25%) sepia(91%) saturate(6617%) hue-rotate(318deg) brightness(99%) contrast(114%)",
+                        "invert(51%) sepia(83%) saturate(1103%) hue-rotate(71deg) brightness(119%) contrast(117%)"
+                    ]
+
+                    function render_screensaver(filter = 0, x = 1, y = 1, reverse_x = false, reverse_y = false) {
+                        let shift_x = (reverse_x ? ((root.clientWidth / 50) * -1) : (root.clientWidth / 50));
+                        let shift_y = (reverse_y ? ((root.clientWidth / 50) * -1) : (root.clientWidth / 50));
+
+                        if ((x < 0) || ((x + el.width) > root.clientWidth)) {
+                            shift_x *= -1;
+                            filter += 1;
+                            reverse_x = !reverse_x;
+                        }
+
+                        if ((y < 0) || ((y + el.height) > root.clientHeight)) {
+                            shift_y *= -1;
+                            filter += 1;
+                            reverse_y = !reverse_y;
+                        }
+
+                        if (x < 0) {
+                            x = 0;
+                        }
+
+                        if (y < 0) {
+                            y = 0;
+                        }
+
+                        if ((x + el.width) > root.clientWidth) {
+                            x = (root.clientWidth - el.width);
+                        }
+
+                        if ((y + el.height) > root.clientHeight) {
+                            y = (root.clientHeight - el.height);
+                        }
+
+                        if ((filter + 1) > filters.length) {
+                            filter = 0;
+                        }
+
+                        el.style.filter = filters[filter];
+                        el.style.transform = "translate(" + x + "px, " + y + "px)";
+
+                        setTimeout(() => {
+                            render_screensaver.call(this, filter, (x + shift_x), (y + shift_y), reverse_x, reverse_y);
+                        }, 100);
+                    }
+
+                    render_screensaver.call(this);
+                }));
+            });
+
+            this._.element.appendChild(this._.form.screensaver);
+        }, 5000);
+    } else {
+        clearTimeout(SStimeout);
+
+        if (this._.form.screensaver) {
+            this._.form.screensaver.remove();
+        }
     }
 }
 

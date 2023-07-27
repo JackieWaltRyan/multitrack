@@ -1,4 +1,5 @@
 import {createElement, getPosInElement} from "../utils";
+import {screensaver} from "./media";
 
 let GUItimeout;
 let OVERtimeout;
@@ -23,6 +24,12 @@ export function showOverlay() {
     GUItimeout = setTimeout(() => {
         show.call(this);
     }, 3100);
+
+    if (this._.playing) {
+        screensaver.call(this, false);
+    } else {
+        screensaver.call(this, true);
+    }
 }
 
 export function generateOverlay() {
@@ -161,6 +168,12 @@ export function showMobileOverlay(event) {
                 showMobile.call(this);
             }
         }, 3100);
+    }
+
+    if (this._.playing) {
+        screensaver.call(this, false);
+    } else {
+        screensaver.call(this, true);
     }
 }
 

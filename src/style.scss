@@ -1,6 +1,6 @@
 .mt {
-    --mt--accent-color: #ced4da;
-    --mt--accent-text: black;
+    --mt_accent_color: #ced4da;
+    --mt_accent_text: black;
     display: block;
     width: 854px;
     height: 480px;
@@ -22,6 +22,16 @@
         width: 100%;
         height: 100%;
         opacity: 0.75;
+    }
+
+    .mt_screensaver {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        background-color: #111;
     }
 
     video, .mt_subtitles {
@@ -49,8 +59,8 @@
 
         .mt_settings_header {
             display: flex;
-            background: var(--mt--accent-color, white);
-            color: var(--mt--accent-text, black);
+            background: var(--mt_accent_color, white);
+            color: var(--mt_accent_text, black);
             padding: 0 12px;
             width: 100%;
             line-height: 32px;
@@ -100,8 +110,8 @@
                 }
 
                 &[selected="true"] {
-                    background-color: var(--mt--accent-color, rgba(255, 255, 255, 0.5));
-                    color: var(--mt--accent-text, black);
+                    background-color: var(--mt_accent_color, rgba(255, 255, 255, 0.5));
+                    color: var(--mt_accent_text, black);
                 }
             }
 
@@ -150,7 +160,7 @@
                 }
 
                 .mt_speed_root_selected {
-                    background-color: var(--mt--accent-color, white);
+                    background-color: var(--mt_accent_color, white);
                 }
 
                 .mt_speed_root_selected::before {
@@ -294,7 +304,7 @@
             }
 
             .mt_overlay_progress_bar_played {
-                background-color: var(--mt--accent-color, white);
+                background-color: var(--mt_accent_color, white);
             }
         }
 
@@ -320,7 +330,7 @@
             }
 
             .mt_overlay_volume_bar_selected {
-                background-color: var(--mt--accent-color, white);
+                background-color: var(--mt_accent_color, white);
             }
 
             .mt_overlay_volume_bar_selected::before {
@@ -629,6 +639,7 @@
         bottom: 60px;
         text-align: center;
         width: fit-content;
+        filter: drop-shadow(2px 4px 6px black);
     }
 
     .mt_timeset {

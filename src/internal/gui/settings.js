@@ -597,20 +597,24 @@ export function generateSettings() {
             }, (el) => {
                 let release = (event) => {
                     this._.form.settings.playbackRate.updateStyle = false;
-                    let element_1 = this._.form.settings.playbackRate.background;
-                    let pos_1 = getPosInElement(element_1, event).x / element_1.clientWidth;
 
-                    if (pos_1 < 0) {
-                        pos_1 = 0;
+                    let root = this._.form.settings.playbackRate.root;
+                    let background = this._.form.settings.playbackRate.background;
+                    let selected = this._.form.settings.playbackRate.selected;
+
+                    let pos = getPosInElement(background, event).x / background.offsetWidth;
+
+                    if (pos < 0) {
+                        pos = 0;
                     }
 
-                    if (pos_1 > 1) {
-                        pos_1 = 1;
+                    if (pos > 1) {
+                        pos = 1;
                     }
 
-                    this._.form.settings.playbackRate.selected.style.width = ((85 * pos_1) + "%");
+                    selected.style.width = (((background.offsetWidth / (root.offsetWidth / 100)) * pos) + "%");
 
-                    let convert = ((2 - 0.25) * pos_1) + 0.25;
+                    let convert = ((2 - 0.25) * pos) + 0.25;
 
                     LogoInfoBlock.call(this, convert.toString().slice(0, 4));
                     setSpeed.call(this, convert);
@@ -618,20 +622,23 @@ export function generateSettings() {
 
                 let move = (event) => {
                     if (this._.form.settings.playbackRate.updateStyle) {
-                        let element_2 = this._.form.settings.playbackRate.background;
-                        let pos_2 = getPosInElement(element_2, event).x / element_2.clientWidth;
+                        let root2 = this._.form.settings.playbackRate.root;
+                        let background2 = this._.form.settings.playbackRate.background;
+                        let selected2 = this._.form.settings.playbackRate.selected;
 
-                        if (pos_2 < 0) {
-                            pos_2 = 0;
+                        let pos2 = getPosInElement(background2, event).x / background2.offsetWidth;
+
+                        if (pos2 < 0) {
+                            pos2 = 0;
                         }
 
-                        if (pos_2 > 1) {
-                            pos_2 = 1;
+                        if (pos2 > 1) {
+                            pos2 = 1;
                         }
 
-                        this._.form.settings.playbackRate.selected.style.width = ((85 * pos_2) + "%");
+                        selected2.style.width = (((background2.offsetWidth / (root2.offsetWidth / 100)) * pos2) + "%");
 
-                        let convert = ((2 - 0.25) * pos_2) + 0.25;
+                        let convert = ((2 - 0.25) * pos2) + 0.25;
 
                         LogoInfoBlock.call(this, convert.toString().slice(0, 4));
                         setSpeed.call(this, convert);
@@ -640,6 +647,7 @@ export function generateSettings() {
 
                 el.addEventListener("mousedown", () => {
                     this._.form.settings.playbackRate.updateStyle = true;
+
                     Object(this._.moveEvents).push({
                         move: move,
                         release: release,
@@ -648,6 +656,7 @@ export function generateSettings() {
 
                 el.addEventListener("touchstart", () => {
                     this._.form.settings.playbackRate.updateStyle = true;
+
                     Object(this._.moveEvents).push({
                         move: move,
                         release: release,

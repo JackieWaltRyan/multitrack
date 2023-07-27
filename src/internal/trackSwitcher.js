@@ -18,6 +18,7 @@ export function setVideo(link) {
     }
 
     let playbackRate = this.playbackRate;
+
     this._.form.video.mt_pause();
     this._.form.video.src = link;
     this._.form.video.mt_setTime(currentTimeVideo);
@@ -42,6 +43,7 @@ export function setAudio(link) {
     }
 
     let playbackRate = this.playbackRate;
+
     this._.form.audio.mt_pause();
     this._.form.audio.src = link;
     this._.form.audio.mt_setTime(currentTimeAudio);
