@@ -1,6 +1,12 @@
 import {changePlaying, clear_old_seek, seek, skip} from "./playback";
 
-let LIBtimeout;
+let LIBtimeout = null;
+let CStimeout = null;
+
+let old_size = {
+    video: null,
+    audio: null
+}
 
 export function getPosInElement(element, event) {
     return {
@@ -154,4 +160,63 @@ export function sleep(ms) {
             reject();
         }, ms);
     });
+}
+
+export function check_size() {
+    clearTimeout(CStimeout);
+
+    let elements = {
+        video: this._.form.video.src,
+        audio: this._.form.audio.src
+    };
+
+    for (let el in elements) {
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", (elements[el] + Math.floor(Math.random() * Date.now())), true);
+
+        xhr.setRequestHeader("Range", "bytes=0-1");
+
+        xhr.addEventListener("load", () => {
+            if (xhr.status === 206) {
+                let new_size = parseInt(xhr.getResponseHeader("Content-Range").split("/")[1]);
+
+                if (old_size[el] === null) {
+                    old_size[el] = new_size;
+                } else {
+                    if (old_size[el] !== new_size) {
+                        if (el === "video") {
+                            if (localStorage.getItem("mt_mark_quality")) {
+                                let index = this._.videos.findIndex((video) => (video.name === localStorage.getItem("mt_mark_quality")));
+
+                                if (index !== -1) {
+                                    this._.form.settings.menu.quality.Buttons[index].click();
+                                }
+
+                                old_size[el] = new_size;
+                            }
+                        }
+
+                        if (el === "audio") {
+                            if (localStorage.getItem("mt_mark_dubs")) {
+                                let index = this._.audios.findIndex((audio) => (audio.code === localStorage.getItem("mt_mark_dubs")));
+
+                                if (index !== -1) {
+                                    this._.form.settings.menu.dubs.Buttons[index].click();
+                                }
+
+                                old_size[el] = new_size;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        xhr.send();
+    }
+
+    CStimeout = setTimeout(() => {
+        check_size.call(this);
+    }, 60000);
 }

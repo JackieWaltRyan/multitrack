@@ -1,10 +1,13 @@
 import {createElement, secondsToTime} from "../utils";
 import {changePlaying, downloadStatusUpdate, setSpeed, setTime, skip} from "../playback";
+import {closeSettings} from "./settings";
 
-let video;
-let audio;
+let video = null;
+let audio = null;
+
 let repeat_data = [];
-let SStimeout;
+
+let SStimeout = null;
 
 export function repeat() {
     return repeat_data;
@@ -60,13 +63,18 @@ export function screensaver(trigger) {
                 }
             }
 
+            closeSettings.call(this);
+
+            this._.form.timeset.open = false;
+            this._.form.timeset.root.style.display = "none";
+
             let root = this._.element;
 
             this._.form.screensaver = createElement("div", {
                 class: "mt_screensaver"
             }, (el) => {
                 el.appendChild(createElement("img", {
-                    src: "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 26.5.0  SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='%D0%A1%D0%BB%D0%BE%D0%B9_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 192 88' style='enable-background:new 0 0 192 88%3B' xml:space='preserve'%3E%3Cpath d='M131.2 12.9h18.2c0 0 22-1.2 21.4 10.2c-0.9 17.5-27.6 16.2-27.6 16.2l5.2-22.7h-18.2l-7.6 32.9h18.1c0 0 18 0.8 32.9-6.3c15.8-7.6 15.9-21 15.9-21c0-5.5-2.9-10.7-7.8-13.4c-9.3-5.5-21.5-6-21.5-6h-39.8L97.1 33.3L87.2 2.7H18.6l-2.5 10.2h18.2c0 0 22-1.2 21.4 10.2c-0.9 17.4-27.6 16.1-27.6 16.1l5.2-22.7H15.1L7.5 49.4h18.1c0 0 18 0.8 32.9-6.3c15.8-7.6 15.9-21 15.9-21c-0.1-1.8-0.3-3.7-0.7-5.5c-0.4-1.4-1-3.7-1-3.7h0.9L90.4 60L131.2 12.9z'/%3E%3Cpath d='M90.8 60C42 60 2.5 65.7 2.5 72.7S42 85.4 90.8 85.4s88.3-5.7 88.3-12.7S139.6 60 90.8 60z M48.1 79.6h-3.7l-7.8-13.2h5.2l4.5 8l4.5-8H56L48.1 79.6z M69 79.6h-4.8V66.4H69V79.6z M86 79.6h-6.8V66.4H86c5.2 0 9.4 2.9 9.4 6.6S91.1 79.6 86 79.6L86 79.6z M115.2 69.3h-5.7v2.2h5.4v2.9h-5.4v2.3h5.7v2.9h-10.5V66.4h10.5V69.3z M134.4 80.1c-5.9 0-10.2-3-10.2-7.3c0-4 4.9-6.8 10.2-6.8s10.2 2.8 10.2 6.8C144.6 77.1 140.4 80.1 134.4 80.1L134.4 80.1z'/%3E%3Cpath d='M134.4 69.3c2.9 0 5.2 1.7 5.2 3.5c0 2.3-2.4 3.9-5.2 3.9s-5.2-1.7-5.2-3.9C129.2 71 131.6 69.3 134.4 69.3z'/%3E%3Cpath d='M85.1 69.3H84v7.4h1.1c2.9 0 5.3-1.1 5.3-3.7C90.4 70.7 88.2 69.3 85.1 69.3z'/%3E%3C/svg%3E"
+                    src: (((new Date().getMonth() + 1).toString() + new Date().getDate().toString()) === "41") ? "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 26.5.0  SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='%D0%A1%D0%BB%D0%BE%D0%B9_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 192 88' style='enable-background:new 0 0 192 88%3B' xml:space='preserve'%3E%3Cpath d='M131.2 12.9h18.2c0 0 22-1.2 21.4 10.2c-0.9 17.5-27.6 16.2-27.6 16.2l5.2-22.7h-18.2l-7.6 32.9h18.1c0 0 18 0.8 32.9-6.3c15.8-7.6 15.9-21 15.9-21c0-5.5-2.9-10.7-7.8-13.4c-9.3-5.5-21.5-6-21.5-6h-39.8L97.1 33.3L87.2 2.7H18.6l-2.5 10.2h18.2c0 0 22-1.2 21.4 10.2c-0.9 17.4-27.6 16.1-27.6 16.1l5.2-22.7H15.1L7.5 49.4h18.1c0 0 18 0.8 32.9-6.3c15.8-7.6 15.9-21 15.9-21c-0.1-1.8-0.3-3.7-0.7-5.5c-0.4-1.4-1-3.7-1-3.7h0.9L90.4 60L131.2 12.9z'/%3E%3Cpath d='M90.8 60C42 60 2.5 65.7 2.5 72.7S42 85.4 90.8 85.4s88.3-5.7 88.3-12.7S139.6 60 90.8 60z M48.1 79.6h-3.7l-7.8-13.2h5.2l4.5 8l4.5-8H56L48.1 79.6z M69 79.6h-4.8V66.4H69V79.6z M86 79.6h-6.8V66.4H86c5.2 0 9.4 2.9 9.4 6.6S91.1 79.6 86 79.6L86 79.6z M115.2 69.3h-5.7v2.2h5.4v2.9h-5.4v2.3h5.7v2.9h-10.5V66.4h10.5V69.3z M134.4 80.1c-5.9 0-10.2-3-10.2-7.3c0-4 4.9-6.8 10.2-6.8s10.2 2.8 10.2 6.8C144.6 77.1 140.4 80.1 134.4 80.1L134.4 80.1z'/%3E%3Cpath d='M134.4 69.3c2.9 0 5.2 1.7 5.2 3.5c0 2.3-2.4 3.9-5.2 3.9s-5.2-1.7-5.2-3.9C129.2 71 131.6 69.3 134.4 69.3z'/%3E%3Cpath d='M85.1 69.3H84v7.4h1.1c2.9 0 5.3-1.1 5.3-3.7C90.4 70.7 88.2 69.3 85.1 69.3z'/%3E%3C/svg%3E" : "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 26.5.0  SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='%D0%A1%D0%BB%D0%BE%D0%B9_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 192 88' style='enable-background:new 0 0 192 88%3B' xml:space='preserve'%3E%3Cstyle type='text/css'%3E.st0%7Bdisplay:none%3B%7D%3C/style%3E%3Cg class='st0'%3E%3C/g%3E%3Cpath class='st0' d='M131.2 12.9h18.2c0 0 22-1.2 21.4 10.2c-0.9 17.5-27.6 16.2-27.6 16.2l5.2-22.7h-18.2l-7.6 32.9h18.1c0 0 18 0.8 32.9-6.3c15.8-7.6 15.9-21 15.9-21c0-5.5-2.9-10.7-7.8-13.4c-9.3-5.5-21.5-6-21.5-6h-39.8L97.1 33.3L87.2 2.7H18.6l-2.5 10.2h18.2c0 0 22-1.2 21.4 10.2c-0.9 17.4-27.6 16.1-27.6 16.1l5.2-22.7H15.1L7.5 49.4h18.1c0 0 18 0.8 32.9-6.3c15.8-7.6 15.9-21 15.9-21c-0.1-1.8-0.3-3.7-0.7-5.5c-0.4-1.4-1-3.7-1-3.7h0.9L90.4 60L131.2 12.9z'/%3E%3Cpath d='M90.8 60C42 60 2.5 65.7 2.5 72.7S42 85.4 90.8 85.4s88.3-5.7 88.3-12.7S139.6 60 90.8 60z M48.1 79.6h-3.7l-7.8-13.2h5.2l4.5 8l4.5-8H56L48.1 79.6z M69 79.6h-4.8V66.4H69V79.6z M86 79.6h-6.8V66.4H86c5.2 0 9.4 2.9 9.4 6.6S91.1 79.6 86 79.6L86 79.6z M115.2 69.3h-5.7v2.2h5.4v2.9h-5.4v2.3h5.7v2.9h-10.5V66.4h10.5V69.3z M134.4 80.1c-5.9 0-10.2-3-10.2-7.3c0-4 4.9-6.8 10.2-6.8s10.2 2.8 10.2 6.8C144.6 77.1 140.4 80.1 134.4 80.1L134.4 80.1z'/%3E%3Cpath d='M134.4 69.3c2.9 0 5.2 1.7 5.2 3.5c0 2.3-2.4 3.9-5.2 3.9s-5.2-1.7-5.2-3.9C129.2 71 131.6 69.3 134.4 69.3z'/%3E%3Cpath d='M85.1 69.3H84v7.4h1.1c2.9 0 5.3-1.1 5.3-3.7C90.4 70.7 88.2 69.3 85.1 69.3z'/%3E%3Cg%3E%3Cpath d='M13.1 19.1h14.2l-5.6 30.2H7.3L13.1 19.1z M92.9 26.1l-4.3 23.3H74l4.3-23.1c0.4-2.2 0.4-4.1 0-5.7c-0.4-1.6-1.1-2.9-2.1-4c-1-1-2.3-1.8-3.9-2.3c-1.5-0.5-3.3-0.7-5.1-0.7H58c0.4 0.8 0.8 1.8 1.1 2.8c0.3 1.1 0.5 2.1 0.7 3.2c0.2 1.1 0.2 2.2 0.2 3.3c0 1.1-0.2 2.2-0.4 3.2l-4.5 23.3H40.7l2.5-13.3l1.7-9.8c0.5-2.6 0.5-4.7 0-6.4c-0.5-1.7-1.2-3-2.3-3.9c-1.1-0.9-2.4-1.6-3.9-1.9c-1.5-0.4-3.1-0.5-4.7-0.5h-20l2.1-11.1H74c1.6 0 3.2 0.3 4.9 0.8c1.7 0.5 3.3 1.3 4.8 2.3c1.5 1 3 2.2 4.3 3.6c1.3 1.4 2.4 3 3.3 4.7c0.9 1.7 1.5 3.6 1.8 5.7C93.4 21.6 93.3 23.8 92.9 26.1z'/%3E%3Cpath d='M92.5 25.7L97 2.4h14.5l-4.4 23.1l-0.1 1c-0.2 2.3 0 4.2 0.4 5.7c0.5 1.5 1.2 2.7 2.1 3.6c1 0.9 2.2 1.5 3.7 1.9c1.5 0.4 3.1 0.5 5 0.5h20l-2 11.1h-24.6c-2.2 0-4.3-0.4-6.6-1.3c-2.2-0.8-4.3-2.1-6.1-3.7c-1.8-1.6-3.4-3.6-4.6-6c-1.2-2.4-1.9-5.1-2.1-8.2c0-0.7 0-1.5 0.1-2.2C92.3 27.2 92.4 26.4 92.5 25.7z'/%3E%3Cpath d='M149.6 49.4h-13.9l4.5-24.2h8.2h5.7h13c2.7 0 4.6-0.6 5.9-1.7c1.3-1.1 1.9-2.7 1.9-4.7c0-2.1-0.5-3.6-1.6-4.5c-1.1-1-2.7-1.4-4.7-1.4h-26.2l2-10.4h27.9c2.8 0 5.2 0.4 7.4 1.2c2.1 0.8 3.9 1.9 5.3 3.4c1.4 1.4 2.5 3.2 3.3 5.2c0.7 2 1.1 4.2 1.1 6.6c0 3.1-0.5 5.7-1.6 8c-1.1 2.2-2.5 4.1-4.3 5.5c-1.8 1.5-3.8 2.5-6 3.2c-2.2 0.7-4.5 1-6.9 1H152L149.6 49.4z'/%3E%3C/g%3E%3C/svg%3E"
                 }, (el) => {
                     el.style.transition = "0.1s transform linear";
                     el.style.width = "25%";
@@ -76,8 +84,8 @@ export function screensaver(trigger) {
                         "invert(87%) sepia(76%) saturate(4483%) hue-rotate(111deg) brightness(104%) contrast(109%)",
                         "invert(49%) sepia(98%) saturate(1502%) hue-rotate(0deg) brightness(102%) contrast(106%)",
                         "invert(11%) sepia(100%) saturate(5486%) hue-rotate(237deg) brightness(101%) contrast(126%)",
-                        "invert(96%) sepia(81%) saturate(5421%) hue-rotate(353deg) brightness(100%) contrast(103%)",
                         "invert(28%) sepia(67%) saturate(7498%) hue-rotate(9deg) brightness(105%) contrast(110%)",
+                        "invert(96%) sepia(81%) saturate(5421%) hue-rotate(353deg) brightness(100%) contrast(103%)",
                         "invert(25%) sepia(91%) saturate(6617%) hue-rotate(318deg) brightness(99%) contrast(114%)",
                         "invert(51%) sepia(83%) saturate(1103%) hue-rotate(71deg) brightness(119%) contrast(117%)"
                     ]

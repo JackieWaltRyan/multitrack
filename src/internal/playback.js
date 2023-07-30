@@ -1,9 +1,12 @@
-import {LogoInfoBlock, setMediaSession, URLparams} from "./utils";
+import {check_size, LogoInfoBlock, setMediaSession, URLparams} from "./utils";
 import {screensaver} from "./gui/media";
 
 let trigger = true;
+
 let old_seek = 0;
-let DSUtimeout;
+
+let DSUtimeout = null;
+let DSUcounter = 0;
 
 export function synchronize(target = null) {
     let root = target ? target : this;
@@ -59,9 +62,37 @@ export function downloadStatusUpdate() {
     let button_play = this._.form.buttons.but_play;
 
     if (allowedStates.includes(video.readyState) && allowedStates.includes(audio.readyState)) {
+        DSUcounter = 0;
+
         this._.form.logo_spiner.style.display = "none";
     } else {
         DSUtimeout = setTimeout(() => {
+            DSUcounter += 1;
+
+            if (DSUcounter >= 15) {
+                if (!allowedStates.includes(video.readyState)) {
+                    if (localStorage.getItem("mt_mark_quality")) {
+                        let index = this._.videos.findIndex((video) => (video.name === localStorage.getItem("mt_mark_quality")));
+
+                        if (index !== -1) {
+                            this._.form.settings.menu.quality.Buttons[index].click();
+                        }
+                    }
+                }
+
+                if (!allowedStates.includes(audio.readyState)) {
+                    if (localStorage.getItem("mt_mark_dubs")) {
+                        let index = this._.audios.findIndex((audio) => (audio.code === localStorage.getItem("mt_mark_dubs")));
+
+                        if (index !== -1) {
+                            this._.form.settings.menu.dubs.Buttons[index].click();
+                        }
+                    }
+                }
+
+                DSUcounter = 0;
+            }
+
             downloadStatusUpdate.call(this);
         }, 1000);
     }
@@ -140,6 +171,8 @@ export function changePlaying(val) {
 
             xhr.send();
         }
+
+        check_size.call(this);
     } else {
         this._.form.video.mt_pause();
         this._.form.audio.mt_pause();

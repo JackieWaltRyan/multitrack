@@ -2,7 +2,7 @@ class MultitrackJSLoader {
     constructor(data) {
         let xhr = new XMLHttpRequest();
         
-        xhr.open("GET", ("/api/v1/episodes/name/" + encodeURIComponent(data.data.episode_name) + "?" + Math.floor(Math.random() * Date.now())), true);
+        xhr.open("GET", ("//bronyru.info/api/v1/episodes/name/" + encodeURIComponent(data.data.episode_name) + "?" + Math.floor(Math.random() * Date.now())), true);
 
         xhr.addEventListener("load", () => {
             if (xhr.status === 200) {
@@ -58,7 +58,7 @@ class MultitrackJSLoader {
                 let ds_times = null;
 
                 let xhr_ds_series = new XMLHttpRequest();
-                xhr_ds_series.open("GET", ("/_design/player/midnight-new/ds_series.json?" + Math.floor(Math.random() * Date.now())), false);
+                xhr_ds_series.open("GET", ("ds_series.json?" + Math.floor(Math.random() * Date.now())), false);
                 xhr_ds_series.send();
 
                 if (xhr_ds_series.status === 200) {
@@ -66,7 +66,7 @@ class MultitrackJSLoader {
                 }
 
                 let xhr_ds_times = new XMLHttpRequest();
-                xhr_ds_times.open("GET", ("/_design/player/midnight-new/ds_times.json?" + Math.floor(Math.random() * Date.now())), false);
+                xhr_ds_times.open("GET", ("ds_times.json?" + Math.floor(Math.random() * Date.now())), false);
                 xhr_ds_times.send();
 
                 if (xhr_ds_times.status === 200) {

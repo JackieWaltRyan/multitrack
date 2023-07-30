@@ -5,7 +5,7 @@ import {settings_hotkeys} from "./hotkeys";
 import {showMobileOverlay, showOverlay} from "./overlay";
 import {upcan} from "./media";
 
-let SettingsTimeout;
+let SettingsTimeout = null;
 
 class SettingsButtons {
     constructor(name = null) {
@@ -220,6 +220,7 @@ function generate_quality() {
 
     if (this._.preferredVideoName) {
         let index = this._.videos.findIndex((video) => (video.name === this._.preferredVideoName));
+
         if (index !== -1) {
             preferredVideoIndex = index;
         }
@@ -227,6 +228,7 @@ function generate_quality() {
 
     if (localStorage.getItem("mt_mark_quality") && (localStorage.getItem("mt_set_quality") === "true")) {
         let index = this._.videos.findIndex((video) => (video.name === localStorage.getItem("mt_mark_quality")));
+
         if (index !== -1) {
             preferredVideoIndex = index;
         }
@@ -251,6 +253,7 @@ function generate_dubs() {
 
     if (localStorage.getItem("mt_mark_dubs") && (localStorage.getItem("mt_set_voiceovers") === "true")) {
         let index = this._.audios.findIndex((audio) => (audio.code === localStorage.getItem("mt_mark_dubs")));
+
         if (index !== -1) {
             preferredAudioIndex = index;
         }
@@ -258,6 +261,7 @@ function generate_dubs() {
 
     if ("a" in URLparams()) {
         let index = this._.audios.findIndex((audio) => (audio.code === URLparams()["a"]));
+
         if (index !== -1) {
             preferredAudioIndex = index;
         }
@@ -288,6 +292,7 @@ function generate_subtitles() {
 
     if (localStorage.getItem("mt_mark_subtitles") && (localStorage.getItem("mt_set_subtitles") === "true")) {
         let index = this._.subtitles.findIndex((subtitle) => (subtitle.code === localStorage.getItem("mt_mark_subtitles")));
+
         if (index !== -1) {
             preferredSubtitleIndex = index;
         }
@@ -295,6 +300,7 @@ function generate_subtitles() {
 
     if ("s" in URLparams()) {
         let index = this._.subtitles.findIndex((subtitle) => (subtitle.code === URLparams()["s"]));
+
         if (index !== -1) {
             preferredSubtitleIndex = index;
         }

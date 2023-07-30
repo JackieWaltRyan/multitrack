@@ -1,4 +1,4 @@
-import {createElement, LogoInfoBlock, secondsToTime} from "./utils";
+import {check_size, createElement, LogoInfoBlock, secondsToTime} from "./utils";
 import {hotkeys} from "./gui/hotkeys";
 import {gestures} from "./gui/gestures";
 import {generateMedia} from "./gui/media";
@@ -8,11 +8,11 @@ import {generateProgressbar} from "./gui/progressbar";
 import {generateButtons, tooltip} from "./gui/buttons";
 import {generateMobileOverlay, generateOverlay, showMobileOverlay, showOverlay} from "./gui/overlay";
 
-let TimesetTimeout;
+let TimesetTimeout = null;
 
 let skip_time = {
-    "s": null,
-    "e": null
+    s: null,
+    e: null
 };
 
 function send_sts() {
@@ -394,6 +394,7 @@ export function gui() {
     this._.element.appendChild(this._.form.timeset.root);
 
     gestures.call(this);
+    check_size.call(this);
 
     if (!matchMedia("(any-pointer:coarse)").matches) {
         hotkeys.call(this);

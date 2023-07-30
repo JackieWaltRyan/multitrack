@@ -1,8 +1,8 @@
 import {createElement, getPosInElement} from "../utils";
 import {screensaver} from "./media";
 
-let GUItimeout;
-let OVERtimeout;
+let GUItimeout = null;
+let OVERtimeout = null;
 
 function show() {
     if ((this._.playing || (localStorage.getItem("mt_set_hidemenu") === "true")) && !this._.form.timeset.open) {

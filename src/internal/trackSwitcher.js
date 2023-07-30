@@ -1,6 +1,6 @@
 import {setMediaSession, URLparams} from "./utils";
 
-let ASS;
+let ASS = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     ASS = require("assjs").default;
@@ -20,7 +20,7 @@ export function setVideo(link) {
     let playbackRate = this.playbackRate;
 
     this._.form.video.mt_pause();
-    this._.form.video.src = link;
+    this._.form.video.src = (link + "?" + Math.floor(Math.random() * Date.now()));
     this._.form.video.mt_setTime(currentTimeVideo);
     this._.form.video.mt_setRate(playbackRate);
 
@@ -45,7 +45,7 @@ export function setAudio(link) {
     let playbackRate = this.playbackRate;
 
     this._.form.audio.mt_pause();
-    this._.form.audio.src = link;
+    this._.form.audio.src = (link + "?" + Math.floor(Math.random() * Date.now()));
     this._.form.audio.mt_setTime(currentTimeAudio);
     this._.form.audio.mt_setRate(playbackRate);
 
@@ -76,7 +76,7 @@ export function setSubtitles(url) {
         this._.subtitlesDownloader = setTimeout(() => {
             let xhr = new XMLHttpRequest();
 
-            xhr.open("GET", url, true);
+            xhr.open("GET", (url + "?" + Math.floor(Math.random() * Date.now())), true);
 
             xhr.addEventListener("load", () => {
                 if (xhr.status === 200) {
